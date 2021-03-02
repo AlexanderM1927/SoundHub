@@ -1,0 +1,38 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/app.js"
+  },
+  "author": "Geckode <info@geckode.la>",
+  "license": "ISC",
+  "dependencies": {
+    "app-root-path": "^3.0.0",
+    "axios": "^0.19.2",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.24.0",
+    "moment-duration-format": "^2.3.2",
+    "moment-timezone": "^0.5.28",
+    "mongoose": "^5.9.6",
+    "mongoose-pagination": "^1.0.0",
+    "node-excel-export": "^1.4.4",
+    "nodemailer": "^6.4.6",
+    "nodemon": "^2.0.2",
+    "npm": "^6.14.4",
+    "socket.io": "^2.3.0",
+    "to": "^0.2.9",
+    "update": "^0.7.4",
+    "user-agent-parser": "^0.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  }
+}
