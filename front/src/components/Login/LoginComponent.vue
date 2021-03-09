@@ -2,13 +2,14 @@
     <!--LOGIN AND REGISTER PAGE-->
     <div class="lg_body">
         <div class="row">
-            <div v-if="$q.screen.gt.xs" class="col-md-7">
+            <div v-if="$q.screen.gt.xs" class="col-md-7 row">
                 <img class="lg_img" src="~/assets/login-img.svg">
             </div>
-            <div class="col-md-4 col-xs-12">
+            <div class="col-md-4 col-xs-12" style="opacity: 0.90;">
                 <q-tabs
                 v-model="tab"
-                class="lg_tab bg-purple">
+                class="lg_tab"
+                indicator-color="primary">
                     <q-tab
                     name="sign_in"
                     class="tablinks tab_left"
@@ -20,8 +21,6 @@
                     :class="{ 'selected' : tab=='sign_up' }">
                     Sign Up</q-tab>
                 </q-tabs>
-
-                <q-separator />
 
                 <!--CARD CONTENT-->
                 <q-tab-panels
@@ -37,26 +36,53 @@
                         class="col-md-4 col-xs-12">
                             <q-input outlined v-model="user.email" label="Email" stack-label :dense="dense"  required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
-                                    <q-icon color="accent" name="email" />
+                                    <q-icon color="grey" name="email" />
                                 </template>
                             </q-input><br>
-                            <q-input outlined v-model="user.email" label="Clave" stack-label :dense="dense" :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.password" label="Clave" stack-label :dense="dense" :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                                <template v-slot:prepend>
+                                    <q-icon color="grey" name="vpn_key" />
+                                </template>
                                 <template v-slot:append>
-                                    <q-icon color="accent" :name="isPwd ? 'visibility_off' : 'visibility'" @click="isPwd = !isPwd"/>
+                                    <q-icon color="grey" :name="isPwd ? 'visibility_off' : 'visibility'" @click="isPwd = !isPwd"/>
                                 </template>
                             </q-input>
-                            <p>¿Olvidaste tu contraseña?</p>
-                            <q-btn type="submit" class="full-width" label="login" color="accent"/>
+                            <div class="row q-my-sm">
+                                <a class="link">¿Olvidaste tu contraseña?</a>
+                            </div>
+                            <q-btn type="submit" class="full-width q-mt-sm" label="login" color="grey"/>
                         </q-form>
                     </q-tab-panel>
                     <!--REGISTER-->
                     <q-tab-panel
                     name="sign_up"
                     class="tabcontent">
-                        <div>
-                            <h3>Sing up</h3>
-                            <p>Aquí va el texto para registro</p>
-                        </div>
+                        <q-form
+                        action="submit"
+                        class="col-md-4 col-xs-12">
+                            <q-input outlined v-model="user.email" label="Email" stack-label :dense="dense"  required :rules="[val => !!val || 'Este campo es necesario']">
+                                <template v-slot:prepend>
+                                    <q-icon color="grey" name="email" />
+                                </template>
+                            </q-input><br/>
+                            <q-input outlined v-model="user.password" label="Clave" stack-label :dense="dense" :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                                <template v-slot:prepend>
+                                    <q-icon color="grey" name="vpn_key" />
+                                </template>
+                                <template v-slot:append>
+                                    <q-icon color="grey" :name="isPwd ? 'visibility_off' : 'visibility'" @click="isPwd = !isPwd"/>
+                                </template>
+                            </q-input><br/>
+                            <q-input outlined v-model="user.passwordConfirm" label="Confirmar clave" stack-label :dense="dense" :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                                <template v-slot:prepend>
+                                    <q-icon color="grey" name="vpn_key" />
+                                </template>
+                                <template v-slot:append>
+                                    <q-icon color="grey" :name="isPwd ? 'visibility_off' : 'visibility'" @click="isPwd = !isPwd"/>
+                                </template>
+                            </q-input>
+                            <q-btn type="submit" class="full-width q-mt-sm" label="Register" color="grey"/>
+                        </q-form>
                     </q-tab-panel>
                 </q-tab-panels>
             </div>
@@ -73,7 +99,8 @@ export default {
       tab: 'sign_in',
       user: {
         email: '',
-        password: ''
+        password: '',
+        passwordConfirm: ''
       },
       isPwd: true
     }
@@ -85,9 +112,8 @@ export default {
 .lg_body{
     height: 100vh;
     width: 100%;
-    background: #43434A;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #F5F5F5,#43434A);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #F5F5F5,#43434A); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-image: url(../../assets/login-background.jpg);
+    background-position: center center;
 }
 
 .lg_card{
@@ -97,15 +123,15 @@ export default {
 }
 
 .lg_img {
+    max-width: 900px;
     width: 100%;
     height: auto;
-    margin-top: 11%;
+    margin: 11% auto 0 auto;
 }
 
 .lg_tab{
     margin-top: 20%;
     width: 100%;
-    background: $accent;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
 }
@@ -113,7 +139,7 @@ export default {
 .tablinks{
     width: 50%;
     height: 45px;
-    background-color: $accent;
+    background-color: #2b2b30;
     color: #F5F5F5;
     font-weight: 400;
     font-size: 20px;
@@ -122,11 +148,11 @@ export default {
 }
 
 .tablinks:hover{
-    background-color: $accent;
+    background-color: #38383f;
 }
 
 .selected{
-    background-color: $accent;
+    background-color: #3d393f;
 }
 
 </style>
