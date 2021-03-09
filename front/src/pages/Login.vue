@@ -8,7 +8,7 @@
             <!--TABS TO CHANGE THE FORM-->
             <q-tabs
              v-model="tab"
-             class="lg_tab">
+             class="lg_tab bg-purple">
                 <q-tab
                  name="sign_in"
                  class="tablinks tab_left"

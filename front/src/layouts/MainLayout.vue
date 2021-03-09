@@ -101,6 +101,7 @@ export default {
       leftDrawerOpen: false,
       essentialLinks: linksData
     }
-  }
+  },
+  props: ['view']
 }
 </script>

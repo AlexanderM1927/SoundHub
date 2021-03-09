@@ -1,12 +1,15 @@
 
 const routes = [
   {
+    name: 'login',
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/Index.vue') },
-      { path: '/login', component: () => import('pages/Login.vue') }
-    ]
+    component: () => import('layouts/LoginLayout.vue'),
+    meta: {
+      title: 'Login'
+    },
+    props: {
+      view: 'login'
+    }
   },
 
   // Always leave this as last one,
