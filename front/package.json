@@ -1,8 +1,8 @@
 {
   "name": "front",
   "version": "0.0.1",
-  "description": "soundhub",
-  "productName": "soundhub",
+  "description": "SoundHub",
+  "productName": "SoundHub",
   "author": "AlexanderM1927 <52513621+AlexanderM1927@users.noreply.github.com>",
   "private": true,
   "scripts": {

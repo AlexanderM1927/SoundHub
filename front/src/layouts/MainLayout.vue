@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header class="bg-accent" elevated>
       <q-toolbar>
         <q-btn
           flat
@@ -12,10 +12,9 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          SoundHub
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
