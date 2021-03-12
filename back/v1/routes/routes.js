@@ -3,7 +3,7 @@
 // var md_auth = require('../../middlewares/authenticated');
 
 // Controllers
-// var UsersController 	= reqlib('/v1/controllers/usersController.js');
+const UserController 	= reqlib('/v1/controllers/userController.js');
 
 /* 
 METHODS
@@ -13,5 +13,5 @@ All methods are define below this
 // Exportamos la configuración
 module.exports = function (app) {
 	// Users
-	// app.post('/v1/login', UsersController.login)
+	app.post('/v1/login', UserController.login)
 }
