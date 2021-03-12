@@ -32,14 +32,15 @@
                     name="sign_in"
                     class="tabcontent">
                         <q-form
+                        @submit="login"
                         action="submit"
                         class="col-md-4 col-xs-12">
-                            <q-input outlined v-model="user.email" label="Email" stack-label :dense="dense"  required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.email" label="Email" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="email" />
                                 </template>
                             </q-input><br>
-                            <q-input outlined v-model="user.password" label="Clave" stack-label :dense="dense" :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.password" label="Clave" stack-label :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="vpn_key" />
                                 </template>
@@ -52,33 +53,40 @@
                             </div>
                             <q-btn type="submit" class="full-width q-mt-sm" label="login" color="grey"/>
                         </q-form>
+                        <q-btn type="submit" icon="facebook" class="full-width q-mt-sm" label="Iniciar con facebook" color="primary" @click="loginWithFacebook"/>
                     </q-tab-panel>
                     <!--REGISTER-->
                     <q-tab-panel
                     name="sign_up"
                     class="tabcontent">
                         <q-form
+                        @submit="register"
                         action="submit"
                         class="col-md-4 col-xs-12">
-                            <q-input outlined v-model="user.email" label="Email" stack-label :dense="dense"  required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.username" label="Nombre de usuario" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
+                                <template v-slot:prepend>
+                                    <q-icon color="grey" name="badge" />
+                                </template>
+                            </q-input><br>
+                            <q-input outlined type="mail" v-model="user.email" label="Email" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="email" />
                                 </template>
                             </q-input><br/>
-                            <q-input outlined v-model="user.password" label="Clave" stack-label :dense="dense" :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.password" label="Clave" stack-label :type="isPwd1 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="vpn_key" />
                                 </template>
                                 <template v-slot:append>
-                                    <q-icon color="grey" :name="isPwd ? 'visibility_off' : 'visibility'" @click="isPwd = !isPwd"/>
+                                    <q-icon color="grey" :name="isPwd1 ? 'visibility_off' : 'visibility'" @click="isPwd1 = !isPwd1"/>
                                 </template>
                             </q-input><br/>
-                            <q-input outlined v-model="user.passwordConfirm" label="Confirmar clave" stack-label :dense="dense" :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.passwordConfirm" label="Confirmar clave" stack-label :type="isPwd2 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="vpn_key" />
                                 </template>
                                 <template v-slot:append>
-                                    <q-icon color="grey" :name="isPwd ? 'visibility_off' : 'visibility'" @click="isPwd = !isPwd"/>
+                                    <q-icon color="grey" :name="isPwd2 ? 'visibility_off' : 'visibility'" @click="isPwd2 = !isPwd2"/>
                                 </template>
                             </q-input>
                             <q-btn type="submit" class="full-width q-mt-sm" label="Register" color="grey"/>
@@ -92,17 +100,41 @@
 </template>
 
 <script>
+import UserService from '../../services/UserService'
+import { functions } from '../../functions.js'
+
 export default {
   name: 'LoginComponent',
+  mixins: [functions],
   data () {
     return {
       tab: 'sign_in',
       user: {
+        username: '',
         email: '',
         password: '',
         passwordConfirm: ''
       },
-      isPwd: true
+      isPwd: true,
+      isPwd1: true,
+      isPwd2: true
+    }
+  },
+  methods: {
+    async loginWithFacebook () {
+      console.log('login-facebook')
+    },
+    async login () {
+      console.log('login')
+    },
+    async register () {
+      try {
+        await UserService.register(this.user)
+        this.alert('positive', 'Usuario creado correctamente')
+        this.tab = 'sign_in'
+      } catch (error) {
+        this.alert('negative', error.response.data.error)
+      }
     }
   }
 }
@@ -110,10 +142,10 @@ export default {
 
 <style lang="scss" scoped>
 .lg_body{
-    height: 100vh;
-    width: 100%;
-    background-image: url(../../assets/login-background.jpg);
+    // background-size: 100%;
+    background-image: url('../../assets/login-background.jpg');
     background-position: center center;
+    height: 100%;
 }
 
 .lg_card{

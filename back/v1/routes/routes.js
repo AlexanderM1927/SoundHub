@@ -14,4 +14,5 @@ All methods are define below this
 module.exports = function (app) {
 	// Users
 	app.post('/v1/login', UserController.login)
+	app.post('/v1/register', UserController.register)
 }

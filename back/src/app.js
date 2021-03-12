@@ -8,6 +8,30 @@ const bodyP   = require('body-parser')
 const cors    = require('cors')
 const app     = express()
 const http    = require('http').Server(app)
+const db      = require('../v1/models')
+const Role    = db.role
+
+db.sequelize.sync({force: true}).then(() => {
+  console.log('Drop and Resync Db')
+  initial()
+});
+
+function initial() {
+Role.create({
+    id: 1,
+    name: "user"
+});
+
+Role.create({
+    id: 2,
+    name: "moderator"
+});
+
+Role.create({
+    id: 3,
+    name: "admin"
+});
+}
 // const io      = require('socket.io')(http)
 
 // Framework instance
@@ -16,7 +40,7 @@ app.use(bodyP.urlencoded({ extended: false }));
 app.use(bodyP.json({limit: '50mb'}))
 app.use(cors())
 
-reqlib('./v1/routes/routes')(app)
+require('../v1/routes/routes')(app)
 
 ///////////////////////
 // Socket management //
