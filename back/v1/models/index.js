@@ -29,31 +29,145 @@ db.user = require("../models/user.js")(sequelize, Sequelize);
 db.role = require("../models/role.js")(sequelize, Sequelize);
 db.ban = require("../models/ban.js")(sequelize, Sequelize);
 db.sound = require("../models/sound.js")(sequelize, Sequelize);
+db.playlist = require("../models/playlist.js")(sequelize, Sequelize);
+db.comment = require("../models/comment.js")(sequelize, Sequelize);
+db.like = require("../models/like.js")(sequelize, Sequelize);
+db.favorite = require("../models/favorite.js")(sequelize, Sequelize);
 
 db.user.belongsTo(db.role, {
   foreignKey: { 
     name: "role_id",
-    allowNull: true
+    allowNull: false
   }
 });
 
 db.ban.belongsTo(db.user, {
   foreignKey: { 
     name: "user_id",
-    allowNull: true
+    allowNull: false
   }
 });
 
 db.ban.belongsTo(db.user, {
   foreignKey: { 
     name: "responsable_user_id",
-    allowNull: true
+    allowNull: false
   }
 });
 
 db.sound.belongsTo(db.user, {
   foreignKey: { 
     name: "user_id",
+    allowNull: false
+  }
+});
+
+db.playlist.belongsTo(db.user, {
+  foreignKey: { 
+    name: "user_id",
+    allowNull: false
+  }
+});
+
+db.sound.belongsToMany(db.playlist, {
+  through: "sounds_playlist",
+  as: "playlists",
+  foreignKey: "sound_id",
+});
+
+db.playlist.belongsToMany(db.sound, {
+  through: "sounds_playlist",
+  as: "sounds",
+  foreignKey: "playlist_id",
+});
+
+db.comment.belongsTo(db.user, {
+  foreignKey: { 
+    name: "user_id",
+    allowNull: false
+  }
+});
+
+db.comment.belongsTo(db.sound, {
+  foreignKey: { 
+    name: "sound_id",
+    allowNull: true
+  }
+});
+
+db.comment.belongsTo(db.playlist, {
+  foreignKey: { 
+    name: "playlist_id",
+    allowNull: true
+  }
+});
+
+db.like.belongsTo(db.user, {
+  foreignKey: { 
+    name: "user_id",
+    allowNull: false
+  }
+});
+
+db.like.belongsTo(db.sound, {
+  foreignKey: { 
+    name: "sound_id",
+    allowNull: true
+  }
+});
+
+db.like.belongsTo(db.playlist, {
+  foreignKey: { 
+    name: "playlist_id",
+    allowNull: true
+  }
+});
+
+db.like.belongsTo(db.comment, {
+  foreignKey: { 
+    name: "comment_id",
+    allowNull: true
+  }
+});
+
+db.favorite.belongsTo(db.user, {
+  foreignKey: { 
+    name: "user_id",
+    allowNull: false
+  }
+});
+
+db.favorite.belongsTo(db.sound, {
+  foreignKey: { 
+    name: "sound_id",
+    allowNull: true
+  }
+});
+
+db.favorite.belongsTo(db.playlist, {
+  foreignKey: { 
+    name: "playlist_id",
+    allowNull: true
+  }
+});
+
+db.view.belongsTo(db.user, {
+  foreignKey: { 
+    name: "user_id",
+    allowNull: false
+  }
+});
+
+db.view.belongsTo(db.sound, {
+  foreignKey: { 
+    name: "sound_id",
+    allowNull: true
+  }
+});
+
+db.view.belongsTo(db.playlist, {
+  foreignKey: { 
+    name: "playlist_id",
     allowNull: true
   }
 });

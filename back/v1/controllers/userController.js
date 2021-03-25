@@ -41,7 +41,7 @@ exports.register = async function(req, res) {
     username: req.body.username,
     email: req.body.email,
     password: password,
-    roleId: 1 
+    role_id: 1 
   });
   try {
     const savedUser = await user.save()
