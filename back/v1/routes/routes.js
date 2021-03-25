@@ -1,6 +1,6 @@
 'use strict'
 // Llamamos al middlewares
-// var md_auth = require('../../middlewares/authenticated');
+var verifyToken = require('/v1/routes/verifyToken');
 
 // Controllers
 const UserController 	= reqlib('/v1/controllers/userController.js');
@@ -15,4 +15,5 @@ module.exports = function (app) {
 	// Users
 	app.post('/v1/login', UserController.login)
 	app.post('/v1/register', UserController.register)
+	app.post('/v1/setrank', verifyToken, UserController.setRank) //middleware route
 }
