@@ -29,7 +29,7 @@ export const functions = {
         color: type
       })
     },
-    activateLoading (message, spinner = 0) {
+    activateLoading (message = 'Cargando', spinner = 0) {
       var show = {
         message: message
       }

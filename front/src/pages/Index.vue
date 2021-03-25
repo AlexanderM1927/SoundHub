@@ -35,12 +35,12 @@
                         @submit="login"
                         action="submit"
                         class="col-md-4 col-xs-12">
-                            <q-input outlined v-model="user.email" label="Email" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.user_email" label="Email" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
-                                    <q-icon color="grey" name="email" />
+                                    <q-icon color="grey" name="mail" />
                                 </template>
                             </q-input><br>
-                            <q-input outlined v-model="user.password" label="Clave" stack-label :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.user_password" label="Clave" stack-label :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="vpn_key" />
                                 </template>
@@ -63,7 +63,7 @@
                         @submit="register"
                         action="submit"
                         class="col-md-4 col-xs-12">
-                            <q-input outlined v-model="user.username" label="Nombre de usuario" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.user_name" label="Nombre" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="badge" />
                                 </template>
@@ -81,7 +81,7 @@
                                     <q-icon color="grey" :name="isPwd1 ? 'visibility_off' : 'visibility'" @click="isPwd1 = !isPwd1"/>
                                 </template>
                             </q-input><br/>
-                            <q-input outlined v-model="user.passwordConfirm" label="Confirmar clave" stack-label :type="isPwd2 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.user_passwordConfirm" label="Confirmar clave" stack-label :type="isPwd2 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="vpn_key" />
                                 </template>
@@ -111,10 +111,10 @@ export default {
     return {
       tab: 'sign_in',
       user: {
-        username: '',
-        email: '',
-        password: '',
-        passwordConfirm: ''
+        user_name: '',
+        user_email: '',
+        user_password: '',
+        user_passwordConfirm: ''
       },
       isPwd: true,
       isPwd1: true,
@@ -130,12 +130,16 @@ export default {
     },
     async register () {
       try {
-        await UserService.register(this.user)
-        this.alert('positive', 'Usuario creado correctamente')
+        this.activateLoading()
+        if (this.user.user_password === this.user.user_passwordConfirm) {
+          const request = await UserService.register(this.user)
+          if (request.status === 200) this.alert('positive', 'Usuario creado correctamente')
+        }
         this.tab = 'sign_in'
       } catch (error) {
         this.alert('negative', error.response.data.error)
       }
+      this.disableLoading()
     }
   }
 }
