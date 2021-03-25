@@ -27,12 +27,28 @@ db.sequelize = sequelize;
 
 db.user = require("../models/user.js")(sequelize, Sequelize);
 db.role = require("../models/role.js")(sequelize, Sequelize);
+db.ban = require("../models/ban.js")(sequelize, Sequelize);
+db.sound = require("../models/sound.js")(sequelize, Sequelize);
 
 db.user.belongsTo(db.role, {
   foreignKey: { 
-  name: "roleId",
-  allowNull: true
-}
+    name: "role_id",
+    allowNull: true
+  }
+});
+
+db.ban.belongsTo(db.user, {
+  foreignKey: { 
+    name: "user_id",
+    allowNull: true
+  }
+});
+
+db.sound.belongsTo(db.user, {
+  foreignKey: { 
+    name: "user_id",
+    allowNull: true
+  }
 });
 
 db.ROLES = ["user", "admin", "moderator"];

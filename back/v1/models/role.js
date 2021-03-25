@@ -1,11 +1,14 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, DateType) => {
   const Role = sequelize.define("roles", {
-    id: {
-      type: Sequelize.INTEGER,
+    role_id: {
+      type: DateType.INTEGER,
       primaryKey: true
     },
-    name: {
-      type: Sequelize.STRING
+    role_name: {
+      type: DateType.STRING
+    },
+    created_at: {
+      type: DateType.DATE
     }
   });
 

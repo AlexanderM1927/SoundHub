@@ -1,16 +1,32 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, DateType) => {
   const User = sequelize.define("users", {
-    username: {
-      type: Sequelize.STRING
+    user_id: {
+      type: DateType.INTEGER,
+      primaryKey: true
     },
-    email: {
-      type: Sequelize.STRING
+    user_identify: {
+      type: DateType.STRING
     },
-    password: {
-      type: Sequelize.STRING
+    user_email: {
+      type: DateType.STRING
     },
-    roleId: {
-      type: Sequelize.INTEGER
+    user_password: {
+      type: DateType.STRING
+    },
+    user_name: {
+      type: DateType.STRING
+    },
+    user_country: {
+      type: DateType.STRING
+    },
+    user_phone: {
+      type: DateType.STRING
+    },
+    role_id: {
+      type: DateType.INTEGER
+    },
+    created_at: {
+      type: DateType.DATE
     }
   });
 
