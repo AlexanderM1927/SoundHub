@@ -18,18 +18,18 @@ db.sequelize.sync({force: true}).then(() => {
 
 function initial() {
 Role.create({
-    id: 1,
-    name: "user"
+    role_id: 1,
+    role_name: "user"
 });
 
 Role.create({
-    id: 2,
-    name: "moderator"
+    role_id: 2,
+    role_name: "moderator"
 });
 
 Role.create({
-    id: 3,
-    name: "admin"
+    role_id: 3,
+    role_name: "admin"
 });
 }
 // const io      = require('socket.io')(http)

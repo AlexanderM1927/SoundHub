@@ -33,6 +33,7 @@ db.playlist = require("../models/playlist.js")(sequelize, Sequelize);
 db.comment = require("../models/comment.js")(sequelize, Sequelize);
 db.like = require("../models/like.js")(sequelize, Sequelize);
 db.favorite = require("../models/favorite.js")(sequelize, Sequelize);
+db.view = require("../models/view.js")(sequelize, Sequelize);
 
 db.user.belongsTo(db.role, {
   foreignKey: { 
