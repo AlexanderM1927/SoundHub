@@ -44,6 +44,13 @@ db.ban.belongsTo(db.user, {
   }
 });
 
+db.ban.belongsTo(db.user, {
+  foreignKey: { 
+    name: "responsable_user_id",
+    allowNull: true
+  }
+});
+
 db.sound.belongsTo(db.user, {
   foreignKey: { 
     name: "user_id",
