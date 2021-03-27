@@ -1,4 +1,4 @@
-import Api from './axios'
+import Api from '../boot/axios'
 
 export default {
   login (params) {
