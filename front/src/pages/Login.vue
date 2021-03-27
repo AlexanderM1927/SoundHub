@@ -3,7 +3,7 @@
       <img class="lg_img" src="../assets/login-img.svg">
       <div class="row">
           <div class="col-md-7"></div>
-          <div class="col-md-4 col-xs-12">
+          <div class="col-md-4 col-xs-12 lg_tab">
             <div class="box">
               Hola
             </div>
