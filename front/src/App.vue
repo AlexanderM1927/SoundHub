@@ -1,10 +1,18 @@
 <template>
-  <div id="q-app">
-    <router-view />
-  </div>
+  <ion-app>
+    <ion-router-outlet />
+  </ion-app>
 </template>
+
 <script>
-export default {
-  name: 'App'
-}
+import { IonApp, IonRouterOutlet } from '@ionic/vue';
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'App',
+  components: {
+    IonApp,
+    IonRouterOutlet
+  }
+});
 </script>

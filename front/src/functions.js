@@ -1,6 +1,10 @@
-import { QSpinnerGears, QSpinnerAudio } from 'quasar'
+import { IonButton, loadingController } from '@ionic/vue';
 export const functions = {
+  components: { IonButton },
   data () {
+    return {
+      loading: {}
+    }
   },
   methods: {
     validateForm (array, fun) {
@@ -15,13 +19,6 @@ export const functions = {
       }
       return isComplete
     },
-    goTo (location) {
-      this.$router.push('/' + location).catch(err => {
-        if (err._name === 'NavigationDuplicated') {
-          // console.log('it is in page')
-        }
-      })
-    },
     alert (type, msg) {
       this.$q.notify({
         position: 'top',
@@ -29,20 +26,17 @@ export const functions = {
         color: type
       })
     },
-    activateLoading (message = 'Cargando', spinner = 0) {
-      var show = {
-        message: message
-      }
-
-      if (spinner === 1) {
-        show.spinner = QSpinnerGears
-      } else if (spinner === 2) {
-        show.spinner = QSpinnerAudio
-      }
-      this.$q.loading.show(show)
+    async activateLoading () {
+      const loading = await loadingController.create({
+        cssClass: 'my-custom-class',
+        message: 'Please wait...',
+        // duration: this.timeout,
+      });
+      this.loading = loading
+      await loading.present();
     },
-    disableLoading () {
-      this.$q.loading.hide()
+    async disableLoading () {
+      await this.loading.dismiss();
     }
   }
 }
