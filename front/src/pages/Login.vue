@@ -1,11 +1,12 @@
 <template>
   <div class="lg_body">
+      <img class="lg_img" src="../assets/login-img.svg">
       <div class="row">
-          <div class="col-md-7">
-            <img class="lg_img" src="../assets/login-img.svg">
-          </div>
-          <div class="col-md-4 col-xs-12" style="opacity: 0.90;">
-
+          <div class="col-md-7"></div>
+          <div class="col-md-4 col-xs-12">
+            <div class="box">
+              Hola
+            </div>
           </div>
           <div class="col-1"></div>
       </div>
@@ -54,6 +55,13 @@ export default {
 </script>
 
 <style scoped>
+.box {
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0px 0px 0 rgba(0,0,0,.14), 0 0px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.3);
+}
+
 .lg_body{
     /* background-size: 100%; */
     background-image: url('../assets/login-background.jpg');

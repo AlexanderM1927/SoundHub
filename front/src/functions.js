@@ -1,4 +1,4 @@
-import { IonButton, loadingController } from '@ionic/vue';
+import { IonButton, loadingController, alertController } from '@ionic/vue';
 export const functions = {
   components: { IonButton },
   data () {
@@ -19,12 +19,14 @@ export const functions = {
       }
       return isComplete
     },
-    alert (type, msg) {
-      this.$q.notify({
-        position: 'top',
-        message: msg,
-        color: type
-      })
+    async alert (type, msg) {
+      const alert = await alertController
+        .create({
+          cssClass: type,
+          header: 'Alert',
+          message: msg
+        });
+      return alert.present();
     },
     async activateLoading () {
       const loading = await loadingController.create({
