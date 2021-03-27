@@ -1,11 +1,15 @@
 <template>
   <q-page>
+    <Navbar />
     <div class="lg_body">
-        <div class="row">
-            <div v-if="$q.screen.gt.xs" class="col-md-7 row">
+        <q-btn round color="grey" class="absolute-top-left q-mt-lg q-ml-md" to="/">
+            <i class="fas fa-arrow-left"></i>
+        </q-btn>
+        <div class="row justify-around">
+            <div v-if="$q.screen.gt.xs" class="col-md-7 col-sm-0 row">
                 <img class="lg_img" src="~/assets/login-img.svg">
             </div>
-            <div class="col-md-4 col-xs-12" style="opacity: 0.90;">
+            <div class="col-md-4 col-sm-9 col-xs-11" style="opacity: 0.90;">
                 <q-tabs
                 v-model="tab"
                 class="lg_tab"
@@ -48,8 +52,8 @@
                                     <q-icon color="grey" :name="isPwd ? 'visibility_off' : 'visibility'" @click="isPwd = !isPwd"/>
                                 </template>
                             </q-input>
-                            <div class="row q-my-sm">
-                                <a class="link">¿Olvidaste tu contraseña?</a>
+                            <div class="row q-mb-sm">
+                                <q-btn flat to="/recovery">¿Olvidaste tu contraseña?</q-btn>
                             </div>
                             <q-btn type="submit" class="full-width q-mt-sm" label="login" color="grey"/>
                         </q-form>
@@ -103,6 +107,7 @@
 <script>
 import UserService from '../services/UserService'
 import { functions } from '../functions.js'
+import Navbar from 'components/Navbar.vue'
 
 export default {
   name: 'PageIndex',
@@ -121,6 +126,7 @@ export default {
       isPwd2: true
     }
   },
+  components: { Navbar },
   methods: {
     async loginWithFacebook () {
       console.log('login-facebook')
@@ -145,12 +151,17 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+* {
+    font-family: 'Quicksand', sans-serif;
+}
+
 .lg_body{
-    // background-size: 100%;
     background-image: url('../assets/login-background.jpg');
     background-position: center center;
-    height: 100%;
+    height: 100vh;
 }
 
 .lg_card{
@@ -171,6 +182,8 @@ export default {
     width: 100%;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
 }
 
 .tablinks{
