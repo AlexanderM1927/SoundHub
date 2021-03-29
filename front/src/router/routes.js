@@ -21,6 +21,13 @@ const routes = [
       { name: 'perfil', path: '', component: () => import('pages/Index.vue'), meta: { title: 'Profile' } }
     ]
   },
+  {
+    name: 'logout',
+    path: '/logout',
+    meta: {
+      title: 'Logout', requireSession: true
+    }
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

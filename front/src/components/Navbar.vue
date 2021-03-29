@@ -28,7 +28,7 @@
             </q-item>
             <!--ITEMS-->
             <template v-for="(menuItem, index) in menuList">
-              <q-item class="light_font" :key="index" clickable :active="menuItem.label === 'Outbox'" v-ripple>
+              <q-item v-if="!menuItem.isLogin || (menuItem.isLogin && token)" class="light_font" :key="index" clickable :active="menuItem.label === 'Outbox'" v-ripple>
                 <q-item-section avatar>
                   <q-icon :name="menuItem.icon"/>
                 </q-item-section>
@@ -48,30 +48,34 @@
 import { functions } from '../functions.js'
 const menuList = [
   {
+    icon: 'far fa-home',
+    label: 'Inicio',
+    separator: true
+  },
+  {
     icon: 'far fa-user-circle',
     label: 'Perfil',
-    separator: true
+    separator: true,
+    isLogin: true
   },
   {
     icon: 'fas fa-heart',
     label: 'Favoritos',
-    separator: false
+    separator: false,
+    isLogin: true
   },
   {
     icon: 'fas fa-play',
     label: 'Mis listas',
-    separator: false
-  },
-  {
-    icon: 'fas fa-bell',
-    label: 'Notificaciones',
-    separator: true
+    separator: false,
+    isLogin: true
   },
   {
     icon: 'fas fa-sign-out-alt',
     iconColor: 'primary',
     label: 'Salir',
-    separator: false
+    separator: false,
+    isLogin: true
   }
 ]
 export default {
@@ -81,7 +85,8 @@ export default {
     return {
       search_content: '',
       side_options: true,
-      menuList
+      menuList,
+      token: localStorage.getItem('token')
     }
   },
   methods: {
