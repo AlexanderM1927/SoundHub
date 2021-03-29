@@ -43,14 +43,14 @@ export default function (/* { store, ssrContext } */) {
 
     if (!reqSession) {
       if (to.name === 'login' && localStorage.getItem('token')) {
-        next({ name: 'home' })
+        location.href = '/'
       } else {
         next()
       }
     } else if (localStorage.getItem('token')) {
       next()
     } else {
-      next({ name: 'login' })
+      location.href = 'login'
     }
   })
 
