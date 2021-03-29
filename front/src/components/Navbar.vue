@@ -28,7 +28,7 @@
             </q-item>
             <!--ITEMS-->
             <template v-for="(menuItem, index) in menuList">
-              <q-item v-if="!menuItem.isLogin || (menuItem.isLogin && token)" class="light_font" :key="index" clickable :active="menuItem.label === 'Outbox'" v-ripple>
+              <q-item @click="goTo(menuItem.to)" v-if="!menuItem.isLogin || (menuItem.isLogin && token)" class="light_font" :key="index" clickable :active="menuItem.label === 'Outbox'" v-ripple>
                 <q-item-section avatar>
                   <q-icon :name="menuItem.icon"/>
                 </q-item-section>
@@ -50,7 +50,8 @@ const menuList = [
   {
     icon: 'far fa-home',
     label: 'Inicio',
-    separator: true
+    separator: true,
+    to: '/'
   },
   {
     icon: 'far fa-user-circle',
@@ -75,7 +76,8 @@ const menuList = [
     iconColor: 'primary',
     label: 'Salir',
     separator: false,
-    isLogin: true
+    isLogin: true,
+    to: '/logout'
   }
 ]
 export default {
