@@ -15,6 +15,16 @@ const routes = [
       { path: '/recovery', component: () => import('pages/Recovery.vue') }
     ]
   },
+  {
+    path: '/perfil/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Login.vue') }
+    ],
+    meta: {
+      title: 'Perfil', requireSession: true // this params is only in session routes
+    }
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
