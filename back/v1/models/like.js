@@ -2,7 +2,8 @@ module.exports = (sequelize, DateType) => {
   const Like = sequelize.define("likes", {
     like_id: {
       type: DateType.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     user_id: {
       type: DateType.INTEGER
@@ -15,9 +16,6 @@ module.exports = (sequelize, DateType) => {
     },
     sound_id: {
       type: DateType.INTEGER
-    },
-    created_at: {
-      type: DateType.DATE
     }
   });
 

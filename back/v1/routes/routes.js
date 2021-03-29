@@ -1,6 +1,6 @@
 'use strict'
 // Llamamos al middlewares
-var verifyToken = require('/v1/routes/verifyToken');
+var verifyToken = reqlib('/v1/routes/verifyToken');
 
 // Controllers
 const UserController 	= reqlib('/v1/controllers/userController.js');

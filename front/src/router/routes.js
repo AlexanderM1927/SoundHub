@@ -1,37 +1,25 @@
 const routes = [
   {
     path: '/',
-    name: 'home',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
-    ],
-    meta: {
-      title: 'Home'
-    }
+      { name: 'home', path: '', component: () => import('pages/Index.vue'), meta: { title: 'SoundHub' } }
+    ]
   },
   {
     path: '/login',
-    name: 'login',
     component: () => import('layouts/LoginLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Login.vue') },
-      { path: '/recovery', component: () => import('pages/Recovery.vue') }
-    ],
-    meta: {
-      title: 'Login'
-    }
+      { name: 'login', path: '', component: () => import('pages/Login.vue'), meta: { title: 'Login' } },
+      { name: 'recovery', path: '/recovery', component: () => import('pages/Recovery.vue'), meta: { title: 'Recovery' } }
+    ]
   },
   {
     path: '/perfil/:id',
-    name: 'perfil',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
-    ],
-    meta: {
-      title: 'Perfil', requireSession: true // this params is only in session routes
-    }
+      { name: 'perfil', path: '', component: () => import('pages/Index.vue'), meta: { title: 'Profile' } }
+    ]
   },
   // Always leave this as last one,
   // but you can also remove it

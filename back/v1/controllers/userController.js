@@ -24,7 +24,7 @@ exports.login = async function(req, res) {
   const user = await User.findOne({ user_email: req.body.user_email });
   if (!user) return res.status(400).json({ error: 'Usuario no encontrado' });
 
-  const validPassword = await bcrypt.compare(req.body.user_password, user.password);
+  const validPassword = await bcrypt.compare(req.body.user_password, user.user_password);
   if (!validPassword) return res.status(400).json({ error: 'contraseña no válida' })
   
   const token = jwt.sign({
@@ -34,7 +34,10 @@ exports.login = async function(req, res) {
 
   res.header('auth-token', token).json({
       error: null,
-      data: {token}
+      data: {
+        token: token,
+        user: user
+      }
   })
 }
 

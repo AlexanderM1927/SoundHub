@@ -35,7 +35,7 @@
                     name="sign_in"
                     class="tabcontent">
                         <q-form
-                        @submit="login"
+                        @submit="login()"
                         action="submit"
                         class="col-md-4 col-xs-12">
                             <q-input outlined v-model="user.user_email" label="Email" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
@@ -63,7 +63,7 @@
                     name="sign_up"
                     class="tabcontent">
                         <q-form
-                        @submit="register"
+                        @submit="register()"
                         action="submit"
                         class="col-md-4 col-xs-12">
                             <q-input outlined v-model="user.user_name" label="Nombre" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
@@ -71,12 +71,12 @@
                                     <q-icon color="grey" name="badge" />
                                 </template>
                             </q-input><br>
-                            <q-input outlined type="mail" v-model="user.email" label="Email" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined type="mail" v-model="user.user_email" label="Email" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="email" />
                                 </template>
                             </q-input><br/>
-                            <q-input outlined v-model="user.password" label="Clave" stack-label :type="isPwd1 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input outlined v-model="user.user_password" label="Clave" stack-label :type="isPwd1 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="vpn_key" />
                                 </template>
@@ -129,16 +129,34 @@ export default {
       console.log('login-facebook')
     },
     async login () {
-      console.log('login')
+      try {
+        const data = {
+          user_email: this.user.user_email,
+          user_password: this.user.user_password
+        }
+        const request = await UserService.login(data)
+        if (request.status >= 200 & request.status < 300) {
+          localStorage.setItem('token', request.data.data.token)
+          localStorage.setItem('user', request.data.data.user)
+          this.goTo('/')
+        }
+      } catch (error) {
+        this.alert('negative', error.response.data.error)
+      }
     },
     async register () {
       try {
         this.activateLoading()
         if (this.user.user_password === this.user.user_passwordConfirm) {
           const request = await UserService.register(this.user)
-          if (request.status === 200) this.alert('positive', 'Usuario creado correctamente')
+          if (request.status === 200) {
+            this.alert('positive', 'Usuario creado correctamente')
+            this.tab = 'sign_in'
+          }
+        } else {
+          console.log(this.user)
+          this.alert('negative', 'Las claves no coinciden')
         }
-        this.tab = 'sign_in'
       } catch (error) {
         this.alert('negative', error.response.data.error)
       }
@@ -149,12 +167,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
-
-* {
-    font-family: 'Quicksand', sans-serif;
-}
-
 .lg_body{
     background-image: url('../assets/login-background.jpg');
     background-position: center center;

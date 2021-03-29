@@ -2,7 +2,8 @@ module.exports = (sequelize, DateType) => {
   const Ban = sequelize.define("bans", {
     ban_id: {
       type: DateType.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     user_id: {
       type: DateType.INTEGER
@@ -14,9 +15,6 @@ module.exports = (sequelize, DateType) => {
       type: DateType.STRING
     },
     ban_expires: {
-      type: DateType.DATE
-    },
-    created_at: {
       type: DateType.DATE
     }
   });

@@ -2,7 +2,8 @@ module.exports = (sequelize, DateType) => {
   const Comment = sequelize.define("comments", {
     comment_id: {
       type: DateType.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     comment_msg: {
       type: DateType.STRING
@@ -15,9 +16,6 @@ module.exports = (sequelize, DateType) => {
     },
     sound_id: {
       type: DateType.INTEGER
-    },
-    created_at: {
-      type: DateType.DATE
     }
   });
 
