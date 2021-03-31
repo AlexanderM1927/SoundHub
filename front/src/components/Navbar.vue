@@ -13,7 +13,7 @@
         :width="300"
         :breakpoint="500"
         bordered
-        content-class="bg-grey"
+        content-class="bg-grey q-pt-md"
       >
         <q-scroll-area class="fit">
           <q-list>
