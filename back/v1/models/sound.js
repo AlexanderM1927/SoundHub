@@ -13,6 +13,9 @@ module.exports = (sequelize, DateType) => {
     },
     sound_file_url: {
       type: DateType.STRING
+    },
+    sound_thumbnail_url: {
+      type: DateType.STRING
     }
   });
 
