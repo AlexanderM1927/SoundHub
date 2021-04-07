@@ -19,7 +19,7 @@
           <q-list>
             <!--SEARCH BAR-->
             <q-item>
-              <q-input dark dense borderless v-model="search_content" class="q-ml-xs search_input full-width" placeholder="Buscar...">
+              <q-input dark dense borderless @keyup="search()" v-model="search_content" class="q-ml-xs search_input full-width" placeholder="Buscar...">
                 <template v-slot:prepend>
                     <q-icon v-if="search_content === ''" name="fas fa-search" />
                     <q-icon v-else name="fas fa-times" class="cursor-pointer" @click="search_content = ''" />
@@ -28,7 +28,7 @@
             </q-item>
             <!--ITEMS-->
             <template v-for="(menuItem, index) in menuList">
-              <q-item @click="goTo(menuItem.to)" v-if="!menuItem.isLogin || (menuItem.isLogin && token)" class="light_font" :key="index" clickable :active="menuItem.label === 'Outbox'" v-ripple>
+              <q-item @click="goTo(menuItem.to)" v-if="menuItem.isLogin === undefined || (menuItem.isLogin && token) || (!menuItem.isLogin && !token)" class="light_font" :key="index" clickable :active="menuItem.label === 'Outbox'" v-ripple>
                 <q-item-section avatar>
                   <q-icon :name="menuItem.icon"/>
                 </q-item-section>
@@ -52,6 +52,13 @@ const menuList = [
     label: 'Inicio',
     separator: true,
     to: '/'
+  },
+  {
+    icon: 'far fa-sign-in',
+    label: 'Login',
+    separator: true,
+    to: '/login',
+    isLogin: false
   },
   {
     icon: 'far fa-user-circle',
@@ -94,6 +101,11 @@ export default {
   methods: {
     delete_search () {
       this.search_content = ''
+    },
+    async search () {
+      await this.$store.dispatch('videos/getItemsByName', {
+        name: this.search_content
+      })
     }
   }
 }

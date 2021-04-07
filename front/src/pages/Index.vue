@@ -1,5 +1,7 @@
 <template>
   <q-page>
+    Hola<br>
+    {{searchResults}}
   </q-page>
 </template>
 
@@ -11,6 +13,13 @@ export default {
   mixins: [functions],
   data () {
     return {
+    }
+  },
+  computed: {
+    searchResults: {
+      get () {
+        return this.$store.state.videos.searchResults
+      }
     }
   },
   methods: {
