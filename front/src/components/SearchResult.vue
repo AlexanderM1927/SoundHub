@@ -1,17 +1,17 @@
 <template>
     <div class="container row search_item justify-around">
-        <q-img src="../assets/search-thumbnail.jpg" class="col-3 q-my-sm"></q-img>
+        <q-img :src="result.thumbnail.thumbnails[0].url" class="col-3 q-my-sm"></q-img>
         <div class="content q-my-sm col-8" >
-            <p class="item_title item_font">Título del vídeo</p>
-            <p class="item_font">100,000 reproducciones | Subido 1 año</p>
-            <p class="item_font">Descripción básica del vídeo de mierda</p>
+            <p class="item_title item_font">{{result.title}}</p>
+            <p class="item_font">{{result.length.accessibility.accessibilityData.label}}</p>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-  name: 'SearchResult'
+  name: 'SearchResult',
+  props: ['result']
 }
 </script>
 

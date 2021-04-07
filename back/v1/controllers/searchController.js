@@ -3,9 +3,9 @@
 const youtubesearchapi = require('youtube-search-api');
 
 exports.search = async function(req, res) {
-  const { NAME } = req.query
-    // console.log(NAME)
-    const youtube = await youtubesearchapi.GetListByKeyword(NAME, false)
+  const name = req.params.name
+    // console.log(name)
+    const youtube = await youtubesearchapi.GetListByKeyword(name, false)
     // console.log(youtube)
     const results = {
       items: [],

@@ -24,6 +24,13 @@ const routes = [
     ]
   },
   {
+    path: '/search/:name',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { name: 'search', path: '', component: () => import('pages/Search.vue'), meta: { title: 'Search' } }
+    ]
+  },
+  {
     name: 'logout',
     path: '/logout',
     meta: {

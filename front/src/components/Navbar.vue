@@ -98,14 +98,24 @@ export default {
       token: localStorage.getItem('token')
     }
   },
+  computed: {
+    searchText: {
+      get () {
+        return this.$store.state.videos.searchText
+      }
+    }
+  },
+  watch: {
+    searchText () {
+      this.search_content = this.searchText
+    }
+  },
   methods: {
     delete_search () {
       this.search_content = ''
     },
-    async search () {
-      await this.$store.dispatch('videos/getItemsByName', {
-        name: this.search_content
-      })
+    search () {
+      location.href = '/search/' + this.search_content
     }
   }
 }
