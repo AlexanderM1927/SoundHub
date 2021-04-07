@@ -3,7 +3,9 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { name: 'home', path: '', component: () => import('pages/Index.vue'), meta: { title: 'SoundHub' } }
+      { name: 'home', path: '', component: () => import('pages/Index.vue'), meta: { title: 'SoundHub' } },
+      { name: 'search', path: '/search', component: () => import('pages/Search.vue'), meta: { title: 'SoundHub' } },
+      { name: 'play', path: '/play', component: () => import('pages/Play.vue'), meta: { title: 'SoundHub' } }
     ]
   },
   {
