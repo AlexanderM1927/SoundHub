@@ -19,7 +19,7 @@
           <q-list>
             <!--SEARCH BAR-->
             <q-item>
-              <q-input dark dense borderless @keyup="search()" v-model="search_content" class="q-ml-xs search_input full-width" placeholder="Buscar...">
+              <q-input dark dense borderless @keyup.enter="search()" v-model="search_content" class="q-ml-xs search_input full-width" placeholder="Buscar...">
                 <template v-slot:prepend>
                     <q-icon v-if="search_content === ''" name="fas fa-search" />
                     <q-icon v-else name="fas fa-times" class="cursor-pointer" @click="search_content = ''" />

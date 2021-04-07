@@ -1,5 +1,5 @@
 'use strict'
-import ytdl from 'ytdl-core';
+// import ytdl from 'ytdl-core'; // this is for download
 const youtubesearchapi = require('youtube-search-api');
 
 exports.search = async function(req, res) {
