@@ -7,7 +7,7 @@
   "scripts": {
     "start": "nodemon src/app.js"
   },
-  "author": "Geckode <info@geckode.la>",
+  "author": "SoftCorp <@SoftCorp>",
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
