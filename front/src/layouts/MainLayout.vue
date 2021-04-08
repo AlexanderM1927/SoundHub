@@ -7,7 +7,7 @@
     </q-page-container>
     <div id='player' class='inactive'>
       <div class='row'>
-        <div class='col-4'>
+        <div class='col-md-4 col-xs-2'>
           <center>
             <q-btn
               v-if='isPlaying'
@@ -27,7 +27,7 @@
             />
           </center>
         </div>
-        <div class='col-8'>
+        <div class='col-md-1 col-xs-2'>
           <q-btn
             color="primary"
             flat
@@ -36,8 +36,12 @@
             size="xl"
             @click="wavesurfer.skipBackward(1)"
           />
-          <div id='waveform' style="float: left;"></div>
-            <q-btn
+        </div>
+        <div class="col-md-6 col-xs-6">
+          <div id='waveform' style="width: 100%;"></div>
+        </div>
+        <div class="col-md-1 col-xs-2">
+          <q-btn
             color="primary"
             flat
             round
@@ -89,10 +93,10 @@ export default {
       this.wavesurfer = WaveSurfer.create({
         container: '#waveform',
         hideScrollbar: true,
-        waveColor: 'black',
-        // progressColor: 'hsla(200, 100%, 30%, 0.5)',
-        cursorColor: '#000',
-        barWidth: 1
+        waveColor: 'white',
+        progressColor: 'hsla(200, 100%, 30%, 0.5)',
+        cursorColor: '#fff',
+        barWidth: 3
       })
       this.wavesurfer.on('error', err => {
         console.error(err)
@@ -109,7 +113,6 @@ export default {
     loadFile (url) {
       if (!this.wavesurfer) this.createWaveSurfer()
       this.wavesurfer.load(url)
-      console.log(this.wavesurfer)
     }
   }
 }
