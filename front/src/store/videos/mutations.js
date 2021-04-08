@@ -14,3 +14,7 @@ export const setSearchText = (state, payload) => {
 export const setLoading = (state, payload) => {
   state.loading = payload
 }
+
+export const setSong = (state, payload) => {
+  state.song = payload
+}

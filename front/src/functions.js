@@ -39,6 +39,14 @@ export const functions = {
     },
     disableLoading () {
       this.$q.loading.hide()
+    },
+    async abrirReproductor (result) {
+      await this.$store.dispatch('videos/getSongByUrl', {
+        url: result.id
+      })
+      if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
+        document.getElementById('player').classList.toggle('inactive')
+      }
     }
   }
 }

@@ -20,4 +20,5 @@ module.exports = function (app) {
 
 	// Searches
 	app.get('/v1/search/:name', SearchController.search)
+	app.get('/v1/download/:url', SearchController.download)
 }
