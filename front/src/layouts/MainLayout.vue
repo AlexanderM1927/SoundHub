@@ -109,7 +109,7 @@ export default {
     loadFile (url) {
       if (!this.wavesurfer) this.createWaveSurfer()
       this.wavesurfer.load(url)
-      this.wavesurfer.playPause()
+      console.log(this.wavesurfer)
     }
   }
 }

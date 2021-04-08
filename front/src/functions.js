@@ -16,7 +16,11 @@ export const functions = {
       return isComplete
     },
     goTo (location) {
-      window.location.href = location
+      this.$router.push('/' + location).catch(err => {
+        if (err._name === 'NavigationDuplicated') {
+          // console.log('it is in page')
+        }
+      })
     },
     alert (type, msg) {
       this.$q.notify({

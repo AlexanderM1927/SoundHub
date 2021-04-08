@@ -114,8 +114,12 @@ export default {
     delete_search () {
       this.search_content = ''
     },
-    search () {
-      location.href = '/search/' + this.search_content
+    async search () {
+      await this.$store.dispatch('videos/getItemsByName', {
+        name: this.search_content
+      })
+      this.goTo('search/' + this.search_content)
+      // location.href = '/search/' + this.search_content
     }
   }
 }
