@@ -1,5 +1,5 @@
 'use strict'
-// import ytdl from 'ytdl-core'; // this is for download
+const ytdl = require('ytdl-core'); // this is for download
 const youtubesearchapi = require('youtube-search-api');
 
 exports.search = async function(req, res) {
@@ -22,5 +22,20 @@ exports.search = async function(req, res) {
     })
   } catch (error) {
     res.status(400).json({error})
+  }
+}
+
+exports.download = async function(req, res) {
+  try {
+    const url = req.params.url;
+    // if (downloadFormat === 'audio-only') {
+      res.setHeader("Content-Type", "audio/mp3");
+      // res.set('content-type', 'audio/mpeg');
+      ytdl(url, {
+        quality: 'lowestaudio'
+      }).pipe(res);
+    // }
+  } catch (e) {
+    console.log(e);
   }
 }

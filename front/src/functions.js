@@ -16,7 +16,11 @@ export const functions = {
       return isComplete
     },
     goTo (location) {
-      window.location.href = location
+      this.$router.push('/' + location).catch(err => {
+        if (err._name === 'NavigationDuplicated') {
+          // console.log('it is in page')
+        }
+      })
     },
     alert (type, msg) {
       this.$q.notify({
@@ -39,6 +43,14 @@ export const functions = {
     },
     disableLoading () {
       this.$q.loading.hide()
+    },
+    async abrirReproductor (result) {
+      await this.$store.dispatch('videos/getSongByUrl', {
+        url: result.id
+      })
+      if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
+        document.getElementById('player').classList.toggle('inactive')
+      }
     }
   }
 }

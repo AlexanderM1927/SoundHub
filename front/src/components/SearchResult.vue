@@ -1,5 +1,5 @@
 <template>
-    <div class="container row search_item justify-around">
+    <div @click="abrirReproductor(result)" class="container row search_item justify-around">
         <q-img :src="result.thumbnail.thumbnails[0].url" class="col-3 q-my-sm"></q-img>
         <div class="content q-my-sm col-8" >
             <p class="item_title item_font">{{result.title}}</p>
@@ -9,9 +9,16 @@
 </template>
 
 <script>
+import { functions } from '../functions.js'
+
 export default {
+  mixins: [functions],
   name: 'SearchResult',
-  props: ['result']
+  props: ['result'],
+  data () {
+    return {
+    }
+  }
 }
 </script>
 
