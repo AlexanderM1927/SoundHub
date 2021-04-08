@@ -3,7 +3,7 @@
     <q-header elevated class="bg-grey">
         <q-toolbar>
           <q-btn flat @click="side_options = !side_options" round dense icon="menu" />
-          <q-toolbar-title>SoundHub</q-toolbar-title>
+          <q-toolbar-title class="uwu">SoundHub</q-toolbar-title>
         </q-toolbar>
       </q-header>
 
@@ -36,8 +36,9 @@
                   {{ menuItem.label }}
                 </q-item-section>
               </q-item>
-              <q-separator :key="'sep' + index"  v-if="menuItem.separator" />
             </template>
+            <!--ITEMS-->
+            <NavLink v-for="menu in menuList" :key="menu.title" v-bind="to" />
           </q-list>
         </q-scroll-area>
       </q-drawer>
@@ -46,49 +47,50 @@
 
 <script>
 import { functions } from '../functions.js'
+import { NavLink } from './NavLink'
 const menuList = [
   {
+    title: 'Inicio',
     icon: 'far fa-home',
-    label: 'Inicio',
-    separator: true,
-    to: '/'
+    to: '/',
+    separator: true
   },
   {
+    title: 'Login',
     icon: 'far fa-sign-in',
-    label: 'Login',
-    separator: true,
     to: '/login',
+    separator: true,
     isLogin: false
   },
   {
+    title: 'Perfil',
     icon: 'far fa-user-circle',
-    label: 'Perfil',
     separator: true,
     isLogin: true
   },
   {
+    title: 'Favoritos',
     icon: 'fas fa-heart',
-    label: 'Favoritos',
     separator: false,
     isLogin: true
   },
   {
+    title: 'Mis listas',
     icon: 'fas fa-play',
-    label: 'Mis listas',
     separator: false,
     isLogin: true
   },
   {
+    title: 'Salir',
     icon: 'fas fa-sign-out-alt',
-    iconColor: 'primary',
-    label: 'Salir',
+    to: '/logout',
     separator: false,
-    isLogin: true,
-    to: '/logout'
+    isLogin: true
   }
 ]
 export default {
   name: 'Navbar',
+  components: { NavLink },
   mixins: [functions],
   data () {
     return {
@@ -132,5 +134,10 @@ export default {
 .light_font {
   color: #f5f5f5;
   font-size: 16px;
+}
+
+.uwu {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
 }
 </style>
