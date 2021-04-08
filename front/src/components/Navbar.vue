@@ -86,7 +86,7 @@ export default {
   data () {
     return {
       search_content: '',
-      side_options: true,
+      side_options: false,
       menuList,
       token: localStorage.getItem('token')
     }
