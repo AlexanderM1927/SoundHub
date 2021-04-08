@@ -28,17 +28,8 @@
             </q-item>
             <!--ITEMS-->
             <template v-for="(menuItem, index) in menuList">
-              <q-item @click="goTo(menuItem.to)" v-if="menuItem.isLogin === undefined || (menuItem.isLogin && token) || (!menuItem.isLogin && !token)" class="light_font" :key="index" clickable :active="menuItem.label === 'Outbox'" v-ripple>
-                <q-item-section avatar>
-                  <q-icon :name="menuItem.icon"/>
-                </q-item-section>
-                <q-item-section >
-                  {{ menuItem.label }}
-                </q-item-section>
-              </q-item>
+              <NavLink :menuItem="menuItem" :token="token" :key="index" />
             </template>
-            <!--ITEMS-->
-            <NavLink v-for="menu in menuList" :key="menu.title" v-bind="to" />
           </q-list>
         </q-scroll-area>
       </q-drawer>
@@ -47,7 +38,7 @@
 
 <script>
 import { functions } from '../functions.js'
-import { NavLink } from './NavLink'
+import NavLink from './NavLink'
 const menuList = [
   {
     title: 'Inicio',

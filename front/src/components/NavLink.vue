@@ -1,49 +1,24 @@
 <template>
-  <q-item
-    clickable
-    tag="a"
-    target="_blank"
-    :href="to"
-    class="item-container q-pt-lg q-pb-lg"
-  >
-    <!--ICON-->
-    <q-item-section
-      v-if="icon"
-      avatar
-      class="item-content"
-    >
-      <q-icon :name="icon" />
+  <q-item @click="goLocation(menuItem.to)" v-if="menuItem.isLogin === undefined || (menuItem.isLogin && token) || (!menuItem.isLogin && !token)" class="light_font" clickable :active="menuItem.label === 'Outbox'" v-ripple>
+    <q-item-section avatar>
+      <q-icon :name="menuItem.icon"/>
     </q-item-section>
-    <!--TITLE -->
-    <q-item-section class="item-content">
-      <q-item-label>{{ title }}</q-item-label>
+    <q-item-section >
+      {{ menuItem.title }}
     </q-item-section>
-    <q-separator :key="'sep' + index"  v-if="menuItem.separator" />
   </q-item>
 </template>
 
 <script>
+import { functions } from '../functions.js'
 export default {
-  name: 'NavLink',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    icon: {
-      type: String,
-      default: ''
-    },
-    to: {
-      type: String,
-      default: '#',
-      required: true
-    },
-    separator: {
-      type: Boolean,
-      default: false
+  mixins: [functions],
+  data () {
+    return {
     }
-  }
+  },
+  name: 'NavLink',
+  props: ['menuItem', 'token']
 }
 </script>
 

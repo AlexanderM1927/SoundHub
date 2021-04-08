@@ -22,6 +22,9 @@ export const functions = {
         }
       })
     },
+    goLocation (url) {
+      location.href = url
+    },
     alert (type, msg) {
       this.$q.notify({
         position: 'top',
