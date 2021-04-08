@@ -94,7 +94,7 @@ export default {
   computed: {
     searchText: {
       get () {
-        return this.$store.state.videos.searchText
+        return this.$store.state.sounds.searchText
       }
     }
   },
@@ -108,7 +108,7 @@ export default {
       this.search_content = ''
     },
     async search () {
-      await this.$store.dispatch('videos/getItemsByName', {
+      await this.$store.dispatch('sounds/getItemsByName', {
         name: this.search_content
       })
       this.goTo('search/' + this.search_content)

@@ -48,7 +48,7 @@ export const functions = {
       this.$q.loading.hide()
     },
     async abrirReproductor (result) {
-      await this.$store.dispatch('videos/getSongByUrl', {
+      await this.$store.dispatch('sounds/getSongByUrl', {
         url: result.id
       })
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {

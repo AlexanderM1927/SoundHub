@@ -79,7 +79,7 @@ export default {
     },
     song: {
       get () {
-        return this.$store.state.videos.song
+        return this.$store.state.sounds.song
       }
     }
   },

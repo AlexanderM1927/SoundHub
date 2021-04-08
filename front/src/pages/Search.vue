@@ -24,12 +24,12 @@ export default {
   computed: {
     searchResults: {
       get () {
-        return this.$store.state.videos.searchResults
+        return this.$store.state.sounds.searchResults
       }
     },
     loading: {
       get () {
-        return this.$store.state.videos.loading
+        return this.$store.state.sounds.loading
       }
     }
   },
@@ -43,7 +43,7 @@ export default {
     }
   },
   async mounted () {
-    await this.$store.dispatch('videos/getItemsByName', {
+    await this.$store.dispatch('sounds/getItemsByName', {
       name: this.$route.params.name
     })
   },

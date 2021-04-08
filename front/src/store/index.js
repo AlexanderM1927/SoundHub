@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import videos from './videos'
+import sounds from './sounds'
 // import example from './module-example'
 
 Vue.use(Vuex)
@@ -17,7 +17,7 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      videos
+      sounds
       // example
     },
 
