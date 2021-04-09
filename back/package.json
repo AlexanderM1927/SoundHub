@@ -10,8 +10,6 @@
   "author": "SoftCorp <@SoftCorp>",
   "license": "ISC",
   "dependencies": {
-    "youtube-search-api": "^1.0.9",
-    "ytdl-core": "^4.5.0",
     "@hapi/joi": "^17.1.1",
     "app-root-path": "^3.0.0",
     "axios": "^0.19.2",
@@ -20,12 +18,14 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "formidable": "^1.2.2",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.28",
     "mongoose": "^5.9.6",
     "mongoose-pagination": "^1.0.0",
+    "multer": "^1.4.2",
     "node-excel-export": "^1.4.4",
     "nodemailer": "^6.4.6",
     "nodemon": "^2.0.2",
@@ -36,7 +36,9 @@
     "socket.io": "^2.3.0",
     "to": "^0.2.9",
     "update": "^0.7.4",
-    "user-agent-parser": "^0.6.0"
+    "user-agent-parser": "^0.6.0",
+    "youtube-search-api": "^1.0.9",
+    "ytdl-core": "^4.5.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0"

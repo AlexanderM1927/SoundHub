@@ -1,5 +1,5 @@
 <template>
-  <q-item @click="goLocation(menuItem.to)" v-if="menuItem.isLogin === undefined || (menuItem.isLogin && token) || (!menuItem.isLogin && !token)" class="light_font" clickable :active="menuItem.label === 'Outbox'" v-ripple>
+  <q-item @click="goLocation(menuItem.to)" v-if="menuItem.requireSession === undefined || (menuItem.requireSession && token) || (!menuItem.requireSession && !token)" class="light_font" clickable :active="menuItem.label === 'Outbox'" v-ripple>
     <q-item-section avatar>
       <q-icon :name="menuItem.icon"/>
     </q-item-section>

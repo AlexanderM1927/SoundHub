@@ -47,36 +47,42 @@ const menuList = [
     separator: true
   },
   {
-    title: 'Login',
-    icon: 'far fa-sign-in',
-    to: '/login',
-    separator: true,
-    isLogin: false
-  },
-  {
     title: 'Perfil',
     icon: 'far fa-user-circle',
     separator: true,
-    isLogin: true
+    requireSession: true
   },
   {
     title: 'Favoritos',
     icon: 'fas fa-heart',
     separator: false,
-    isLogin: true
+    requireSession: true
   },
   {
     title: 'Mis listas',
     icon: 'fas fa-play',
     separator: false,
-    isLogin: true
+    requireSession: true
+  },
+  {
+    title: 'Mis canciones',
+    icon: 'fas fa-music',
+    to: '/sound',
+    separator: false
+  },
+  {
+    title: 'Login',
+    icon: 'far fa-sign-in',
+    to: '/login',
+    separator: true,
+    requireSession: false
   },
   {
     title: 'Salir',
     icon: 'fas fa-sign-out-alt',
     to: '/logout',
     separator: false,
-    isLogin: true
+    requireSession: true
   }
 ]
 export default {

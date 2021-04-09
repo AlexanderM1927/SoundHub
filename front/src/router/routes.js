@@ -29,6 +29,13 @@ const routes = [
     ]
   },
   {
+    path: '/sound',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { name: 'sound', path: '', component: () => import('pages/Sound.vue'), meta: { title: 'My songs' } }
+    ]
+  },
+  {
     name: 'logout',
     path: '/logout',
     meta: {
