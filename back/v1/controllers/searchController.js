@@ -53,8 +53,12 @@ exports.download = async function(req, res) {
         quality: 'lowestaudio'
       }).pipe(res);
     } else {
-      const sound = await Sound.findOne({ id: url })
-      const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound.sound_file_url);
+      const sound = await Sound.findAll({ 
+        where: {
+          sound_id: url 
+        }
+      })
+      const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound[0].sound_file_url);
       const readStream = fileSystem.createReadStream(filePath);
       readStream.pipe(res)
     }

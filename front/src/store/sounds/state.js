@@ -3,7 +3,7 @@ export default function () {
     searchResults: null,
     loading: false,
     searchText: '',
-    song: ''
+    song: null
     //
   }
 }

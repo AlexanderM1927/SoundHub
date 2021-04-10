@@ -2,7 +2,7 @@
   <q-page>
     <div class="row justify-around">
       <div class="col-md-8 col-xs-12 container">
-        <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
+        <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
         <div v-bind:key="result.id" v-for="result in sounds">
             <SearchResultSound :result="result" />
             <q-separator></q-separator>
@@ -24,7 +24,8 @@ export default {
   name: 'PageSounds',
   data () {
     return {
-      sounds: []
+      sounds: [],
+      token: localStorage.getItem('token')
     }
   },
   mounted () {
@@ -36,7 +37,7 @@ export default {
         if (localStorage.getItem('token')) {
           const params = {
             user_id: JSON.parse(localStorage.getItem('user')).user_id,
-            token: localStorage.getItem('token')
+            token: this.token
           }
           const request = await SoundService.getMySounds(params)
           this.sounds = request.data.data.items
@@ -60,6 +61,7 @@ export default {
           const token = localStorage.getItem('token')
           const request = await SoundService.store(formData, token)
           if (request.status >= 200 && request.status < 300) this.alert('positive', 'Se agrego la canción correctamente')
+          this.getMySounds()
           this.disableLoading()
         } catch (error) {
           for (let i = 0; i < error.response.data.error.errors.length; i++) {

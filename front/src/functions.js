@@ -48,22 +48,57 @@ export const functions = {
       this.$q.loading.hide()
     },
     async abrirReproductor (result) {
-      this.activateLoading()
-      if (result.type === 'video') {
-        await this.$store.dispatch('sounds/getSongByUrl', {
-          url: result.id,
-          type: result.type
+      const song = this.$store.state.sounds.song
+      if (song) {
+        this.$q.dialog({
+          title: 'Cambiar de canción',
+          message: 'Actualmente tienes una canción, deseas cambiarla?',
+          cancel: true,
+          persistent: true,
+          result: result,
+          dark: true
+        }).onOk(async () => {
+          this.activateLoading()
+          if (result.type === 'video') {
+            await this.$store.dispatch('sounds/getSongByUrl', {
+              url: result.id,
+              type: result.type
+            })
+          } else if (result.type === 'sound') {
+            await this.$store.dispatch('sounds/getSongByUrl', {
+              url: result.sound_id,
+              type: result.type
+            })
+          }
+          if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
+            document.getElementById('player').classList.toggle('inactive')
+          }
+          this.disableLoading()
+        }).onOk(() => {
+          // console.log('>>>> second OK catcher')
+        }).onCancel(() => {
+          // console.log('>>>> Cancel')
+        }).onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
         })
-      } else if (result.type === 'sound') {
-        await this.$store.dispatch('sounds/getSongByUrl', {
-          url: result.sound_id,
-          type: result.type
-        })
+      } else {
+        this.activateLoading()
+        if (result.type === 'video') {
+          await this.$store.dispatch('sounds/getSongByUrl', {
+            url: result.id,
+            type: result.type
+          })
+        } else if (result.type === 'sound') {
+          await this.$store.dispatch('sounds/getSongByUrl', {
+            url: result.sound_id,
+            type: result.type
+          })
+        }
+        if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
+          document.getElementById('player').classList.toggle('inactive')
+        }
+        this.disableLoading()
       }
-      if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
-        document.getElementById('player').classList.toggle('inactive')
-      }
-      this.disableLoading()
     },
     cerrarReproductor () {
       if (document.getElementById('player') && !document.getElementById('player').classList.contains('inactive')) {
