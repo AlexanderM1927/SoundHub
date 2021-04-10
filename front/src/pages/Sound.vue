@@ -35,10 +35,12 @@ export default {
           formData.append('user_id', JSON.parse(localStorage.getItem('user')).user_id)
           const token = localStorage.getItem('token')
           const request = await SoundService.store(formData, token)
-          console.log(request)
+          if (request.status >= 200 && request.status < 300) this.alert('positive', 'Se agrego la canción correctamente')
           this.disableLoading()
         } catch (error) {
-          console.log(error)
+          for (let i = 0; i < error.response.data.error.errors.length; i++) {
+            this.alert('negative', error.response.data.error.errors[i].message)
+          }
           this.disableLoading()
         }
       }).onCancel(() => {

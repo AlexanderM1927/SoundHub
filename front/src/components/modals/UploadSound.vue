@@ -51,7 +51,7 @@
                 </q-icon>
               </template>
             </q-file>
-            <q-input outlined v-model="sound.sound_name" label="Nombre de la canción" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
+            <q-input outlined v-model="sound.sound_name" label="Nombre de la canción" stack-label :rules="[val => !!val || 'Este campo es necesario']">
                 <template v-slot:prepend>
                     <q-icon color="grey" name="badge" />
                 </template>

@@ -48,12 +48,23 @@ export const functions = {
       this.$q.loading.hide()
     },
     async abrirReproductor (result) {
-      await this.$store.dispatch('sounds/getSongByUrl', {
-        url: result.id
-      })
+      if (result.type === 'video') {
+        await this.$store.dispatch('sounds/getSongByUrl', {
+          url: result.id,
+          type: result.type
+        })
+      } else if (result.type === 'sound') {
+        await this.$store.dispatch('sounds/getSongByUrl', {
+          url: result.sound_id,
+          type: result.type
+        })
+      }
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
         document.getElementById('player').classList.toggle('inactive')
       }
+    },
+    getSrcFromBackend (url) {
+      return process.env.API_URL.replace('v1/', '') + url.replace('public', '')
     }
   }
 }

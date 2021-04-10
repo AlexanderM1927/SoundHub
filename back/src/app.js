@@ -10,6 +10,7 @@ const app     = express()
 const http    = require('http').Server(app)
 const db      = require('../v1/models')
 const Role    = db.role
+app.use(express.static(__dirname+'/public'));
 
 db.sequelize.sync();
 

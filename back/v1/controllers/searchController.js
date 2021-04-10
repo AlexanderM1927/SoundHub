@@ -1,18 +1,36 @@
 'use strict'
 const ytdl = require('ytdl-core'); // this is for download
 const youtubesearchapi = require('youtube-search-api');
+const Sound = require('../models').sound
+const { Op } = require("sequelize");
+const path = require('path');
+const fileSystem = require('fs');
 
 exports.search = async function(req, res) {
   const name = req.params.name
     // console.log(name)
     const youtube = await youtubesearchapi.GetListByKeyword(name, false)
-    // console.log(youtube)
+    const sounds = await Sound.findAll({
+      where: {
+        sound_name: {
+          [Op.iLike]: '%' + name + '%'
+        }
+      }
+    })
     const results = {
       items: [],
       nextPage: {}
     }
+    for (let i = 0; i < sounds.length; i++) {
+      const sound = {
+        type: 'sound'
+      }
+      Object.assign(sound, sounds[i].dataValues)
+      results.items.push(sound)
+    }
     for (let i = 0; i < youtube.items.length; i++) {
-      if (youtube.items[i].type === 'video') results.items.push(youtube.items[i])
+      const video = youtube.items[i]
+      if (video.type === 'video') results.items.push(video)
     }
     results.nextPage = youtube.nextPage
   try {
@@ -28,13 +46,18 @@ exports.search = async function(req, res) {
 exports.download = async function(req, res) {
   try {
     const url = req.params.url;
-    // if (downloadFormat === 'audio-only') {
-      res.setHeader("Content-Type", "audio/mp3");
-      // res.set('content-type', 'audio/mpeg');
+    const type = req.params.type;
+    res.setHeader("Content-Type", "audio/mpeg");
+    if (type === 'video') {
       ytdl(url, {
         quality: 'lowestaudio'
       }).pipe(res);
-    // }
+    } else {
+      const sound = await Sound.findOne({ id: url })
+      const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound.sound_file_url);
+      const readStream = fileSystem.createReadStream(filePath);
+      readStream.pipe(res)
+    }
   } catch (e) {
     console.log(e);
   }

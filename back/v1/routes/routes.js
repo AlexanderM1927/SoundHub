@@ -21,7 +21,7 @@ module.exports = function (app) {
 
 	// Searches
 	app.get('/v1/search/:name', SearchController.search)
-	app.get('/v1/download/:url', SearchController.download)
+	app.get('/v1/download/:type/:url', SearchController.download)
 
 	// Sounds
 	app.post('/v1/sounds', verifyToken, SoundController.store)

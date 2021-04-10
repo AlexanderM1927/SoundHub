@@ -1,10 +1,9 @@
 <template>
     <div @click="abrirReproductor(result)" class="container row search_item justify-around">
-        <q-img :src="result.thumbnail.thumbnails[0].url" class="col-3 q-my-sm"></q-img>
-        <div class="content q-my-sm col-8" >
-            <p class="item_title item_font">{{result.title}}</p>
-            <p class="item_font">{{result.length.accessibility.accessibilityData.label}}</p>
-        </div>
+      <q-img :src="getSrcFromBackend(result.sound_thumbnail_url)" style="height: 100px;" class="col-3 q-my-sm"></q-img>
+      <div class="content q-my-sm col-8" >
+          <p class="item_title item_font">{{result.sound_name}}</p>
+      </div>
     </div>
 </template>
 

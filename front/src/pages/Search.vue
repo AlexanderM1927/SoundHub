@@ -3,7 +3,8 @@
         <div class="col-md-8 col-xs-12 container">
             <p class="title text-h6 q-ml-md q-mt-md">RESULTADOS DE LA BÚSQUEDA</p>
             <div v-bind:key="result.id" v-for="result in searchResults">
-              <Search :result="result" />
+              <SearchResultYoutube v-if="result.type === 'video'" :result="result" />
+              <SearchResultSound v-else-if="result.type === 'sound'" :result="result" />
               <q-separator></q-separator>
             </div>
         </div>
@@ -12,11 +13,12 @@
 
 <script>
 import { functions } from '../functions.js'
-import Search from '../components/SearchResult.vue'
+import SearchResultYoutube from '../components/SearchResultYoutube.vue'
+import SearchResultSound from '../components/SearchResultSound.vue'
 
 export default {
   mixins: [functions],
-  components: { Search },
+  components: { SearchResultYoutube, SearchResultSound },
   data () {
     return {
     }
