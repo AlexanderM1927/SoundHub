@@ -5,7 +5,7 @@
           <center>
             <q-btn
               v-if='isPlaying'
-              color='primary'
+              color='negative'
               round
               icon='pause'
               size='xl'
@@ -13,7 +13,7 @@
             />
             <q-btn
               v-if="!isPlaying && !isLoading"
-              color="primary"
+              color="negative"
               round
               icon="play_arrow"
               size="xl"
@@ -23,7 +23,7 @@
         </div>
         <div class='col-md-1 col-xs-2'>
           <q-btn
-            color="primary"
+            color="negative"
             flat
             round
             icon="fast_rewind"
@@ -36,7 +36,7 @@
         </div>
         <div class="col-md-1 col-xs-2">
           <q-btn
-            color="primary"
+            color="negative"
             flat
             round
             icon="fast_forward"
@@ -83,7 +83,7 @@ export default {
         container: '#waveform',
         hideScrollbar: true,
         waveColor: 'white',
-        progressColor: 'hsla(200, 100%, 30%, 0.5)',
+        progressColor: 'red(200, 100%, 30%, 0.5)',
         cursorColor: '#fff',
         barWidth: 3
       })
