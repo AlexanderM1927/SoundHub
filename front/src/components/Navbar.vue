@@ -114,9 +114,9 @@ export default {
     delete_search () {
       this.search_content = ''
     },
-    async search () {
+    search () {
       this.side_options = false
-      await this.$store.dispatch('sounds/getItemsByName', {
+      this.$store.dispatch('sounds/getItemsByName', {
         name: this.search_content
       })
       this.goTo('/search/' + this.search_content)

@@ -33,7 +33,6 @@
               v-model="sound.sound_file_url"
               :label="'Canción'"
               outlined
-              accept="audio/mpeg"
               lazy-rules
               use-chips
               :rules="[
@@ -55,7 +54,7 @@
                 <template v-slot:prepend>
                     <q-icon color="grey" name="badge" />
                 </template>
-            </q-input><br>
+            </q-input>
         </div>
         <q-card-actions align="right">
             <q-btn color="black" label="OK" type="submit" />
@@ -66,7 +65,10 @@
 </template>
 
 <script>
+import { functions } from '../../functions.js'
+
 export default {
+  mixins: [functions],
   data () {
     return {
       window: window.URL,
@@ -76,6 +78,10 @@ export default {
         sound_name: ''
       }
     }
+  },
+
+  mounted () {
+    this.cerrarReproductor()
   },
 
   methods: {

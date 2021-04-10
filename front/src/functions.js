@@ -48,6 +48,7 @@ export const functions = {
       this.$q.loading.hide()
     },
     async abrirReproductor (result) {
+      this.activateLoading()
       if (result.type === 'video') {
         await this.$store.dispatch('sounds/getSongByUrl', {
           url: result.id,
@@ -60,6 +61,12 @@ export const functions = {
         })
       }
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
+        document.getElementById('player').classList.toggle('inactive')
+      }
+      this.disableLoading()
+    },
+    cerrarReproductor () {
+      if (document.getElementById('player') && !document.getElementById('player').classList.contains('inactive')) {
         document.getElementById('player').classList.toggle('inactive')
       }
     },
