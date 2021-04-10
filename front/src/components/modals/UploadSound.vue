@@ -33,7 +33,7 @@
               v-model="sound.sound_file_url"
               :label="'Canción'"
               outlined
-              accept=".mp3"
+              accept="audio/mpeg"
               lazy-rules
               use-chips
               :rules="[

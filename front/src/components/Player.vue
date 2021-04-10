@@ -3,6 +3,7 @@
       <div class='row'>
         <div class='col-md-4 col-xs-2'>
           <center>
+            <q-circular-progress v-if="isLoading" size="72px" indeterminate color="negative" />
             <q-btn
               v-if='isPlaying'
               color='negative'
@@ -93,9 +94,11 @@ export default {
         this.$q.notify({ message: err })
       })
       this.wavesurfer.on('loading', () => {
+        this.isLoading = true
         this.activateLoading()
       })
       this.wavesurfer.on('ready', () => {
+        this.isLoading = false
         this.disableLoading()
       })
     },
