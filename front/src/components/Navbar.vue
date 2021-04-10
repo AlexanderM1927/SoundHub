@@ -3,6 +3,7 @@
     <q-header elevated class="bg-grey">
         <q-toolbar>
           <q-btn flat @click="side_options = !side_options" round dense icon="menu" />
+          <img src="/favicon.png" style="height: 50px; width: 50px;" />
           <q-toolbar-title class="uwu">SoundHub</q-toolbar-title>
         </q-toolbar>
       </q-header>
