@@ -115,10 +115,11 @@ export default {
       this.search_content = ''
     },
     async search () {
+      this.side_options = false
       await this.$store.dispatch('sounds/getItemsByName', {
         name: this.search_content
       })
-      this.goTo('search/' + this.search_content)
+      this.goTo('/search/' + this.search_content)
       // location.href = '/search/' + this.search_content
     }
   }
