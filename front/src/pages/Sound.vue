@@ -28,17 +28,19 @@ export default {
     }
   },
   mounted () {
-    this.getMySongs()
+    this.getMySounds()
   },
   methods: {
-    async getMySongs () {
+    async getMySounds () {
       try {
-        const params = {
-          user_id: JSON.parse(localStorage.getItem('user')).user_id,
-          token: localStorage.getItem('token')
+        if (localStorage.getItem('token')) {
+          const params = {
+            user_id: JSON.parse(localStorage.getItem('user')).user_id,
+            token: localStorage.getItem('token')
+          }
+          const request = await SoundService.getMySounds(params)
+          this.sounds = request.data.data.items
         }
-        const request = await SoundService.getMySongs(params)
-        this.sounds = request.data.data.items
       } catch (error) {
         console.log(error)
       }
