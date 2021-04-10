@@ -3,6 +3,10 @@
     <div class="row justify-around">
       <div class="col-md-8 col-xs-12 container">
         <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
+        <div v-bind:key="result.id" v-for="result in sounds">
+            <SearchResultSound :result="result" />
+            <q-separator></q-separator>
+          </div>
       </div>
     </div>
   </q-page>
@@ -12,15 +16,33 @@
 import { functions } from '../functions.js'
 import SoundService from '../services/SoundService'
 import UploadSound from '../components/modals/UploadSound'
+import SearchResultSound from '../components/SearchResultSound.vue'
 
 export default {
   mixins: [functions],
+  components: { SearchResultSound },
   name: 'PageSounds',
   data () {
     return {
+      sounds: []
     }
   },
+  mounted () {
+    this.getMySongs()
+  },
   methods: {
+    async getMySongs () {
+      try {
+        const params = {
+          user_id: JSON.parse(localStorage.getItem('user')).user_id,
+          token: localStorage.getItem('token')
+        }
+        const request = await SoundService.getMySongs(params)
+        this.sounds = request.data.data.items
+      } catch (error) {
+        console.log(error)
+      }
+    },
     async uploadSoundModal () {
       this.$q.dialog({
         component: UploadSound,

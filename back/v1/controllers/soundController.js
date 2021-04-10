@@ -24,13 +24,25 @@ const upload = multer({ storage : storage}).fields([
 ])
 
 exports.showByUser = async function(req, res) {
-  const sounds = await Sound.find({ user_id: req.params.user_id })
   try {
+    const sounds = await Sound.findAll({ user_id: req.params.user_id })
+    const results = {
+      items: [],
+      nextPage: {}
+    }
+    for (let i = 0; i < sounds.length; i++) {
+      const sound = {
+        type: 'sound'
+      }
+      Object.assign(sound, sounds[i].dataValues)
+      results.items.push(sound)
+    }
     res.json({
       error: null,
-      data: sounds
+      data: results
     })
   } catch (error) {
+    console.log(error)
     res.status(400).json({error})
   }
 }

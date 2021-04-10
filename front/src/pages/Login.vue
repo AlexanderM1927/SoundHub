@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="lg_body">
-        <q-btn round color="grey" class="absolute-top-left q-mt-lg q-ml-md" @click="goLocation('/')">
+        <q-btn round color="grey" class="absolute-top-left q-mt-lg q-ml-md" @click="goTo('/')">
             <i class="fas fa-arrow-left"></i>
         </q-btn>
         <div class="row justify-around">
@@ -138,7 +138,7 @@ export default {
         if (request.status >= 200 & request.status < 300) {
           localStorage.setItem('token', request.data.data.token)
           localStorage.setItem('user', JSON.stringify(request.data.data.user))
-          this.goLocation('/')
+          this.goTo('/')
         }
       } catch (error) {
         this.alert('negative', error.response.data.error)

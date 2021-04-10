@@ -9,5 +9,8 @@ export default {
   },
   delete (params) {
     return Api().delete('sounds/' + params.sound_id, { headers: { Authorization: params.token } })
+  },
+  getMySongs (params) {
+    return Api().get('sounds/' + params.user_id, { headers: { Authorization: params.token } })
   }
 }

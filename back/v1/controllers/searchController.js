@@ -7,7 +7,8 @@ const path = require('path');
 const fileSystem = require('fs');
 
 exports.search = async function(req, res) {
-  const name = req.params.name
+  try {
+    const name = req.params.name
     // console.log(name)
     const youtube = await youtubesearchapi.GetListByKeyword(name, false)
     const sounds = await Sound.findAll({
@@ -33,7 +34,6 @@ exports.search = async function(req, res) {
       if (video.type === 'video') results.items.push(video)
     }
     results.nextPage = youtube.nextPage
-  try {
     res.json({
       error: null,
       data: results
