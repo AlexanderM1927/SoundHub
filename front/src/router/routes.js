@@ -36,6 +36,20 @@ const routes = [
     ]
   },
   {
+    path: '/playlist',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { name: 'playlist', path: '', component: () => import('pages/Playlist.vue'), meta: { title: 'My playlists', requireSession: true } }
+    ]
+  },
+  {
+    path: '/playlist/:playlist_id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { name: 'playlist-profile', path: '', component: () => import('pages/PlaylistProfile.vue'), meta: { title: 'Playlist' } }
+    ]
+  },
+  {
     name: 'logout',
     path: '/logout',
     meta: {

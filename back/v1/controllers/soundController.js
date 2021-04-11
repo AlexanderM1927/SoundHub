@@ -58,7 +58,11 @@ exports.store = async function(req, res) {
 
 exports.showByUser = async function(req, res) {
   try {
-    const sounds = await Sound.findAll({ user_id: req.params.user_id })
+    const sounds = await Sound.findAll({ 
+      where: {
+        user_id: req.params.user_id
+      }
+     })
     const results = {
       items: [],
       nextPage: {}

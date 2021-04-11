@@ -1,9 +1,12 @@
 <template>
   <q-page>
-    <div class="row justify-around">
-      <div class="col-md-8 col-xs-12 container">
-        <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
+    <div :class="`row justify-around`">
+      <div :class="`${mode === 'playlist' ? '' : 'col-md-8'} col-xs-12 container`">
+        <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token && mode !== 'playlist'" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
         <div v-bind:key="result.id" v-for="result in sounds">
+            <div class="options">
+              <q-btn round @click="$emit('addSound', result)" color="positive" icon="add" />
+            </div>
             <SearchResultSound :result="result" />
             <q-separator></q-separator>
           </div>
@@ -22,6 +25,7 @@ export default {
   mixins: [functions],
   components: { SearchResultSound },
   name: 'PageSounds',
+  props: ['mode'],
   data () {
     return {
       sounds: [],

@@ -34,6 +34,7 @@ db.comment = require("../models/comment.js")(sequelize, Sequelize);
 db.like = require("../models/like.js")(sequelize, Sequelize);
 db.favorite = require("../models/favorite.js")(sequelize, Sequelize);
 db.view = require("../models/view.js")(sequelize, Sequelize);
+db.soundPlaylist = require("../models/soundPlaylist.js")(sequelize, Sequelize);
 
 db.user.belongsTo(db.role, {
   foreignKey: { 
@@ -71,13 +72,13 @@ db.playlist.belongsTo(db.user, {
 });
 
 db.sound.belongsToMany(db.playlist, {
-  through: "sounds_playlist",
+  through: db.soundPlaylist,
   as: "playlists",
   foreignKey: "sound_id",
 });
 
 db.playlist.belongsToMany(db.sound, {
-  through: "sounds_playlist",
+  through: db.soundPlaylist,
   as: "sounds",
   foreignKey: "playlist_id",
 });
