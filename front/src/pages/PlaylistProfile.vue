@@ -33,6 +33,7 @@ export default {
   components: { SearchResultSound, Sound },
   data () {
     return {
+      id: this.$route.params.playlist_id,
       playlist: {
         playlist_id: 0,
         sounds: []
@@ -42,7 +43,7 @@ export default {
     }
   },
   mounted () {
-    this.getPlaylistInfo(this.$route.params.playlist_id)
+    this.getPlaylistInfo(this.id)
   },
   methods: {
     async getPlaylistInfo (id) {
@@ -71,6 +72,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.getPlaylistInfo(this.id)
       this.dialogSounds = false
     }
   }
