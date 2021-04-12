@@ -25,6 +25,34 @@ export default function (/* { store, ssrContext } */) {
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
   })
+  Router.beforeEach(async (to, from, next) => {
+    document.title = to.meta.title
+    // si es logout
+    if (to.name === 'logout') {
+      try {
+        localStorage.removeItem('user')
+        localStorage.removeItem('token')
+      } catch (error) {
+        localStorage.removeItem('user')
+        localStorage.removeItem('token')
+      }
+      location.href = 'login'
+    }
+
+    const reqSession = to.matched.some(route => route.meta.requireSession)
+
+    if (!reqSession) {
+      if (to.name === 'login' && localStorage.getItem('token')) {
+        location.href = '/'
+      } else {
+        next()
+      }
+    } else if (localStorage.getItem('token')) {
+      next()
+    } else {
+      location.href = 'login'
+    }
+  })
 
   return Router
 }
