@@ -62,7 +62,7 @@ const menuList = [
   {
     title: 'Mis listas',
     icon: 'fas fa-play',
-    to: 'playlist',
+    to: '/playlist',
     separator: false,
     requireSession: true
   },
