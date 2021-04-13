@@ -99,10 +99,11 @@ export default {
       })
       this.wavesurfer.on('ready', () => {
         this.isLoading = false
+        this.wavesurfer.playPause()
         this.disableLoading()
       })
     },
-    loadFile (url) {
+    async loadFile (url) {
       if (!this.wavesurfer) this.createWaveSurfer()
       this.wavesurfer.load(url)
     }
