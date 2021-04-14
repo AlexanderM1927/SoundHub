@@ -33,7 +33,7 @@ import UploadSound from '../components/modals/UploadSound'
 import Playlist from './Playlist.vue'
 import SearchResultSound from '../components/SearchResultSound.vue'
 import SoundPlaylistService from '../services/SoundPlaylistService'
-import { Plugins } from '@capacitor/core'
+import { Plugins, FilesystemDirectory } from '@capacitor/core'
 
 const { Filesystem } = Plugins
 export default {
