@@ -65,11 +65,6 @@ export const functions = {
       }
       this.disableLoading()
     },
-    cerrarReproductor () {
-      if (document.getElementById('player') && !document.getElementById('player').classList.contains('inactive')) {
-        document.getElementById('player').classList.toggle('inactive')
-      }
-    },
     getSrcFromBackend (url) {
       return process.env.API_URL.replace('v1/', '') + url.replace('public', '')
     }
