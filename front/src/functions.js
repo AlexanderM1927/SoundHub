@@ -1,4 +1,8 @@
 import { QSpinnerGears, QSpinnerAudio } from 'quasar'
+import { Plugins, FilesystemDirectory } from '@capacitor/core'
+import SearchService from './services/SearchService'
+
+const { Filesystem, Storage } = Plugins
 export const functions = {
   data () {
   },
@@ -67,6 +71,50 @@ export const functions = {
     },
     getSrcFromBackend (url) {
       return process.env.API_URL.replace('v1/', '') + url.replace('public', '')
+    },
+    convertBlobToBase64 (blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onerror = reject
+        reader.onloadend = () => {
+          resolve(reader.result)
+        }
+        reader.readAsDataURL(blob)
+      })
+    },
+    async verifyAndCreateFolder () {
+      try {
+        await Filesystem.mkdir({
+          path: 'soundhub',
+          directory: FilesystemDirectory.Documents,
+          recursive: false // like mkdir -p
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async downloadFile (payload, files) {
+      try {
+        const request = await SearchService.getSongByUrl(payload)
+        const blob = request.data
+        this.convertBlobToBase64(blob).then(async (str) => {
+          this.verifyAndCreateFolder()
+          const file = await Filesystem.writeFile({
+            data: str,
+            path: 'soundhub/' + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('\\') + 1),
+            directory: FilesystemDirectory.Documents
+          })
+          const path = file.uri
+          files.unshift(path)
+          Storage.set({
+            key: 'soundhub',
+            value: JSON.stringify(files)
+          })
+        })
+        console.log('Wrote file')
+      } catch (e) {
+        console.error('Unable to write file', e)
+      }
     }
   }
 }

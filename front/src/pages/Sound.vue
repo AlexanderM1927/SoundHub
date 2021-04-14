@@ -6,8 +6,10 @@
         <div v-bind:key="result.id" v-for="result in sounds">
             <SearchResultSound :result="result" />
             <q-btn round @click="agregarSound(result)" color="positive" icon="add" />
+            <q-btn round @click="downloadFile({sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id}, files)" color="positive" icon="download" />
             <q-separator></q-separator>
           </div>
+          {{files}}
       </div>
     </div>
     <q-dialog
@@ -31,7 +33,9 @@ import UploadSound from '../components/modals/UploadSound'
 import Playlist from './Playlist.vue'
 import SearchResultSound from '../components/SearchResultSound.vue'
 import SoundPlaylistService from '../services/SoundPlaylistService'
+import { Plugins } from '@capacitor/core'
 
+const { Storage } = Plugins
 export default {
   mixins: [functions],
   components: { SearchResultSound, Playlist },
@@ -41,13 +45,23 @@ export default {
       sounds: [],
       token: localStorage.getItem('token'),
       dialogPlaylist: false,
-      sound: {}
+      sound: {},
+      files: []
     }
   },
   mounted () {
     this.getMySounds()
+    this.getMySoundsFromDevice()
   },
   methods: {
+    async getMySoundsFromDevice () {
+      try {
+        const files = await Storage.get({ key: 'soundhub' })
+        this.files = JSON.parse(files.value) || []
+      } catch (e) {
+        console.error('Unable to read dir', e)
+      }
+    },
     async getMySounds () {
       try {
         if (localStorage.getItem('token')) {
