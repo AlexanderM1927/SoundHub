@@ -3,10 +3,12 @@ const SoundPlaylist = require('../models').soundPlaylist
 
 exports.store = async function(req, res) {
   try {
-    const sound_paylist = new SoundPlaylist({
-      playlist_id: req.body.playlist_id,
-      sound_id: req.body.sound_id
-    })
+    const data = {
+      playlist_id: req.body.playlist_id
+    }
+    if (req.body.sound_id) data.sound_id = req.body.sound_id
+    else if (req.body.youtube_id) data.youtube_id = req.body.youtube_id
+    const sound_paylist = new SoundPlaylist(data)
     await sound_paylist.save()
     res.json({
       error: null,
@@ -26,7 +28,8 @@ exports.update = async function(req, res) {
     })
     const sound_playlist = sounds_playlists[0]
     sound_playlist.playlist_id = req.body.playlist_id
-    sound_playlist.sound_id = req.body.sound_id
+    if (req.body.sound_id) sound_playlist.sound_id = req.body.sound_id
+    else if (req.body.youtube_id) sound_playlist.youtube_id = req.body.youtube_id
     await sound_playlist.save()
     res.json({
       error: null,

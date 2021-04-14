@@ -4,6 +4,9 @@ module.exports = (sequelize, DateType) => {
       type: DateType.INTEGER,
       primaryKey: true,
       autoIncrement: true
+    },
+    youtube_id: {
+      type: DateType.STRING
     }
   });
 
