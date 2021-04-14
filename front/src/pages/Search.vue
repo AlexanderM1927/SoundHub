@@ -36,7 +36,8 @@ export default {
   data () {
     return {
       token: localStorage.getItem('token'),
-      dialogPlaylist: false
+      dialogPlaylist: false,
+      sound: {}
     }
   },
   computed: {
