@@ -6,7 +6,7 @@
         <div v-bind:key="result.id" v-for="result in sounds">
             <SearchResultSound :result="result" />
             <q-btn round @click="agregarSound(result)" color="positive" icon="add" />
-            <q-btn round @click="downloadFile({sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id}, files)" color="positive" icon="download" />
+            <q-btn round @click="downloadFile({name: result.sound_name, sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id}, files)" color="positive" icon="download" />
             <q-separator></q-separator>
           </div>
           {{files}}
@@ -35,7 +35,7 @@ import SearchResultSound from '../components/SearchResultSound.vue'
 import SoundPlaylistService from '../services/SoundPlaylistService'
 import { Plugins } from '@capacitor/core'
 
-const { Storage } = Plugins
+const { Filesystem } = Plugins
 export default {
   mixins: [functions],
   components: { SearchResultSound, Playlist },
@@ -56,8 +56,11 @@ export default {
   methods: {
     async getMySoundsFromDevice () {
       try {
-        const files = await Storage.get({ key: 'soundhub' })
-        this.files = JSON.parse(files.value) || []
+        const ret = await Filesystem.readdir({
+          path: 'soundhub',
+          directory: FilesystemDirectory.Documents
+        })
+        this.files = ret
       } catch (e) {
         console.error('Unable to read dir', e)
       }

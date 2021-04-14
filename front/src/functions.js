@@ -2,7 +2,7 @@ import { QSpinnerGears, QSpinnerAudio } from 'quasar'
 import { Plugins, FilesystemDirectory } from '@capacitor/core'
 import SearchService from './services/SearchService'
 
-const { Filesystem, Storage } = Plugins
+const { Filesystem } = Plugins
 export const functions = {
   data () {
   },
@@ -99,16 +99,10 @@ export const functions = {
         const blob = request.data
         this.convertBlobToBase64(blob).then(async (str) => {
           this.verifyAndCreateFolder()
-          const file = await Filesystem.writeFile({
+          await Filesystem.writeFile({
             data: str,
-            path: 'soundhub/' + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('\\') + 1),
+            path: 'soundhub/' + payload.name +  payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.') + 1),
             directory: FilesystemDirectory.Documents
-          })
-          const path = file.uri
-          files.unshift(path)
-          Storage.set({
-            key: 'soundhub',
-            value: JSON.stringify(files)
           })
         })
         console.log('Wrote file')
