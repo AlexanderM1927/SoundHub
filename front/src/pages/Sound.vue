@@ -4,12 +4,14 @@
       <div :class="`col-md-8 col-xs-12 container`">
         <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
         <div v-bind:key="result.id" v-for="result in sounds">
-            <SearchResultSound :result="result" />
-            <q-btn round @click="agregarSound(result)" color="positive" icon="add" />
-            <q-btn round @click="downloadFile({name: result.sound_name, sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id}, files)" color="positive" icon="download" />
-            <q-separator></q-separator>
-          </div>
+          <SearchResultSound v-if="result.type === 'sound'" :result="result" />
+          <ResultSoundDevice v-else-if="result.type === 'device'" :result="result" />
+          <q-btn round v-if="result.type !== 'device'" @click="downloadFile({name: result.sound_name, sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id})" color="positive" icon="download" />
+          <q-separator></q-separator>
+        </div>
+        <div hidden>
           {{files}}
+        </div>
       </div>
     </div>
     <q-dialog
@@ -32,13 +34,14 @@ import SoundService from '../services/SoundService'
 import UploadSound from '../components/modals/UploadSound'
 import Playlist from './Playlist.vue'
 import SearchResultSound from '../components/SearchResultSound.vue'
+import ResultSoundDevice from '../components/ResultSoundDevice.vue'
 import SoundPlaylistService from '../services/SoundPlaylistService'
-import { Plugins, FilesystemDirectory } from '@capacitor/core'
+import { Plugins, FilesystemDirectory, Capacitor } from '@capacitor/core'
 
 const { Filesystem } = Plugins
 export default {
   mixins: [functions],
-  components: { SearchResultSound, Playlist },
+  components: { SearchResultSound, ResultSoundDevice, Playlist },
   name: 'PageSounds',
   data () {
     return {
@@ -56,11 +59,26 @@ export default {
   methods: {
     async getMySoundsFromDevice () {
       try {
+        this.activateLoading()
         const ret = await Filesystem.readdir({
           path: 'soundhub',
           directory: FilesystemDirectory.Documents
         })
-        this.files = ret
+        this.files = ret.files
+        for (let i = 0; i < this.files.length; i++) {
+          const getUri = await Filesystem.getUri({
+            path: 'soundhub/' + this.files[i],
+            directory: FilesystemDirectory.Documents
+          })
+          const path = getUri.uri
+          const url = await Capacitor.convertFileSrc(path)
+          const data = {
+            sound_name: this.files[i],
+            type: 'device',
+            url: url
+          }
+          this.sounds.push(data)
+        }
       } catch (e) {
         console.error('Unable to read dir', e)
       }
@@ -78,6 +96,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.disableLoading()
     },
     async uploadSoundModal () {
       this.$q.dialog({

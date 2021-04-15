@@ -54,14 +54,18 @@ export const functions = {
     async abrirReproductor (result) {
       this.activateLoading()
       if (result.type === 'video') {
-        await this.$store.dispatch('sounds/getSongByUrl', {
+        await this.$store.dispatch('sounds/getSongById', {
           url: result.id,
           type: result.type
         })
       } else if (result.type === 'sound') {
-        await this.$store.dispatch('sounds/getSongByUrl', {
+        await this.$store.dispatch('sounds/getSongById', {
           url: result.sound_id,
           type: result.type
+        })
+      } else if (result.type === 'device') {
+        await this.$store.dispatch('sounds/getSongByUrl', {
+          url: result.url
         })
       }
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
@@ -93,12 +97,12 @@ export const functions = {
         console.log(error)
       }
     },
-    async downloadFile (payload, files) {
+    async downloadFile (payload) {
       try {
-        const request = await SearchService.getSongByUrl(payload)
+        const request = await SearchService.getSongById(payload)
         const blob = request.data
         this.convertBlobToBase64(blob).then(async (str) => {
-          this.verifyAndCreateFolder()
+          await this.verifyAndCreateFolder()
           await Filesystem.writeFile({
             data: str,
             path: 'soundhub/' + payload.name + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.')),
