@@ -1,4 +1,8 @@
 import { QSpinnerGears, QSpinnerAudio } from 'quasar'
+import { Plugins, FilesystemDirectory } from '@capacitor/core'
+import SearchService from './services/SearchService'
+
+const { Filesystem } = Plugins
 export const functions = {
   data () {
   },
@@ -50,14 +54,18 @@ export const functions = {
     async abrirReproductor (result) {
       this.activateLoading()
       if (result.type === 'video') {
-        await this.$store.dispatch('sounds/getSongByUrl', {
+        await this.$store.dispatch('sounds/getSongById', {
           url: result.id,
           type: result.type
         })
       } else if (result.type === 'sound') {
-        await this.$store.dispatch('sounds/getSongByUrl', {
+        await this.$store.dispatch('sounds/getSongById', {
           url: result.sound_id,
           type: result.type
+        })
+      } else if (result.type === 'device') {
+        await this.$store.dispatch('sounds/getSongByUrl', {
+          url: result.url
         })
       }
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
@@ -67,6 +75,44 @@ export const functions = {
     },
     getSrcFromBackend (url) {
       return process.env.API_URL.replace('v1/', '') + url.replace('public', '')
+    },
+    convertBlobToBase64 (blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onerror = reject
+        reader.onloadend = () => {
+          resolve(reader.result)
+        }
+        reader.readAsDataURL(blob)
+      })
+    },
+    async verifyAndCreateFolder () {
+      try {
+        await Filesystem.mkdir({
+          path: 'soundhub',
+          directory: FilesystemDirectory.Documents,
+          recursive: false // like mkdir -p
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async downloadFile (payload) {
+      try {
+        const request = await SearchService.getSongById(payload)
+        const blob = request.data
+        this.convertBlobToBase64(blob).then(async (str) => {
+          await this.verifyAndCreateFolder()
+          await Filesystem.writeFile({
+            data: str,
+            path: 'soundhub/' + payload.name + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.')),
+            directory: FilesystemDirectory.Documents
+          })
+        })
+        console.log('Wrote file')
+      } catch (e) {
+        console.error('Unable to write file', e)
+      }
     }
   }
 }

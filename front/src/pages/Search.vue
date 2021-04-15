@@ -6,6 +6,8 @@
         <SearchResultYoutube v-if="result.type === 'video'" :result="result" />
         <SearchResultSound v-else-if="result.type === 'sound'" :result="result" />
         <q-btn round @click="agregarSound(result)" color="positive" icon="add" />
+          <q-btn round v-if="result.type === 'sound'" @click="downloadFile({name: result.sound_name, sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id})" color="positive" icon="download" />
+          <q-btn round v-else-if="result.type === 'video'" @click="downloadFile({name: result.title, sound_file_url: '.mp3', type: 'video', url: result.id})" color="positive" icon="download" />
         <q-separator></q-separator>
       </div>
     </div>
