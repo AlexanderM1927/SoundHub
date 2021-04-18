@@ -14,17 +14,6 @@
         </div>
       </div>
     </div>
-    <q-dialog
-      v-model="dialogPlaylist"
-      transition-show="slide-up"
-      transition-hide="slide-down"
-    >
-      <q-card style="width: 800px; max-width: 80vw;" class="container">
-        <q-card-section>
-          <Playlist mode= 'adding' @addToPlaylist="addToPlaylist"></Playlist>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
@@ -32,22 +21,19 @@
 import { functions } from '../functions.js'
 import SoundService from '../services/SoundService'
 import UploadSound from '../components/modals/UploadSound'
-import Playlist from './Playlist.vue'
 import SearchResultSound from '../components/SearchResultSound.vue'
 import ResultSoundDevice from '../components/ResultSoundDevice.vue'
-import SoundPlaylistService from '../services/SoundPlaylistService'
 import { Plugins, FilesystemDirectory, Capacitor } from '@capacitor/core'
 
 const { Filesystem } = Plugins
 export default {
   mixins: [functions],
-  components: { SearchResultSound, ResultSoundDevice, Playlist },
+  components: { SearchResultSound, ResultSoundDevice },
   name: 'PageSounds',
   data () {
     return {
       sounds: [],
       token: localStorage.getItem('token'),
-      dialogPlaylist: false,
       sound: {},
       files: []
     }
@@ -126,29 +112,6 @@ export default {
       }).onDismiss(() => {
         console.log('Called on OK or Cancel')
       })
-    },
-    agregarSound (sound) {
-      this.dialogPlaylist = true
-      this.sound = sound
-    },
-    async addToPlaylist (playlist) {
-      try {
-        const data = {}
-        if (this.sound.type === 'video') {
-          data.playlist_id = playlist.playlist_id
-          data.youtube_id = this.sound.id
-          data.token = this.token
-        } else {
-          data.playlist_id = playlist.playlist_id
-          data.sound_id = this.sound.sound_id
-          data.token = this.token
-        }
-        const request = await SoundPlaylistService.add(data)
-        if (request.status >= 200 && request.status < 300) this.alert('positive', 'Canción agregada correctamente')
-      } catch (error) {
-        console.log(error)
-      }
-      this.dialogPlaylist = false
     }
   }
 }
