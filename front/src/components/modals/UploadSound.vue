@@ -6,7 +6,7 @@
             <div class="text-h6">
               Subir nueva canción
             </div>
-            <q-img :src="window.createObjectURL(sound.sound_thumbnail_url)" v-if="sound.sound_thumbnail_url" ></q-img>
+            <q-img style="max-height: 200px;" :src="window.createObjectURL(sound.sound_thumbnail_url)" v-if="sound.sound_thumbnail_url" ></q-img>
             <q-file
               v-model="sound.sound_thumbnail_url"
               :label="'Thumbnail'"
@@ -78,10 +78,6 @@ export default {
         sound_name: ''
       }
     }
-  },
-
-  mounted () {
-    this.cerrarReproductor()
   },
 
   methods: {
