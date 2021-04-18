@@ -8,7 +8,7 @@
             </div>
         </div>
         <q-btn round @click="agregarSound(result)" color="positive" icon="add" />
-        <q-btn round @click="downloadFile({name: result.title, sound_file_url: '.mp3', type: 'video', url: result.id})" color="positive" icon="download" />
+        <q-btn v-if="download" round @click="downloadFile({name: result.title, sound_file_url: '.mp3', type: 'video', url: result.id})" color="positive" icon="download" />
         <q-dialog
         v-model="dialogPlaylist"
         transition-show="slide-up"
@@ -32,7 +32,7 @@ export default {
   mixins: [functions],
   components: { Playlist },
   name: 'SearchResult',
-  props: ['result'],
+  props: ['result', 'download'],
   data () {
     return {
       token: localStorage.getItem('token'),

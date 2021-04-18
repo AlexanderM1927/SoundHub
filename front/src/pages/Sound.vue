@@ -4,8 +4,7 @@
       <div :class="`col-md-8 col-xs-12 container`">
         <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
         <div v-bind:key="result.id" v-for="result in sounds">
-          <SearchResultSound :result="result" />
-          <q-btn round @click="downloadFile({name: result.sound_name, sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id})" color="positive" icon="download" />
+          <SearchResultSound :result="result" :download="false" />
           <q-separator></q-separator>
         </div>
         <div v-bind:key="result.id" v-for="result in files">
