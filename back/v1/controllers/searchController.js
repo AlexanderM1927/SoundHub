@@ -31,7 +31,8 @@ exports.search = async function(req, res) {
     }
     for (let i = 0; i < youtube.items.length; i++) {
       const video = youtube.items[i]
-      if (video.type === 'video') results.items.push(video)
+      // console.log(video.length.accessibility.accessibilityData)
+      if (video.type === 'video' && video.length.accessibility) results.items.push(video)
     }
     results.nextPage = youtube.nextPage
     res.json({
