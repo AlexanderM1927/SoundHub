@@ -44,3 +44,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.profile-title {
+  text-transform: capitalize;
+}
+</style>

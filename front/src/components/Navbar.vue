@@ -1,10 +1,12 @@
 <template>
   <div>
     <q-header elevated class="bg-grey">
-        <q-toolbar>
-          <q-btn flat @click="side_options = !side_options" round dense icon="menu" />
-          <img src="/favicon.png" style="height: 50px; width: 50px;" />
-          <q-toolbar-title class="uwu">SoundHub</q-toolbar-title>
+        <q-toolbar class="row col-12 justify-between">
+          <div class="row" @click="goTo('/')">
+            <img src="/favicon.png" class="search-icon" />
+            <q-toolbar-title class="search-title vertical-middle">SoundHub</q-toolbar-title>
+          </div>
+          <q-btn flat @click="side_options = !side_options" round dense icon="fas fa-bars" />
         </q-toolbar>
       </q-header>
 
@@ -20,7 +22,7 @@
           <q-list>
             <!--SEARCH BAR-->
             <q-item>
-              <q-input dark dense borderless @keyup.enter="search()" v-model="search_content" class="q-ml-xs search_input full-width" placeholder="Buscar...">
+              <q-input dark dense borderless @keyup.enter="search()" v-model="search_content" class="q-ml-xs search-input full-width" placeholder="Buscar...">
                 <template v-slot:prepend>
                     <q-icon v-if="search_content === ''" name="fas fa-search" />
                     <q-icon v-else name="fas fa-times" class="cursor-pointer" @click="search_content = ''" />
@@ -41,12 +43,6 @@
 import { functions } from '../functions.js'
 import NavLink from './NavLink'
 const menuList = [
-  {
-    title: 'Inicio',
-    icon: 'far fa-home',
-    to: '/',
-    separator: true
-  },
   {
     title: 'Perfil',
     icon: 'far fa-user-circle',
@@ -128,20 +124,27 @@ export default {
 </script>
 
 <style>
-.search_input{
+.search-title {
+  margin: auto;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+.search-icon{
+  width: 40px;
+  height: 40px;
+  margin: auto;
+  font-weight: 300;
+  font-size: 24px;
+}
+
+.search-input{
   padding-left: 10px;
   background-color: #505057;
   font-size: 18px;
   border-radius: 5px;
 }
 
-.light_font {
-  color: #f5f5f5;
-  font-size: 16px;
-}
-
-.uwu {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-}
 </style>

@@ -23,5 +23,11 @@ export default {
 </script>
 
 <style>
+.light_font {
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  color: #f5f5f5;
+}
 
 </style>
