@@ -1,15 +1,34 @@
 <template>
   <q-page>
     <div :class="`row justify-around`">
-      <div :class="`${mode === 'playlist' ? '' : 'col-md-8'} col-xs-12 container`">
-        <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token && mode !== 'playlist'" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
-        <div v-bind:key="result.id" v-for="result in sounds">
-            <div class="options">
-              <q-btn round @click="$emit('addSound', result)" color="positive" icon="add" />
-            </div>
-            <SearchResultSound :result="result" />
-            <q-separator></q-separator>
+      <div
+        :class="`${mode === 'playlist' ? '' : 'col-md-8'} row col-xs-12 justify-around`"
+      >
+        <!--TITLE -->
+        <p class="col-11 title text-h6 bg-grey q-pa-sm q-mt-md">
+          Mis canciones
+          <a
+            v-if="token && mode !== 'playlist'"
+            class="text-green"
+            style="cursor: pointer"
+            @click="uploadSoundModal()"
+          >
+            <q-icon name="unarchive" /> <q-tooltip>Subir</q-tooltip>
+          </a>
+        </p>
+
+        <!--CONTENT-->
+        <div class="col-11" v-bind:key="result.id" v-for="result in sounds">
+          <div class="options">
+            <q-btn
+              round
+              @click="$emit('addSound', result)"
+              color="positive"
+              icon="add"
+            />
           </div>
+          <SearchResultSound :result="result" />
+        </div>
       </div>
     </div>
   </q-page>

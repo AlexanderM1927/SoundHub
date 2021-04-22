@@ -1,14 +1,14 @@
 <template>
-  <q-dialog ref="dialog" @hide="onDialogHide">
-    <q-card class="q-dialog-plugin">
+  <q-dialog class="custom-alert" ref="dialog" @hide="onDialogHide">
+    <q-card class="q-dialog-plugin alert-body">
       <q-form @submit="onOKClick()">
-        <div class="form">
-            <div class="text-h6">
+        <div class="q-px-md q-py-sm">
+            <div class="text-h6 q-my-xs">
               {{mode}} nueva playlist
             </div>
-            <q-input outlined v-model="playlist.playlist_name" label="Nombre de la playlist" stack-label :rules="[val => !!val || 'Este campo es necesario']">
+            <q-input class="alert-input q-pb-none" outlined v-model="playlist.playlist_name" label="Nombre de la playlist" stack-label :rules="[val => !!val || 'Este campo es necesario']">
                 <template v-slot:prepend>
-                    <q-icon color="grey" name="badge" />
+                    <q-icon color="black" name="badge" />
                 </template>
             </q-input>
         </div>
@@ -70,7 +70,13 @@ export default {
 }
 </script>
 <style scoped>
-.form {
-    padding: 10px;
+.alert-body {
+  background-color: #dddddd;
+}
+
+.alert-input {
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
+  font-size: 16px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-around">
     <div class="col-md-8 col-xs-12 container">
-      <p class="title text-h6 q-ml-md q-mt-md">Canciones de: {{playlist.playlist_name}} <a v-if="token" class="text-green" style="cursor: pointer;" @click="agregarSound()"> <q-icon name="add"/> <q-tooltip>Agregar</q-tooltip> </a></p>
+      <p class="title profile-title text-h6 q-ml-md q-mt-md">Canciones de: <br> {{playlist.playlist_name}} <a v-if="token" class="text-green" style="cursor: pointer;" @click="agregarSound()"> <q-icon name="add"/> <q-tooltip>Agregar</q-tooltip> </a></p>
       <div v-bind:key="result.id" v-for="result in playlist.sounds">
         <SearchResultSound :result="result.sound" />
         <q-separator></q-separator>
@@ -76,3 +76,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.profile-title {
+  text-transform: capitalize;
+}
+</style>
