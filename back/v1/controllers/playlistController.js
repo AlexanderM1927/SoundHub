@@ -3,6 +3,7 @@ const formidable = require('formidable')
 const Playlist = require('../models').playlist
 const Sound = require('../models').sound
 const SoundPlaylist = require('../models').soundPlaylist
+const youtubesearchapi = require('youtube-search-api');
 SoundPlaylist.belongsTo(Sound, {foreignKey: 'sound_id'})
 
 exports.store = async function(req, res) {
@@ -54,6 +55,16 @@ exports.get = async function(req, res) {
         model: Sound
       }]
     })
+    for (let i = 0; i < playlist.dataValues.sounds.length; i++) {
+      if (playlist.dataValues.sounds[i].youtube_id) {
+        const searchYt = await youtubesearchapi.GetListByKeyword(playlist.dataValues.sounds[i].youtube_id, false)
+        const element = searchYt.items[0]
+        element.type = 'video'
+        playlist.dataValues.sounds[i] = element
+      } else {
+        playlist.dataValues.sounds[i].sound.dataValues.type = 'sound'
+      }
+    }
     res.json({
       error: null,
       data: playlist

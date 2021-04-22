@@ -34,10 +34,6 @@ export default {
     }
   },
 
-  mounted () {
-    this.cerrarReproductor()
-  },
-
   methods: {
     // following method is REQUIRED
     // (don't change its name --> "show")

@@ -21,7 +21,11 @@ exports.login = async function(req, res) {
   const { error } = schemaLogin.validate(req.body);
   if (error) return res.status(400).json({ error: error.details[0].message })
   
-  const user = await User.findOne({ user_email: req.body.user_email });
+  const user = await User.findOne({ 
+    where: {
+      user_email: req.body.user_email
+    }
+   });
   if (!user) return res.status(400).json({ error: 'Usuario no encontrado' });
 
   const validPassword = await bcrypt.compare(req.body.user_password, user.user_password);
@@ -49,7 +53,12 @@ exports.register = async function(req, res) {
     return res.status(400).json({error: error.details[0].message})
   }
 
-  const isEmailExist = await User.findOne({ user_email: req.body.user_email });
+  const isEmailExist = await User.findOne({ 
+    where: {
+      user_email: req.body.user_email
+    } });
+  console.log('isEmailExist')
+  console.log(isEmailExist)
   if (isEmailExist) {
     return res.status(400).json({error: 'Email ya registrado'})
   }

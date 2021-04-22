@@ -1,26 +1,12 @@
 <template>
   <q-page>
     <div class="row justify-around">
-      <div class="row col-md-8 col-xs-12 justify-around">
-        <!--TITLE-->
-        <p class="row col-11 title text-h6 q-mt-md q-pa-sm bg-grey">
-          Mis playlists
-          <a
-            v-if="token"
-            class="text-green"
-            style="cursor: pointer"
-            @click="agregarPlaylist()"
-          >
-            <q-icon name="add" />
-            <q-tooltip>Agregar</q-tooltip>
-          </a>
-        </p>
-        <!--CONTENT-->
-        <div
-          class="row col-11 justify-around"
-          v-bind:key="result.id"
-          v-for="result in playlists"
-        >
+      <div :class="`${mode === 'adding' ? '' : 'col-md-8' } col-xs-12 container`">
+        <p class="title text-h6 q-ml-md q-mt-md">Mis playlists <a v-if="token" class="text-green" style="cursor: pointer;" @click="agregarPlaylist()"> <q-icon name="add"/> <q-tooltip>Agregar</q-tooltip> </a></p>
+        <div v-bind:key="result.id" v-for="result in playlists">
+          <div class="options" v-if="mode === 'adding'">
+            <q-btn round @click="$emit('addToPlaylist', result)" color="positive" icon="add" />
+          </div>
           <PlaylistResult :result="result" />
         </div>
       </div>
@@ -38,6 +24,7 @@ export default {
   mixins: [functions],
   components: { PlaylistResult },
   name: 'PagePlaylist',
+  props: ['mode'],
   data () {
     return {
       playlists: [],

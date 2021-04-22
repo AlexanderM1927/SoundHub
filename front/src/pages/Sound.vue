@@ -1,33 +1,15 @@
 <template>
   <q-page>
     <div :class="`row justify-around`">
-      <div
-        :class="`${mode === 'playlist' ? '' : 'col-md-8'} row col-xs-12 justify-around`"
-      >
-        <!--TITLE -->
-        <p class="col-11 title text-h6 bg-grey q-pa-sm q-mt-md">
-          Mis canciones
-          <a
-            v-if="token && mode !== 'playlist'"
-            class="text-green"
-            style="cursor: pointer"
-            @click="uploadSoundModal()"
-          >
-            <q-icon name="unarchive" /> <q-tooltip>Subir</q-tooltip>
-          </a>
-        </p>
-
-        <!--CONTENT-->
-        <div class="col-11" v-bind:key="result.id" v-for="result in sounds">
-          <div class="options">
-            <q-btn
-              round
-              @click="$emit('addSound', result)"
-              color="positive"
-              icon="add"
-            />
-          </div>
-          <SearchResultSound :result="result" />
+      <div :class="`col-md-8 col-xs-12 container`">
+        <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
+        <div v-bind:key="result.id" v-for="result in sounds">
+          <SearchResultSound :result="result" :download="false" />
+          <q-separator></q-separator>
+        </div>
+        <div v-bind:key="result.id" v-for="result in files">
+          <ResultSoundDevice :result="result" />
+          <q-separator></q-separator>
         </div>
       </div>
     </div>
@@ -39,22 +21,53 @@ import { functions } from '../functions.js'
 import SoundService from '../services/SoundService'
 import UploadSound from '../components/modals/UploadSound'
 import SearchResultSound from '../components/SearchResultSound.vue'
+import ResultSoundDevice from '../components/ResultSoundDevice.vue'
+import { Plugins, FilesystemDirectory, Capacitor } from '@capacitor/core'
 
+const { Filesystem } = Plugins
 export default {
   mixins: [functions],
-  components: { SearchResultSound },
+  components: { SearchResultSound, ResultSoundDevice },
   name: 'PageSounds',
-  props: ['mode'],
   data () {
     return {
       sounds: [],
-      token: localStorage.getItem('token')
+      token: localStorage.getItem('token'),
+      sound: {},
+      files: []
     }
   },
   mounted () {
+    this.getMySoundsFromDevice()
     this.getMySounds()
   },
   methods: {
+    async getMySoundsFromDevice () {
+      try {
+        this.activateLoading()
+        const ret = await Filesystem.readdir({
+          path: 'soundhub',
+          directory: FilesystemDirectory.Documents
+        })
+        for (let i = 0; i < ret.files.length; i++) {
+          const getUri = await Filesystem.getUri({
+            path: 'soundhub/' + ret.files[i],
+            directory: FilesystemDirectory.Documents
+          })
+          const path = getUri.uri
+          const url = await Capacitor.convertFileSrc(path)
+          const data = {
+            sound_name: ret.files[i],
+            type: 'device',
+            url: url
+          }
+          this.files.push(data)
+          // this.sounds.push(data)
+        }
+      } catch (e) {
+        console.error('Unable to read dir', e)
+      }
+    },
     async getMySounds () {
       try {
         if (localStorage.getItem('token')) {
@@ -68,6 +81,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.disableLoading()
     },
     async uploadSoundModal () {
       this.$q.dialog({
