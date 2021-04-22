@@ -36,6 +36,7 @@ export default {
   },
   methods: {
     async getMyPlaylists () {
+      this.activateLoading()
       try {
         if (localStorage.getItem('token')) {
           const params = {
@@ -48,6 +49,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.disableLoading()
     },
     agregarPlaylist () {
       this.$q.dialog({
