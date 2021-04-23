@@ -2,8 +2,9 @@
   <div class="row justify-around">
     <div class="col-md-8 col-xs-12 container">
       <p class="title text-h6 q-ml-md q-mt-md">Canciones de: {{playlist.playlist_name}}</p>
+      <q-btn color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
       <div v-bind:key="result.id" v-for="result in playlist.sounds">
-        <SearchResultSound v-if="result.sound_id" :result="result.sound" />
+        <SearchResultSound v-if="result.type === 'sound'" :result="result" />
         <SearchResultYoutube v-else :result="result" />
         <q-separator></q-separator>
       </div>
@@ -34,21 +35,23 @@ export default {
   },
   methods: {
     async getPlaylistInfo (id) {
-      this.activateLoading()
       try {
+        this.activateLoading()
         const request = await PlaylistService.get({ playlist_id: id })
         this.playlist = request.data.data
+        for (let i = 0; i < this.playlist.sounds.length; i++) {
+          if (this.playlist.sounds[i].sound_id) {
+            this.playlist.sounds[i] = this.playlist.sounds[i].sound
+          }
+        }
       } catch (error) {
         console.log(error)
       }
       this.disableLoading()
+    },
+    getPlaylistAndPlay () {
+      this.playPlaylist(this.playlist.sounds)
     }
   }
 }
 </script>
-
-<style>
-.profile-title {
-  text-transform: capitalize;
-}
-</style>
