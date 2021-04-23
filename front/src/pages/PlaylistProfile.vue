@@ -34,13 +34,21 @@ export default {
   },
   methods: {
     async getPlaylistInfo (id) {
+      this.activateLoading()
       try {
         const request = await PlaylistService.get({ playlist_id: id })
         this.playlist = request.data.data
       } catch (error) {
         console.log(error)
       }
+      this.disableLoading()
     }
   }
 }
 </script>
+
+<style>
+.profile-title {
+  text-transform: capitalize;
+}
+</style>
