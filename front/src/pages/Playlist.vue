@@ -1,12 +1,14 @@
 <template>
   <q-page>
     <div class="row justify-around">
-      <div class="col-md-8 col-xs-12 container">
+      <div :class="`${mode === 'adding' ? '' : 'col-md-8' } col-xs-12 container`">
         <p class="title text-h6 q-ml-md q-mt-md">Mis playlists <a v-if="token" class="text-green" style="cursor: pointer;" @click="agregarPlaylist()"> <q-icon name="add"/> <q-tooltip>Agregar</q-tooltip> </a></p>
         <div v-bind:key="result.id" v-for="result in playlists">
-          <PlaylistResult :result="result" />
-          <q-separator></q-separator>
+          <div class="options" v-if="mode === 'adding'">
+            <q-btn round @click="$emit('addToPlaylist', result)" color="positive" icon="add" />
           </div>
+          <PlaylistResult :result="result" />
+        </div>
       </div>
     </div>
   </q-page>
@@ -22,6 +24,7 @@ export default {
   mixins: [functions],
   components: { PlaylistResult },
   name: 'PagePlaylist',
+  props: ['mode'],
   data () {
     return {
       playlists: [],
@@ -33,6 +36,7 @@ export default {
   },
   methods: {
     async getMyPlaylists () {
+      this.activateLoading()
       try {
         if (localStorage.getItem('token')) {
           const params = {
@@ -45,6 +49,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.disableLoading()
     },
     agregarPlaylist () {
       this.$q.dialog({

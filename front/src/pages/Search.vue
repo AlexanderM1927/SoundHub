@@ -1,14 +1,14 @@
 <template>
-    <div class="row justify-around">
-        <div class="col-md-8 col-xs-12 container">
-            <p class="title text-h6 q-ml-md q-mt-md">RESULTADOS DE LA BÚSQUEDA</p>
-            <div v-bind:key="result.id" v-for="result in searchResults">
-              <SearchResultYoutube v-if="result.type === 'video'" :result="result" />
-              <SearchResultSound v-else-if="result.type === 'sound'" :result="result" />
-              <q-separator></q-separator>
-            </div>
-        </div>
+  <div class="row justify-around">
+    <div class="col-md-8 col-xs-12 container">
+      <p class="title text-h6 q-ml-md q-mt-md">RESULTADOS DE LA BÚSQUEDA</p>
+      <div v-bind:key="result.id" v-for="result in searchResults">
+        <SearchResultYoutube v-if="result.type === 'video'" :result="result" :download="true" />
+        <SearchResultSound v-else-if="result.type === 'sound'" :result="result" :download="true" />
+        <q-separator></q-separator>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -21,6 +21,9 @@ export default {
   components: { SearchResultYoutube, SearchResultSound },
   data () {
     return {
+      token: localStorage.getItem('token'),
+      dialogPlaylist: false,
+      sound: {}
     }
   },
   computed: {
@@ -50,7 +53,6 @@ export default {
     })
   },
   methods: {
-
   }
 }
 </script>

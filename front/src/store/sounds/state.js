@@ -3,7 +3,9 @@ export default function () {
     searchResults: null,
     loading: false,
     searchText: '',
-    song: null
+    song: null,
+    playlist: [],
+    position: 1
     //
   }
 }

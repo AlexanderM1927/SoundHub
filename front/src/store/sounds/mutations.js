@@ -18,3 +18,11 @@ export const setLoading = (state, payload) => {
 export const setSong = (state, payload) => {
   state.song = payload
 }
+
+export const setSongOnPlaylist = (state, payload) => {
+  state.playlist.push(payload)
+}
+
+export const setPosOnPlaylist = (state, payload) => {
+  state.position = payload
+}

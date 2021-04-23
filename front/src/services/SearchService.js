@@ -4,7 +4,7 @@ export default {
   getItemsByName (params) {
     return Api().get('search/' + params.name)
   },
-  getSongByUrl (params) {
+  getSongById (params) {
     return Api().get('download/' + params.type + '/' + params.url, { responseType: 'blob' })
   }
 }

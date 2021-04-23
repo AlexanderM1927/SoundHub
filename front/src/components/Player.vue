@@ -71,6 +71,16 @@ export default {
       get () {
         return this.$store.state.sounds.song
       }
+    },
+    playlist: {
+      get () {
+        return this.$store.state.sounds.playlist
+      }
+    },
+    position: {
+      get () {
+        return this.$store.state.sounds.position
+      }
     }
   },
   watch: {
@@ -99,10 +109,17 @@ export default {
       })
       this.wavesurfer.on('ready', () => {
         this.isLoading = false
+        this.wavesurfer.playPause()
         this.disableLoading()
       })
+      this.wavesurfer.on('finish', () => {
+        if (this.playlist.length > 0 && this.playlist.length > this.position) {
+          this.loadFile(this.playlist[this.position])
+          this.$store.dispatch('sounds/setPosition', (this.position + 1))
+        }
+      })
     },
-    loadFile (url) {
+    async loadFile (url) {
       if (!this.wavesurfer) this.createWaveSurfer()
       this.wavesurfer.load(url)
     }
