@@ -97,6 +97,42 @@ export const functions = {
         console.log(error)
       }
     },
+    async playPlaylist (playlist) {
+      this.activateLoading()
+      let isNotFirst = false
+      for (let i = 0; i < playlist.length; i++) {
+        if (i > 0) isNotFirst = true
+        if (playlist[i].type === 'video') {
+          await this.$store.dispatch('sounds/getSongById', {
+            url: playlist[i].id,
+            type: playlist[i].type,
+            playlistMode: isNotFirst,
+            isFirstOnPlaylist: !isNotFirst
+          })
+          this.disableLoading()
+        } else if (playlist[i].type === 'sound') {
+          await this.$store.dispatch('sounds/getSongById', {
+            url: playlist[i].sound_id,
+            type: playlist[i].type,
+            playlistMode: isNotFirst,
+            isFirstOnPlaylist: !isNotFirst
+          })
+          this.disableLoading()
+        } else if (playlist[i].type === 'device') {
+          await this.$store.dispatch('sounds/getSongByUrl', {
+            url: playlist[i].url,
+            playlistMode: isNotFirst,
+            isFirstOnPlaylist: !isNotFirst
+          })
+          this.disableLoading()
+        }
+        if (!isNotFirst) {
+          if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
+            document.getElementById('player').classList.toggle('inactive')
+          }
+        }
+      }
+    },
     async downloadFile (payload) {
       try {
         const request = await SearchService.getSongById(payload)
