@@ -35,7 +35,7 @@ export const getSongById = async ({ commit }, payload) => {
 
 export const getSongByUrl = ({ commit }, payload) => {
   try {
-    if (payload.isFirstOnPlaylist) commit('setFirstSongOnPlaylist', payload.url)
+    if (payload.isFirstOnPlaylist) commit('setSongOnPlaylist', payload.url)
     if (!payload.playlistMode) commit('setSong', payload.url)
     else commit('setSongOnPlaylist', payload.url)
   } catch (error) {
