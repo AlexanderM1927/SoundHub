@@ -16,4 +16,4 @@ export default {
   getMyPlaylists (params) {
     return Api().get('playlists-user/' + params.user_id, { headers: { Authorization: params.token } })
   }
-} 
+}

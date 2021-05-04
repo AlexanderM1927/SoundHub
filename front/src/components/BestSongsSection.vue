@@ -1,7 +1,17 @@
 <template>
   <div class="row popular-body col-11">
     <div class="col-12 popular-cards">
-      <!---->
+      <!--TITLE CARD-->
+      <div class="row title-card q-mr-lg">
+        <q-card class="col-12 tc-body">
+          <q-card-section class="tc-text">
+            Popular<br>
+            esta<br>
+            semana
+          </q-card-section>
+        </q-card>
+      </div>
+      <!--SELECTED SONGS-->
       <TopSong
        v-for="song in songs"
        :key="song.title"
@@ -73,18 +83,16 @@ export default {
 
   overflow-x: scroll !important;
   white-space: nowrap;
-
 }
 
 .popular-cards {
-  padding: 25px;
   display: flex;
   overflow-x: auto;
   border-radius: 10px;
 }
 
 .popular-body::-webkit-scrollbar {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 /* RELATED TO SCROLLBAR */
@@ -98,7 +106,30 @@ export default {
 }
 
 .popular-cards::-webkit-scrollbar-thumb {
-  background: rgba(15, 15, 15, 0.5);
+  background: rgba(15, 15, 15, 0.45);
   border-radius: 10px;
+}
+
+/* TITLE CARD */
+.title-card {
+  height: 340px;
+  padding: 8px;
+  background: linear-gradient(130deg,#ff7a18,#af002d 41.07%,#319197 76.05%);
+  border-radius: 8px;
+}
+
+.tc-body {
+  min-width: 180px;
+  width: 15%;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.tc-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 2.1rem;
+  color: #ffffff;
+  line-height: 2.3rem;
 }
 </style>

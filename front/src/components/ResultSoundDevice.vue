@@ -24,18 +24,18 @@ export default {
 <style>
 
 .content {
-    color: #E83845;
+  color: #E83845;
 }
 
 .item_title {
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 20px !important;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 20px !important;
 }
 
 .item_font {
-    color: #f5f5f5;
-    font-family: 'Quicksand', sans-serif;
+  color: #f5f5f5;
+  font-family: 'Quicksand', sans-serif;
 }
 
 </style>
