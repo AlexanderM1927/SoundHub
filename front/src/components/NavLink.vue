@@ -25,7 +25,7 @@ export default {
 <style>
 .light_font {
   font-family: 'Inter', sans-serif;
-  font-weight: bold;
+  font-weight: 400;
   font-size: 18px;
   color: #f5f5f5;
 }
