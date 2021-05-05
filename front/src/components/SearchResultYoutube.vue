@@ -14,7 +14,7 @@
           </p>
       </q-img>
       <div class="content col-md-8 col-xs-12">
-        <p class="item_title item_font">{{ result.title }}</p>
+        <p class="item_title">{{ result.title }}</p>
       </div>
     </div>
     <!--ACTION BUTTONS-->
