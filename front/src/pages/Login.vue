@@ -168,50 +168,50 @@ export default {
 
 <style scoped>
 .lg_body{
-    background-image: url('../assets/login-background.jpg');
-    background-position: center center;
-    height: 100vh;
+  height: 100vh;
+  background-image: url('../assets/login-background.jpg');
+  background-position: center center;
 }
 
 .lg_card{
-    width: 100%;
-    background: #f5f5f5;
-    border-radius: 20px;
+  width: 100%;
+  background: #f5f5f5;
+  border-radius: 20px;
 }
 
 .lg_img {
-    max-width: 900px;
-    width: 100%;
-    height: auto;
-    margin: 11% auto 0 auto;
+  max-width: 900px;
+  width: 100%;
+  height: auto;
+  margin: 11% auto 0 auto;
 }
 
 .lg_tab{
-    margin-top: 20%;
-    width: 100%;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 700;
+  width: 100%;
+  margin-top: 20%;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .tablinks{
-    width: 50%;
-    height: 45px;
-    background-color: #2b2b30;
-    color: #F5F5F5;
-    font-weight: 400;
-    font-size: 20px;
-    border: none;
-    cursor: pointer;
+  width: 50%;
+  height: 45px;
+  background-color: #2b2b30;
+  font-weight: 400;
+  font-size: 20px;
+  color: #F5F5F5;
+  border: none;
+  cursor: pointer;
 }
 
 .tablinks:hover{
-    background-color: #38383f;
+  background-color: #38383f;
 }
 
 .selected{
-    background-color: #3d393f;
+  background-color: #3d393f;
 }
 
 </style>

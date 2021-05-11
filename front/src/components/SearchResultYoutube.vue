@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="q-mb-sm">
     <!--VIDEO CONTENT-->
     <div
       @click="abrirReproductor(result)"
       style="cursor: pointer"
       class="container row justify-around"
     >
+      <!--IMG-->
       <q-img
         :src="result.thumbnail.thumbnails[0].url"
         class="col-md-3 col-xs-12 rslt-img">
@@ -13,22 +14,24 @@
             {{ result.length.simpleText }}
           </p>
       </q-img>
-      <div class="content col-md-8 col-xs-12">
-        <p class="item_title">{{ result.title }}</p>
+      <!--TITLE-->
+      <div class="rslt_div_title col-md-8 col-xs-12">
+        <p class="rslt_title">{{ result.title }}</p>
       </div>
     </div>
     <!--ACTION BUTTONS-->
-    <div>
+    <div :class="`row col-md-3 col-xs-12 rslt-buttons justify-around`">
+      <!--ADD TO LIST-->
       <q-btn
-        class="q-ml-sm q-mb-xs"
-        round
+        class="col-5 q-ml-sm q-mb-xs"
         @click="agregarSound(result)"
         color="positive"
+        glossy
         icon="add" />
+      <!--DOWNLOAD-->
       <q-btn
-        class="q-ml-sm q-mb-xs"
+        class="col-5 q-ml-sm q-mb-xs"
         v-if="download"
-        round
         @click="
           downloadFile({
             name: result.title,
@@ -37,6 +40,7 @@
             url: result.id,
           })"
         color="positive"
+        glossy
         icon="download"
       />
     </div>
@@ -99,28 +103,37 @@ export default {
 </script>
 
 <style>
-.content {
-  color: #e83845;
+.rslt_div_title{
+  background-color: #44444b;
+  padding: 0.4rem 0.4rem 0px 0.4rem;
 }
 
-.item_title {
+.rslt_title {
+  width: 90%;
   font-family: "Inter", sans-serif;
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: #f5f5f5;
-  line-height: 1.2rem !important;
+  line-height: 1.25rem !important;
 }
 
 .rlst-img {
   height: 100px !important;
+  margin: auto;
 }
 
 .rslt-img-text {
   position: absolute;
+  padding: 2px;
   bottom: -18px;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.75);
 
   text-align: center;
   color: #ffffff;
+}
+
+.rslt-buttons {
+  background-color: #44444b;
+  padding-bottom: 10px;
 }
 </style>
