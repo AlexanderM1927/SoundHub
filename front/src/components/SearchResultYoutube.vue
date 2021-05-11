@@ -20,7 +20,7 @@
       </div>
     </div>
     <!--ACTION BUTTONS-->
-    <div :class="`${q.screen.gt.md ? '' : 'q-mt-lg'} row col-md-3 col-xs-12 rslt-buttons justify-around`">
+    <div :class="`row col-md-3 col-xs-12 rslt-buttons justify-around`">
       <!--ADD TO LIST-->
       <q-btn
         class="col-5 q-ml-sm q-mb-xs"
