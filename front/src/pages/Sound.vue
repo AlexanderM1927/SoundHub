@@ -3,12 +3,13 @@
     <div :class="`row justify-around`">
       <div :class="`col-md-8 col-xs-12 container`">
         <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
-        <div v-bind:key="result.id" v-for="result in sounds">
-          <SearchResultSound :result="result" :download="false" />
-          <q-separator></q-separator>
-        </div>
+        <q-btn color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
         <div v-bind:key="result.id" v-for="result in files">
           <ResultSoundDevice :result="result" />
+          <q-separator></q-separator>
+        </div>
+        <div v-bind:key="result.id" v-for="result in sounds">
+          <SearchResultSound :result="result" :download="false" />
           <q-separator></q-separator>
         </div>
       </div>
@@ -34,7 +35,8 @@ export default {
       sounds: [],
       token: localStorage.getItem('token'),
       sound: {},
-      files: []
+      files: [],
+      allSounds: []
     }
   },
   mounted () {
@@ -111,6 +113,13 @@ export default {
       }).onDismiss(() => {
         console.log('Called on OK or Cancel')
       })
+    },
+    getPlaylistAndPlay () {
+      this.allSounds = [...this.files]
+      for (let i = 0; i < this.sounds.length; i++) {
+        this.allSounds.push(this.sounds[i])
+      }
+      this.playPlaylist(this.allSounds)
     }
   }
 }
