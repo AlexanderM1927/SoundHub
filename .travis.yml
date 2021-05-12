@@ -1,6 +1,10 @@
 language: node_js
 node_js:
   - '12'
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database soundhub;' -U postgres
 script:
   - cd back
   - mkdir public
