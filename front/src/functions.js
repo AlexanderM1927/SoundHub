@@ -90,7 +90,7 @@ export const functions = {
       try {
         await Filesystem.mkdir({
           path: 'soundhub',
-          // directory: FilesystemDirectory,
+          directory: FilesystemDirectory.Data,
           recursive: false // like mkdir -p
         })
       } catch (error) {
@@ -142,8 +142,8 @@ export const functions = {
           await this.verifyAndCreateFolder()
           await Filesystem.writeFile({
             data: str,
-            path: 'soundhub/' + payload.name + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.'))
-            // directory: FilesystemDirectory
+            path: 'soundhub/' + payload.name + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.')),
+            directory: FilesystemDirectory.Data
           })
         })
         console.log('Wrote file')
