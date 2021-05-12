@@ -49,12 +49,12 @@ export default {
         this.activateLoading()
         const ret = await Filesystem.readdir({
           path: 'soundhub',
-          directory: FilesystemDirectory.Documents
+          directory: FilesystemDirectory.Data
         })
         for (let i = 0; i < ret.files.length; i++) {
           const getUri = await Filesystem.getUri({
             path: 'soundhub/' + ret.files[i],
-            directory: FilesystemDirectory.Documents
+            directory: FilesystemDirectory.Data
           })
           const path = getUri.uri
           const url = await Capacitor.convertFileSrc(path)
