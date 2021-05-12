@@ -23,7 +23,7 @@ import SoundService from '../services/SoundService'
 import UploadSound from '../components/modals/UploadSound'
 import SearchResultSound from '../components/SearchResultSound.vue'
 import ResultSoundDevice from '../components/ResultSoundDevice.vue'
-import { Plugins, FilesystemDirectory, Capacitor } from '@capacitor/core'
+import { Plugins, Capacitor } from '@capacitor/core'
 
 const { Filesystem } = Plugins
 export default {
