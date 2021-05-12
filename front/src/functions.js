@@ -1,5 +1,5 @@
 import { QSpinnerGears, QSpinnerAudio } from 'quasar'
-import { Plugins } from '@capacitor/core'
+import { Plugins, FilesystemDirectory } from '@capacitor/core'
 import SearchService from './services/SearchService'
 
 const { Filesystem } = Plugins
@@ -90,7 +90,7 @@ export const functions = {
       try {
         await Filesystem.mkdir({
           path: 'soundhub',
-          directory: '',
+          directory: FilesystemDirectory,
           recursive: false // like mkdir -p
         })
       } catch (error) {
@@ -143,7 +143,7 @@ export const functions = {
           await Filesystem.writeFile({
             data: str,
             path: 'soundhub/' + payload.name + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.')),
-            directory: ''
+            directory: FilesystemDirectory
           })
         })
         console.log('Wrote file')
