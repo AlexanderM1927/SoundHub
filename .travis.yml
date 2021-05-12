@@ -3,7 +3,10 @@ node_js:
   - '12'
 script:
   - cd back
-  - mkdir public/sounds
+  - mkdir public
+  - cd public
+  - mkdir sounds
+  - cd ..
   - npm install
   - npm start
 deploy:
