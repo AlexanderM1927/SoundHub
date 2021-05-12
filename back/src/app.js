@@ -12,12 +12,12 @@ const db      = require('../v1/models')
 const Role    = db.role
 app.use(express.static(__dirname+'/public'));
 
-db.sequelize.sync();
+// db.sequelize.sync();
 
-// db.sequelize.sync({force: true}).then(() => {
-//   console.log('Drop and Resync Db')
-//   initial()
-// });
+db.sequelize.sync({force: true}).then(() => {
+  console.log('Drop and Resync Db')
+  initial()
+});
 
 function initial() {
 Role.create({
