@@ -11,4 +11,4 @@ deploy:
 on:
     branch: master
     tags: true
-    repo: soundhub/back
+    repo: AlexanderM1927/soundhub/back
