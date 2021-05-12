@@ -11,7 +11,6 @@
               v-model="sound.sound_thumbnail_url"
               :label="'Thumbnail'"
               outlined
-              accept=".jpg, .png"
               lazy-rules
               use-chips
               :rules="[

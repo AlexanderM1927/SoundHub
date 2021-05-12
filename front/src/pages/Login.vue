@@ -127,6 +127,7 @@ export default {
   methods: {
     async loginWithFacebook () {
       console.log('login-facebook')
+      this.alert('warning', 'Proximamente')
     },
     async login () {
       try {
