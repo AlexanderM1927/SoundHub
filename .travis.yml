@@ -1,14 +1,12 @@
 language: node_js
 node_js:
   - '12'
-script:
-  - npm install
+after_success:
   - npm start
+before_deploy:
+  - cd back
+  - npm install
 deploy:
   provider: heroku
   api_key: $APIKEYHEROKU
   app: soundhubback
-on:
-    branch: master
-    tags: true
-    repo: AlexanderM1927/soundhub/back
