@@ -8,3 +8,7 @@ deploy:
   provider: heroku
   api_key: $APIKEYHEROKU
   app: soundhub
+on:
+    branch: master
+    tags: true
+    repo: soundhub/back
