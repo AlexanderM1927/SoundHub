@@ -50,3 +50,11 @@ export const setPosition = ({ commit }, payload) => {
     console.log(error)
   }
 }
+
+export const reloadPlaylist = ({ commit }) => {
+  try {
+    commit('reloadPlaylist')
+  } catch (error) {
+    console.log(error)
+  }
+}
