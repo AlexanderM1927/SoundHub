@@ -23,7 +23,7 @@ import SoundService from '../services/SoundService'
 import UploadSound from '../components/modals/UploadSound'
 import SearchResultSound from '../components/SearchResultSound.vue'
 import ResultSoundDevice from '../components/ResultSoundDevice.vue'
-import { Plugins, Capacitor } from '@capacitor/core'
+import { Plugins, FilesystemDirectory, Capacitor } from '@capacitor/core'
 
 const { Filesystem } = Plugins
 export default {
@@ -49,12 +49,12 @@ export default {
         this.activateLoading()
         const ret = await Filesystem.readdir({
           path: 'soundhub',
-          directory: ''
+          directory: FilesystemDirectory
         })
         for (let i = 0; i < ret.files.length; i++) {
           const getUri = await Filesystem.getUri({
             path: 'soundhub/' + ret.files[i],
-            directory: ''
+            directory: FilesystemDirectory
           })
           const path = getUri.uri
           const url = await Capacitor.convertFileSrc(path)
