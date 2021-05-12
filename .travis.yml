@@ -7,7 +7,7 @@ script:
 deploy:
   provider: heroku
   api_key: $APIKEYHEROKU
-  app: soundhub
+  app: soundhubback
 on:
     branch: master
     tags: true
