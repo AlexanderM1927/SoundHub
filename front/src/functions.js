@@ -142,7 +142,7 @@ export const functions = {
           await this.verifyAndCreateFolder()
           await Filesystem.writeFile({
             data: str,
-            path: 'soundhub/' + payload.name + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.')),
+            path: 'soundhub/' + payload.name + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.'))
             // directory: FilesystemDirectory
           })
         })
