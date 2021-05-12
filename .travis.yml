@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - '12'
+script:
+  - npm install
+  - npm start
+deploy:
+  provider: heroku
+  api_key: $APIKEYHEROKU
+  app: soundhub
