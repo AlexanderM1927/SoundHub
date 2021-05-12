@@ -8,7 +8,7 @@ script:
   - mkdir sounds
   - cd ..
   - npm install
-  - npm start
+  - npm start &
 deploy:
   provider: heroku
   api_key: $APIKEYHEROKU
