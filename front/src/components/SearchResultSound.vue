@@ -1,13 +1,17 @@
 <template>
   <div>
-    <div @click="abrirReproductor(result)" style="cursor: pointer;" class="container row search_item justify-around">
-      <q-img :src="getSrcFromBackend(result.sound_thumbnail_url)" style="height: 100px;" class="col-3 q-my-sm"></q-img>
-      <div class="content q-my-sm col-8" >
+    <!--VIDEO CONTENT-->
+    <div class="container row justify-around" @click="abrirReproductor(result)" style="cursor: pointer;">
+      <q-img class="col-3 q-my-sm" :src="getSrcFromBackend(result.sound_thumbnail_url)"></q-img>
+      <div class="col-8 q-my-sm">
           <p class="item_title item_font">{{result.sound_name}}</p>
       </div>
     </div>
-    <q-btn round @click="agregarSound(result)" color="positive" icon="add" />
-    <q-btn v-if="download" round @click="downloadFile({name: result.sound_name, sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id})" color="positive" icon="download" />
+    <!--ACTION BUTTONS-->
+    <div class="q-mt-sm">
+      <q-btn class="q-ml-sm" round @click="agregarSound(result)" color="positive" icon="add" />
+      <q-btn v-if="download" round @click="downloadFile({name: result.sound_name, sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id})" color="positive" icon="download" />
+    </div>
     <q-dialog
       v-model="dialogPlaylist"
       transition-show="slide-up"
@@ -69,18 +73,7 @@ export default {
 <style>
 
 .content {
-    color: #E83845;
-}
-
-.item_title {
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 20px !important;
-}
-
-.item_font {
-    color: #f5f5f5;
-    font-family: 'Quicksand', sans-serif;
+  color: #E83845;
 }
 
 </style>

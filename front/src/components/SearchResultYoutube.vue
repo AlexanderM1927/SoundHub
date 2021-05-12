@@ -1,26 +1,61 @@
 <template>
-    <div>
-        <div @click="abrirReproductor(result)" style="cursor: pointer;" class="container row search_item justify-around">
-            <q-img :src="result.thumbnail.thumbnails[0].url" class="col-3 q-my-sm"></q-img>
-            <div class="content q-my-sm col-8" >
-                <p class="item_title item_font">{{result.title}}</p>
-                <p class="item_font" v-if="result.length.accessibility">{{result.length.accessibility.accessibilityData.label}}</p>
-            </div>
-        </div>
-        <q-btn round @click="agregarSound(result)" color="positive" icon="add" />
-        <q-btn v-if="download" round @click="downloadFile({name: result.title, sound_file_url: '.mp3', type: 'video', url: result.id})" color="positive" icon="download" />
-        <q-dialog
-        v-model="dialogPlaylist"
-        transition-show="slide-up"
-        transition-hide="slide-down"
-        >
-            <q-card style="width: 800px; max-width: 80vw;" class="container">
-                <q-card-section>
-                <Playlist mode= 'adding' @addToPlaylist="addToPlaylist"></Playlist>
-                </q-card-section>
-            </q-card>
-        </q-dialog>
+  <div class="q-mb-sm">
+    <!--VIDEO CONTENT-->
+    <div
+      @click="abrirReproductor(result)"
+      style="cursor: pointer"
+      class="container row justify-around"
+    >
+      <!--IMG-->
+      <q-img
+        :src="result.thumbnail.thumbnails[0].url"
+        class="col-md-3 col-xs-12 rslt-img">
+          <p class="rslt-img-text" v-if="result.length.accessibility">
+            {{ result.length.simpleText }}
+          </p>
+      </q-img>
+      <!--TITLE-->
+      <div class="rslt_div_title col-md-8 col-xs-12">
+        <p class="rslt_title">{{ result.title }}</p>
+      </div>
     </div>
+    <!--ACTION BUTTONS-->
+    <div :class="`row col-md-3 col-xs-12 rslt-buttons justify-around`">
+      <!--ADD TO LIST-->
+      <q-btn
+        class="col-5 q-ml-sm q-mb-xs"
+        @click="agregarSound(result)"
+        color="positive"
+        glossy
+        icon="add" />
+      <!--DOWNLOAD-->
+      <q-btn
+        class="col-5 q-ml-sm q-mb-xs"
+        v-if="download"
+        @click="
+          downloadFile({
+            name: result.title,
+            sound_file_url: '.mp3',
+            type: 'video',
+            url: result.id,
+          })"
+        color="positive"
+        glossy
+        icon="download"
+      />
+    </div>
+    <q-dialog
+      v-model="dialogPlaylist"
+      transition-show="slide-up"
+      transition-hide="slide-down"
+    >
+      <q-card style="width: 800px; max-width: 80vw" class="container">
+        <q-card-section>
+          <Playlist mode="adding" @addToPlaylist="addToPlaylist"></Playlist>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+  </div>
 </template>
 
 <script>
@@ -68,20 +103,37 @@ export default {
 </script>
 
 <style>
-
-.content {
-    color: #E83845;
+.rslt_div_title{
+  background-color: #44444b;
+  padding: 0.4rem 0.4rem 0px 0.4rem;
 }
 
-.item_title {
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 20px !important;
+.rslt_title {
+  width: 90%;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: #f5f5f5;
+  line-height: 1.25rem !important;
 }
 
-.item_font {
-    color: #f5f5f5;
-    font-family: 'Quicksand', sans-serif;
+.rlst-img {
+  height: 100px !important;
+  margin: auto;
 }
 
+.rslt-img-text {
+  position: absolute;
+  padding: 2px;
+  bottom: -18px;
+  background-color: rgba(0, 0, 0, 0.75);
+
+  text-align: center;
+  color: #ffffff;
+}
+
+.rslt-buttons {
+  background-color: #44444b;
+  padding-bottom: 10px;
+}
 </style>

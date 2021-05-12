@@ -1,5 +1,5 @@
 <template>
-  <q-card class="col-md-3 col-xs-8 popular-card">
+  <q-card class="popular-card">
     <q-img :src="require(`../assets/${img}`)" class="p-card-img" basic>
       <div v-if="firstOne" style="background-color: transparent">
         <q-icon name="fas fa-crown" class="crown"></q-icon>
@@ -35,6 +35,9 @@ export default {
 .popular-card {
   min-width: 200px;
   width: 15%;
+  height: 300px;
+
+  margin: auto 0;
   background: none;
   border-radius: 10px;
   box-shadow: -20px 0 3rem 0.1rem #000;
@@ -48,7 +51,8 @@ export default {
 .p-card-text {
   width: 100%;
   height: 300px;
-  background-color: rgba(0, 0, 0, 0.8);
+
+  background-color: rgba(0, 0, 0, 0.65);
   color: #f5f5f5;
 
   opacity: 0;
@@ -58,6 +62,7 @@ export default {
 .p-card-p {
   width: 95%;
   margin: 0;
+
   position: absolute;
   top: 50%;
   left: 50%;

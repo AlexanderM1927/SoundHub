@@ -123,10 +123,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .search-title {
-  margin: auto;
   position: relative;
+  margin: auto;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   color: #f5f5f5;

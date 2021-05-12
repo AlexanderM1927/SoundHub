@@ -98,6 +98,7 @@ export const functions = {
       }
     },
     async playPlaylist (playlist) {
+      await this.$store.dispatch('sounds/reloadPlaylist')
       this.activateLoading()
       let isNotFirst = false
       for (let i = 0; i < playlist.length; i++) {

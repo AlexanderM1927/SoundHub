@@ -26,3 +26,9 @@ export const setSongOnPlaylist = (state, payload) => {
 export const setPosOnPlaylist = (state, payload) => {
   state.position = payload
 }
+
+export const reloadPlaylist = (state) => {
+  state.playlist = []
+  state.position = 1
+  state.song = null
+}

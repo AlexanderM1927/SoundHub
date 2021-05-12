@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="row justify-around">
-      <!--CARD-->
+      <!--INITIAL CARD-->
       <div class="row col-11 justify-around">
         <q-card class="col-12 q-mt-md card-body">
           <img src="../assets/lofi-hiphop.jpg">
@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style scoped>
-/* INITIAL CARD */
+/* INITIAL CARD STYLES */
 .card-body {
   background-color: #36363b;
   border-radius: 8px;
