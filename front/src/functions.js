@@ -1,5 +1,5 @@
 import { QSpinnerGears, QSpinnerAudio } from 'quasar'
-import { Plugins, FilesystemDirectory } from '@capacitor/core'
+import { Plugins } from '@capacitor/core'
 import SearchService from './services/SearchService'
 
 const { Filesystem } = Plugins

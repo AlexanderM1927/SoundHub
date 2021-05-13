@@ -1,7 +1,7 @@
 <template>
   <q-page>
-    <div class="row unu justify-around">
-      <div :class="`${mode === 'adding' ? '' : 'col-md-8' } col-xs-12 container`">
+    <div class="row justify-around">
+      <div :class="`custom-dark-bg ${mode === 'adding' ? '' : 'col-md-8' } col-xs-12`">
         <p class="title text-h6 q-ml-md q-mt-md">Mis playlists <a v-if="token" class="text-green" style="cursor: pointer;" @click="agregarPlaylist()"> <q-icon name="add"/> <q-tooltip>Agregar</q-tooltip> </a></p>
         <div v-if="token">
           <div v-bind:key="result.id" v-for="result in playlists">
@@ -87,8 +87,8 @@ export default {
 </script>
 
 <style>
-.unu {
-  background-color: brown;
+.custom-dark-bg {
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 </style>

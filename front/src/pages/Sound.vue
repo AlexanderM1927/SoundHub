@@ -1,9 +1,12 @@
 <template>
   <q-page>
     <div :class="`row justify-around`">
-      <div :class="`col-md-8 col-xs-12 container`">
+      <div :class="`custom-dark-bg col-md-8 col-xs-12 container`">
         <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
-        <q-btn color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
+        <div class="row custom-dark-div">
+          <p class="snd-subtitle col-9">Reproducir en orden</p>
+          <q-btn class="play-btn col-3" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
+        </div>
         <div v-bind:key="result.id" v-for="result in files">
           <ResultSoundDevice :result="result" />
           <q-separator></q-separator>
@@ -23,7 +26,7 @@ import SoundService from '../services/SoundService'
 import UploadSound from '../components/modals/UploadSound'
 import SearchResultSound from '../components/SearchResultSound.vue'
 import ResultSoundDevice from '../components/ResultSoundDevice.vue'
-import { Plugins, FilesystemDirectory, Capacitor } from '@capacitor/core'
+import { Plugins, Capacitor } from '@capacitor/core'
 
 const { Filesystem } = Plugins
 export default {
@@ -124,3 +127,25 @@ export default {
   }
 }
 </script>
+
+<style>
+.custom-dark-div {
+  margin: 1rem 0.5rem;
+  padding: 0.7rem 0.5rem;
+  background-color: rgba(54, 54, 59, 0.9);
+  border-radius: 3px;
+}
+
+.snd-subtitle {
+  margin: auto;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.15rem;
+  color: whitesmoke;
+}
+
+.play-btn {
+  margin: auto;
+  max-width: 80px;
+  height: 35px;
+}
+</style>

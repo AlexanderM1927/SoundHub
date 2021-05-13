@@ -2,14 +2,14 @@
   <div class="q-mb-sm">
     <!--VIDEO CONTENT-->
     <div
+      class="container row justify-around"
       @click="abrirReproductor(result)"
       style="cursor: pointer"
-      class="container row justify-around"
     >
       <!--IMG-->
       <q-img
-        :src="result.thumbnail.thumbnails[0].url"
-        class="col-md-3 col-xs-12 rslt-img">
+        class="col-md-3 col-xs-12 rslt-img"
+        :src="result.thumbnail.thumbnails[0].url">
           <p class="rslt-img-text" v-if="result.length.accessibility">
             {{ result.length.simpleText }}
           </p>
@@ -20,13 +20,12 @@
       </div>
     </div>
     <!--ACTION BUTTONS-->
-    <div :class="`row col-md-3 col-xs-12 rslt-buttons justify-around`">
+    <div :class="`row col-md-3 col-xs-12 rslt-div-btns justify-around`">
       <!--ADD TO LIST-->
       <q-btn
         class="col-5 q-ml-sm q-mb-xs"
         @click="agregarSound(result)"
         color="positive"
-        glossy
         icon="add" />
       <!--DOWNLOAD-->
       <q-btn
@@ -40,7 +39,6 @@
             url: result.id,
           })"
         color="positive"
-        glossy
         icon="download"
       />
     </div>
@@ -104,7 +102,7 @@ export default {
 
 <style>
 .rslt_div_title{
-  background-color: #44444b;
+  background-color: #36363b;
   padding: 0.4rem 0.4rem 0px 0.4rem;
 }
 
@@ -132,8 +130,9 @@ export default {
   color: #ffffff;
 }
 
-.rslt-buttons {
-  background-color: #44444b;
+.rslt-div-btns {
+  background-color: #36363b;
   padding-bottom: 10px;
 }
+
 </style>

@@ -1,25 +1,54 @@
 <template>
-  <div>
+  <div class="q-mb-sm">
     <!--VIDEO CONTENT-->
-    <div class="container row justify-around" @click="abrirReproductor(result)" style="cursor: pointer;">
-      <q-img class="col-3 q-my-sm" :src="getSrcFromBackend(result.sound_thumbnail_url)"></q-img>
-      <div class="col-8 q-my-sm">
-          <p class="item_title item_font">{{result.sound_name}}</p>
+    <div
+      :class="[
+      font==search ? 'container row justify-around' : '']"
+      @click="abrirReproductor(result)"
+      style="cursor: pointer"
+    >
+      <!--IMG-->
+      <q-img
+        class="col-3 col-xs-12 rslt-img"
+        :src="getSrcFromBackend(result.sound_thumbnail_url)">
+      </q-img>
+      <!--TITLE-->
+      <div class="rslt_div_title col-md-8 col-xs-12">
+        <p class="rslt_title">{{ result.sound_name }}</p>
       </div>
     </div>
     <!--ACTION BUTTONS-->
-    <div class="q-mt-sm">
-      <q-btn class="q-ml-sm" round @click="agregarSound(result)" color="positive" icon="add" />
-      <q-btn v-if="download" round @click="downloadFile({name: result.sound_name, sound_file_url: result.sound_file_url, type: 'sound', url: result.sound_id})" color="positive" icon="download" />
+    <div class="row col-md-3 col-xs-12 rslt-div-btns justify-around">
+      <!--ADD TO LIST-->
+      <q-btn
+        class="col-5 q-ml-sm q-mb-xs"
+        @click="agregarSound(result)"
+        color="positive"
+        icon="add"
+      />
+      <!--DOWNLOAD-->
+      <q-btn
+        class="col-5 q-ml-sm q-mb-xs"
+        v-if="download"
+        @click="
+          downloadFile({
+            name: result.sound_name,
+            sound_file_url: result.sound_file_url,
+            type: 'sound',
+            url: result.sound_id,
+          })"
+        color="positive"
+        icon="download"
+      />
     </div>
     <q-dialog
       v-model="dialogPlaylist"
       transition-show="slide-up"
       transition-hide="slide-down"
     >
-      <q-card style="width: 800px; max-width: 80vw;" class="container">
+      <q-card style="width: 800px; max-width: 80vw" class="container">
         <q-card-section>
-          <Playlist mode= 'adding' @addToPlaylist="addToPlaylist"></Playlist>
+          <Playlist mode="adding" @addToPlaylist="addToPlaylist"></Playlist>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -35,7 +64,7 @@ export default {
   mixins: [functions],
   components: { Playlist },
   name: 'SearchResult',
-  props: ['result', 'download'],
+  props: ['result', 'download', 'font'],
   data () {
     return {
       token: localStorage.getItem('token'),
@@ -69,11 +98,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-.content {
-  color: #E83845;
-}
-
-</style>
