@@ -5,11 +5,9 @@
         <p class="col-10 pl-name">{{playlist.playlist_name}}</p>
         <q-btn class="col-2 play-btn" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
       </div>
-      <Prueba/>
       <div v-bind:key="result.id" v-for="result in playlist.sounds">
-        <SearchResultSound v-if="result.type === 'sound'" :result="result" />
-        <SearchResultYoutube v-else :result="result" />
-        <q-separator></q-separator>
+        <SearchResultSound v-if="result.type === 'sound'" :result="result" :tiny="true" />
+        <SearchResultYoutube v-else :result="result" :tiny="true" />
       </div>
     </div>
   </div>
@@ -20,11 +18,10 @@ import { functions } from '../functions.js'
 import SearchResultSound from '../components/SearchResultSound.vue'
 import SearchResultYoutube from '../components/SearchResultYoutube.vue'
 import PlaylistService from '../services/PlaylistService'
-import Prueba from '../components/PlaylistItem.vue'
 
 export default {
   mixins: [functions],
-  components: { SearchResultSound, SearchResultYoutube, Prueba },
+  components: { SearchResultSound, SearchResultYoutube },
   data () {
     return {
       id: this.$route.params.playlist_id,
@@ -61,7 +58,6 @@ export default {
 </script>
 
 <style>
-
 .custom-dark-div {
   margin: 1rem 0.5rem;
   padding: 0.7rem 0.5rem;
@@ -83,4 +79,5 @@ export default {
   max-width: 80px;
   height: 35px;
 }
+
 </style>

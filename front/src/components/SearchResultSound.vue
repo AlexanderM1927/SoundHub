@@ -2,45 +2,51 @@
   <div class="q-mb-sm">
     <!--VIDEO CONTENT-->
     <div
-      :class="[
-      font==search ? 'container row justify-around' : '']"
+      :class="[tiny ? 'row custom-dark-div' : 'row justify-around']"
       @click="abrirReproductor(result)"
-      style="cursor: pointer"
     >
       <!--IMG-->
       <q-img
-        class="col-3 col-xs-12 rslt-img"
-        :src="getSrcFromBackend(result.sound_thumbnail_url)">
+        :class="[tiny ? 'pli-img col-3' : 'col-3 col-xs-12 rslt-img']"
+        :src="getSrcFromBackend(result.sound_thumbnail_url)"
+      >
       </q-img>
+      <!--REMOVE BUTTON-->
+      <template v-if="tiny === true">
+        <a class="pli-delete text-black"> <q-icon name="fas fa-times"/></a>
+      </template>
       <!--TITLE-->
-      <div class="rslt_div_title col-md-8 col-xs-12">
-        <p class="rslt_title">{{ result.sound_name }}</p>
+      <div :class="[tiny ? 'col-9' : 'rslt_div_title col-md-8 col-xs-12']">
+        <p :class="[tiny ? 'pli-text' : 'rslt_title']">{{ result.sound_name }}</p>
       </div>
     </div>
     <!--ACTION BUTTONS-->
-    <div class="row col-md-3 col-xs-12 rslt-div-btns justify-around">
-      <!--ADD TO LIST-->
-      <q-btn
-        class="col-5 q-ml-sm q-mb-xs"
-        @click="agregarSound(result)"
-        color="positive"
-        icon="add"
-      />
-      <!--DOWNLOAD-->
-      <q-btn
-        class="col-5 q-ml-sm q-mb-xs"
-        v-if="download"
-        @click="
-          downloadFile({
-            name: result.sound_name,
-            sound_file_url: result.sound_file_url,
-            type: 'sound',
-            url: result.sound_id,
-          })"
-        color="positive"
-        icon="download"
-      />
-    </div>
+    <template v-if="tiny === false">
+      <div class="row col-md-3 col-xs-12 rslt-div-btns justify-around">
+        <!--ADD TO LIST-->
+        <q-btn
+          class="col-5 q-ml-sm q-mb-xs"
+          @click="agregarSound(result)"
+          color="positive"
+          icon="add"
+        />
+        <!--DOWNLOAD-->
+        <q-btn
+          class="col-5 q-ml-sm q-mb-xs"
+          v-if="download"
+          @click="
+            downloadFile({
+              name: result.sound_name,
+              sound_file_url: result.sound_file_url,
+              type: 'sound',
+              url: result.sound_id,
+            })
+          "
+          color="positive"
+          icon="download"
+        />
+      </div>
+    </template>
     <q-dialog
       v-model="dialogPlaylist"
       transition-show="slide-up"
@@ -64,7 +70,7 @@ export default {
   mixins: [functions],
   components: { Playlist },
   name: 'SearchResult',
-  props: ['result', 'download', 'font'],
+  props: ['result', 'download', 'tiny'],
   data () {
     return {
       token: localStorage.getItem('token'),
@@ -98,3 +104,63 @@ export default {
   }
 }
 </script>
+
+<style>
+/*BIG VERSION STYLES */
+.rslt_div_title{
+  background-color: #36363b;
+  padding: 0.4rem 0.4rem 0px 0.4rem;
+}
+
+.rslt_title {
+  width: 90%;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: #f5f5f5;
+  line-height: 1.25rem !important;
+}
+
+.rlst-img {
+  height: 100px !important;
+  margin: auto;
+}
+
+.rslt-img-text {
+  position: absolute;
+  padding: 2px;
+  bottom: -18px;
+  background-color: rgba(0, 0, 0, 0.75);
+
+  text-align: center;
+  color: #ffffff;
+}
+
+.rslt-div-btns {
+  background-color: #36363b;
+  padding-bottom: 10px;
+}
+
+/*TINY VERSION STYLES*/
+.pli-img {
+  height: 80px !important;
+}
+
+.pli-text {
+  padding: 0 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: .9rem;
+  color: white;
+}
+
+.pli-delete {
+  position: relative;
+  left: 0.8rem;
+  width: 1.5rem;
+  height: 1.8rem;
+  font-size: 1.4rem;
+  background-color: #FF9800;
+  cursor: pointer;
+  z-index: 5;
+}
+</style>

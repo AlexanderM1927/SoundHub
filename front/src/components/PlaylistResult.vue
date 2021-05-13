@@ -8,9 +8,9 @@
     <div class="col-11 q-my-sm">
       <p class="pl-title">{{ result.playlist_name }}</p>
     </div>
-    <!--DELETE ICON-->
+    <!--DELETE ICON
     <a class="col-1 pl-delete text-red"> <q-icon name="fas fa-trash-alt"/></a>
-  </div>
+  --></div>
 </template>
 
 <script>
