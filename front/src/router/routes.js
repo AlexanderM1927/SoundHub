@@ -8,7 +8,7 @@ const routes = [
   },
   {
     path: '/login',
-    component: () => import('layouts/LoginLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [
       { name: 'login', path: '', component: () => import('pages/Login.vue'), meta: { title: 'Login' } },
       { name: 'recovery', path: '/recovery', component: () => import('pages/Recovery.vue'), meta: { title: 'Recovery' } }

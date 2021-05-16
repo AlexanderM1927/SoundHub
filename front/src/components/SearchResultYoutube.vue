@@ -1,5 +1,5 @@
 <template>
-  <div class="q-mb-sm">
+  <div>
     <!--VIDEO CONTENT-->
     <div
       :class="[tiny ? 'row custom-dark-div' : 'row justify-around']"
@@ -16,7 +16,7 @@
           </template>
       </q-img>
       <!--TITLE-->
-      <div :class="[tiny ? 'col-9' : 'rslt_div_title col-12']">
+      <div :class="[tiny ? 'col-md-8 col-xs-9' : 'rslt_div_title col-xs-12']">
         <p :class="[tiny ? 'pli-text' : 'rslt_title']">{{ result.title }}</p>
       </div>
     </div>
@@ -115,8 +115,7 @@ export default {
 }
 
 .rslt_title {
-  width: 90%;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 1.05rem;
   color: #f5f5f5;
@@ -149,8 +148,9 @@ export default {
 }
 
 .pli-text {
-  padding: 0 8px;
+  padding: 0 7% 0 8px;
   font-family: 'Inter', sans-serif;
+  font-size: .9rem;
   color: white;
 }
 
@@ -161,13 +161,15 @@ export default {
 
 .pli-delete {
   position: relative;
-  top: -102px;
-  left: 1rem;
+  top: -109px;
+  left: 99vw;
+  margin-left: -2rem;
   width: 1.5rem;
   height: 1.8rem;
   font-size: 1.4rem;
   background-color: #FF9800;
   cursor: pointer;
+  z-index: 5;
 }
 
 /*PLAYLIST CARD STYLES*/

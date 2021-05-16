@@ -9,11 +9,9 @@
         </div>
         <div v-bind:key="result.id" v-for="result in files">
           <ResultSoundDevice :result="result" />
-          <q-separator></q-separator>
         </div>
         <div v-bind:key="result.id" v-for="result in sounds">
-          <SearchResultSound :result="result" :download="false" />
-          <q-separator></q-separator>
+          <SearchResultSound :result="result" :download="false" :tiny="true"/>
         </div>
       </div>
     </div>
@@ -128,7 +126,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .custom-dark-div {
   margin: 1rem 0.5rem;
   padding: 0.7rem 0.5rem;
