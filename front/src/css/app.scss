@@ -8,11 +8,6 @@ body {
   margin-bottom: 70px;
 }
 
-.options {
-  position: absolute;
-  right: 0;
-}
-
 .container {
   height: 100%;
   background-color: #36363b;
@@ -28,7 +23,7 @@ body {
   bottom: 0px;
   width: 100%;
   height: 70px;
-  background: #FFFFFF;
+  background: #2a2a2e;
   z-index: 9999;
   transition: all 350ms linear;
 }
@@ -39,4 +34,12 @@ body {
 
 #player.active {
   bottom: -0px;
+}
+
+.custom-dark-bg {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.margin-auto {
+  margin: auto;
 }

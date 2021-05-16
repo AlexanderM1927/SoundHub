@@ -15,10 +15,10 @@ const routes = [
     ]
   },
   {
-    path: '/perfil/:id',
+    path: '/perfil',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { name: 'perfil', path: '', component: () => import('pages/Index.vue'), meta: { title: 'Profile' } }
+      { name: 'perfil', path: '', component: () => import('pages/Profile.vue'), meta: { title: 'Perfil' } }
     ]
   },
   {

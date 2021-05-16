@@ -46,6 +46,7 @@ const menuList = [
   {
     title: 'Perfil',
     icon: 'far fa-user-circle',
+    to: '/perfil',
     separator: true,
     requireSession: true
   },
@@ -142,7 +143,7 @@ export default {
 
 .search-input{
   padding-left: 10px;
-  background-color: #505057;
+  background-color: rgba(54, 54, 59, .9);
   font-size: 18px;
   border-radius: 5px;
 }

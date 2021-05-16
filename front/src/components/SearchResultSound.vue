@@ -11,17 +11,19 @@
         :src="getSrcFromBackend(result.sound_thumbnail_url)"
       >
       </q-img>
-      <!--REMOVE BUTTON-->
-      <template v-if="tiny === true">
-        <a class="pli-delete text-black"> <q-icon name="fas fa-times"/></a>
-      </template>
       <!--TITLE-->
-      <div :class="[tiny ? 'col-9' : 'rslt_div_title col-md-8 col-xs-12']">
+      <div :class="[tiny ? 'col-9' : 'rslt_div_title col-12']">
         <p :class="[tiny ? 'pli-text' : 'rslt_title']">{{ result.sound_name }}</p>
       </div>
     </div>
+    <!--REMOVE BUTTON-->
+    <div v-if="tiny === true">
+      <div class="zero">
+        <a class="pli-delete text-black" @click="pintar(true)"> <q-icon name="fas fa-times"/></a>
+      </div>
+    </div>
     <!--ACTION BUTTONS-->
-    <template v-if="tiny === false">
+    <div v-if="tiny === false">
       <div class="row col-md-3 col-xs-12 rslt-div-btns justify-around">
         <!--ADD TO LIST-->
         <q-btn
@@ -46,16 +48,14 @@
           icon="download"
         />
       </div>
-    </template>
+    </div>
     <q-dialog
       v-model="dialogPlaylist"
       transition-show="slide-up"
       transition-hide="slide-down"
     >
-      <q-card style="width: 800px; max-width: 80vw" class="container">
-        <q-card-section>
-          <Playlist mode="adding" @addToPlaylist="addToPlaylist"></Playlist>
-        </q-card-section>
+      <q-card class="pl-card-body">
+        <Playlist mode="adding" @addToPlaylist="addToPlaylist"></Playlist>
       </q-card>
     </q-dialog>
   </div>
@@ -104,63 +104,3 @@ export default {
   }
 }
 </script>
-
-<style>
-/*BIG VERSION STYLES */
-.rslt_div_title{
-  background-color: #36363b;
-  padding: 0.4rem 0.4rem 0px 0.4rem;
-}
-
-.rslt_title {
-  width: 90%;
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 1.05rem;
-  color: #f5f5f5;
-  line-height: 1.25rem !important;
-}
-
-.rlst-img {
-  height: 100px !important;
-  margin: auto;
-}
-
-.rslt-img-text {
-  position: absolute;
-  padding: 2px;
-  bottom: -18px;
-  background-color: rgba(0, 0, 0, 0.75);
-
-  text-align: center;
-  color: #ffffff;
-}
-
-.rslt-div-btns {
-  background-color: #36363b;
-  padding-bottom: 10px;
-}
-
-/*TINY VERSION STYLES*/
-.pli-img {
-  height: 80px !important;
-}
-
-.pli-text {
-  padding: 0 8px;
-  font-family: 'Inter', sans-serif;
-  font-size: .9rem;
-  color: white;
-}
-
-.pli-delete {
-  position: relative;
-  left: 0.8rem;
-  width: 1.5rem;
-  height: 1.8rem;
-  font-size: 1.4rem;
-  background-color: #FF9800;
-  cursor: pointer;
-  z-index: 5;
-}
-</style>

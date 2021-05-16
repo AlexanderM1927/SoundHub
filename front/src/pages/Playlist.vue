@@ -1,14 +1,14 @@
 <template>
   <q-page>
     <div class="row justify-around">
-      <div :class="`custom-dark-bg ${mode === 'adding' ? '' : 'col-md-8' } col-xs-12`">
+      <div :class="`custom-dark-bg ${mode === 'adding' ? '' : 'col-md-12' } col-xs-12`">
         <p class="title text-h6 q-ml-md q-mt-md">Mis playlists <a v-if="token" class="text-green" style="cursor: pointer;" @click="agregarPlaylist()"> <q-icon name="add"/> <q-tooltip>Agregar</q-tooltip> </a></p>
         <div v-if="token">
-          <div v-bind:key="result.id" v-for="result in playlists">
-            <div class="options" v-if="mode === 'adding'">
-              <q-btn round @click="$emit('addToPlaylist', result)" color="positive" icon="add" />
+          <div class="q-mx-xs" v-bind:key="result.id" v-for="result in playlists">
+            <div v-if="mode === 'adding'">
+              <q-btn class="pl-add-btn" round @click="$emit('addToPlaylist', result)" color="positive" icon="add" />
             </div>
-            <PlaylistResult :result="result" />
+            <PlaylistResult :result="result" :tiny="mode === 'adding'" />
           </div>
         </div>
         <div v-else>
@@ -26,9 +26,9 @@ import AddOrEditPlaylist from '../components/modals/AddOrEditPlaylist.vue'
 import PlaylistResult from '../components/PlaylistResult.vue'
 
 export default {
+  name: 'PagePlaylist',
   mixins: [functions],
   components: { PlaylistResult },
-  name: 'PagePlaylist',
   props: ['mode'],
   data () {
     return {
@@ -87,8 +87,10 @@ export default {
 </script>
 
 <style>
-.custom-dark-bg {
-  background-color: rgba(0, 0, 0, 0.25);
+.pl-add-btn {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: 5px;
 }
-
 </style>

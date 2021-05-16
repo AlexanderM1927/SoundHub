@@ -147,8 +147,10 @@ export const functions = {
           })
         })
         console.log('Wrote file')
+        this.alert('primary', 'Canción descargada correctamente')
       } catch (e) {
         console.error('Unable to write file', e)
+        this.alert('warning', 'Hubo un error en la descarga')
       }
     }
   }

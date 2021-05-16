@@ -1,25 +1,29 @@
 <template>
-  <div
-    @click="goTo('playlist/' + result.playlist_id + '')"
-    style="cursor: pointer"
-    class="row col-12 pl-container q-px-sm justify-around"
-  >
-    <!--TEXT-->
-    <div class="col-11 q-my-sm">
-      <p class="pl-title">{{ result.playlist_name }}</p>
+  <div class="row pl-container">
+    <div
+      @click="goTo('playlist/' + result.playlist_id + '')"
+      style="cursor: pointer"
+      class="row col-11 justify-around"
+    >
+      <!--TEXT-->
+      <div class="col-12 q-my-sm">
+        <p class="pl-title">{{ result.playlist_name }}</p>
+      </div>
     </div>
-    <!--DELETE ICON
-    <a class="col-1 pl-delete text-red"> <q-icon name="fas fa-trash-alt"/></a>
-  --></div>
+    <!--DELETE ICON-->
+    <tempalte v-if="tiny===false" class="margin-auto">
+      <a class="col-1 pl-delete text-red"> <q-icon name="fas fa-trash-alt"/></a>
+    </tempalte>
+  </div>
 </template>
 
 <script>
 import { functions } from '../functions.js'
 
 export default {
+  name: 'PlaylistResult',
   mixins: [functions],
-  name: 'Playlist',
-  props: ['result'],
+  props: ['result', 'tiny'],
   data () {
     return {
     }
@@ -45,8 +49,11 @@ export default {
   line-height: 20px !important;
 }
 
+.margin-auto {
+  margin: auto;
+}
+
 .pl-delete {
-  margin: auto auto auto 0;
   font-size: 1.1rem;
   cursor: pointer;
 }

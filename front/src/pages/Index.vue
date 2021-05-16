@@ -37,7 +37,7 @@ export default {
 <style scoped>
 /* INITIAL CARD STYLES */
 .card-body {
-  background-color: #36363b;
+  background-color: rgba(54, 54, 59, .95);
   border-radius: 8px;
 }
 

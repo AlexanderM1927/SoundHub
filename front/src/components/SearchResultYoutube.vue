@@ -15,17 +15,19 @@
             </p>
           </template>
       </q-img>
-      <!--REMOVE BUTTON-->
-      <template v-if="tiny === true">
-        <a class="pli-delete text-black"> <q-icon name="fas fa-times"/></a>
-      </template>
       <!--TITLE-->
-      <div :class="[tiny ? 'col-9' : 'rslt_div_title col-md-8 col-xs-12']">
+      <div :class="[tiny ? 'col-9' : 'rslt_div_title col-12']">
         <p :class="[tiny ? 'pli-text' : 'rslt_title']">{{ result.title }}</p>
       </div>
     </div>
+    <!--REMOVE BUTTON-->
+    <div v-if="tiny === true">
+      <div class="zero">
+        <a class="pli-delete text-black"> <q-icon name="fas fa-times"/></a>
+      </div>
+    </div>
     <!--ACTION BUTTONS-->
-    <template v-if="tiny === false">
+    <div v-if="tiny === false">
       <div :class="`row col-md-3 col-xs-12 rslt-div-btns justify-around`">
         <!--ADD TO LIST-->
         <q-btn
@@ -48,16 +50,14 @@
           icon="download"
         />
       </div>
-    </template>
+    </div>
     <q-dialog
       v-model="dialogPlaylist"
       transition-show="slide-up"
       transition-hide="slide-down"
     >
-      <q-card style="width: 800px; max-width: 80vw" class="container">
-        <q-card-section>
-          <Playlist mode="adding" @addToPlaylist="addToPlaylist"></Playlist>
-        </q-card-section>
+      <q-card class="pl-card-body">
+        <Playlist mode="adding" @addToPlaylist="addToPlaylist"></Playlist>
       </q-card>
     </q-dialog>
   </div>
@@ -154,13 +154,27 @@ export default {
   color: white;
 }
 
+.zero {
+  width: 0;
+  height: 0;
+}
+
 .pli-delete {
-  position: absolute;
-  left: 0.8rem;
+  position: relative;
+  top: -102px;
+  left: 1rem;
   width: 1.5rem;
   height: 1.8rem;
   font-size: 1.4rem;
   background-color: #FF9800;
   cursor: pointer;
+}
+
+/*PLAYLIST CARD STYLES*/
+.pl-card-body {
+  background-color: #36363b;
+  max-width: 90vw;
+  width: 800px;
+  overflow: hidden !important;
 }
 </style>

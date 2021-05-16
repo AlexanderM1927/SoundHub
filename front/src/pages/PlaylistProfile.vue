@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-around">
-    <div class="custom-dark-bg col-md-8 col-xs-12 container">
+    <div class="custom-dark-bg q-pt-sm col-md-8 col-xs-12 container">
       <div class="row custom-dark-div justify-around">
         <p class="col-10 pl-name">{{playlist.playlist_name}}</p>
         <q-btn class="col-2 play-btn" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
@@ -20,6 +20,7 @@ import SearchResultYoutube from '../components/SearchResultYoutube.vue'
 import PlaylistService from '../services/PlaylistService'
 
 export default {
+  name: 'PlaylistProfile',
   mixins: [functions],
   components: { SearchResultSound, SearchResultYoutube },
   data () {
@@ -59,7 +60,7 @@ export default {
 
 <style>
 .custom-dark-div {
-  margin: 1rem 0.5rem;
+  margin: 0.5rem 0.5rem;
   padding: 0.7rem 0.5rem;
   background-color: rgba(54, 54, 59, 0.9);
   border-radius: 3px;
