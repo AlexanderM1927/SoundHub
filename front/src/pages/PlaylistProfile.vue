@@ -59,13 +59,6 @@ export default {
 </script>
 
 <style>
-.custom-dark-div {
-  margin: 0.5rem 0.5rem;
-  padding: 0.7rem 0.5rem;
-  background-color: rgba(54, 54, 59, 0.9);
-  border-radius: 3px;
-}
-
 .pl-name {
   margin: auto;
   font-family: 'Inter', sans-serif;

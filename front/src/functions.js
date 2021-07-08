@@ -135,9 +135,13 @@ export const functions = {
       }
     },
     async downloadFile (payload) {
+      console.log('unu')
       try {
+        console.log('unu')
         const request = await SearchService.getSongById(payload)
+        console.log('unu')
         const blob = request.data
+        console.log('unu')
         this.convertBlobToBase64(blob).then(async (str) => {
           await this.verifyAndCreateFolder()
           await Filesystem.writeFile({
@@ -147,7 +151,6 @@ export const functions = {
           })
         })
         console.log('Wrote file')
-        this.alert('primary', 'Canción descargada correctamente')
       } catch (e) {
         console.error('Unable to write file', e)
         this.alert('warning', 'Hubo un error en la descarga')

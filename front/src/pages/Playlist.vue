@@ -11,8 +11,9 @@
             <PlaylistResult :result="result" :tiny="mode === 'adding'" />
           </div>
         </div>
-        <div v-else>
-          Para crear playlist, primero debes iniciar sesión.
+        <div class="q-mx-md" v-else>
+          <p class="default-msg">Para crear playlist, primero debes iniciar sesión.</p>
+          <q-btn class="yellow-btn" label="Ingresar" to="/login" color="orange"/>
         </div>
       </div>
     </div>

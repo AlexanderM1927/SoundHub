@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="q-mb-sm">
     <!--VIDEO CONTENT-->
     <div
       :class="[tiny ? 'row custom-dark-div' : 'row justify-around']"

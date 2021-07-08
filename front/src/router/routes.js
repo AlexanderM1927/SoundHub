@@ -35,6 +35,14 @@ const routes = [
       { name: 'sound', path: '', component: () => import('pages/Sound.vue'), meta: { title: 'My songs' } }
     ]
   },
+
+  {
+    path: '/favoritos',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { name: 'Favoritos', path: '', component: () => import('pages/Favoritos.vue'), meta: { title: 'My Favorites', requireSession: true } }
+    ]
+  },
   {
     path: '/playlist',
     component: () => import('layouts/MainLayout.vue'),

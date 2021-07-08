@@ -2,12 +2,12 @@
   <div class="row">
     <!--PROFILE IMAGE-->
     <div class="row prfl-img-div col-12">
-      <div class="prfl-img image-upload">
-        <label for="file-input">
+      <div class="prfl-img">
+        <label for="prfl-filepicker">
           <img class="prfl-img" src="../assets/default-user-img.png"/>
         </label>
 
-        <input id="file-input" type="file" />
+        <input id="prfl-filepicker" type="file" />
       </div>
     </div>
     <!--TEXT FIELDS-->
@@ -32,8 +32,8 @@
       </q-input>
       <!--BUTTON-->
       <div class="row full-width justify-around">
-        <q-btn class="prfl-btn col-5" label="Modificar" type="submit" color="orange"/>
-        <q-btn class="prfl-btn col-5" label="Reset" type="reset" color="orange"/>
+        <q-btn class="yellow-btn col-5" label="Modificar" type="submit" color="orange"/>
+        <q-btn class="yellow-btn col-5" label="Reiniciar" type="reset" color="orange"/>
       </div>
     </q-form>
   </div>
@@ -59,6 +59,7 @@ export default {
 </script>
 
 <style>
+/* IMAGE STYLES */
 .prfl-img-div {
   height: 8rem !important;
   background-color: rgba(54, 54, 59, .95);
@@ -72,10 +73,11 @@ export default {
   border-radius: 50%;
 }
 
-.image-upload>input {
+.prfl-img>input {
   display: none;
 }
 
+/* FORM STYLES */
 .prfl-form {
   margin: 6rem 1rem 2.5rem 1rem;
 }
@@ -84,18 +86,8 @@ export default {
   margin-bottom: 1rem;
   padding: 0 10px;
   background-color: rgba(54, 54, 59, .92);
-  color: whitesmoke;
   font-family: 'Inter', sans-serif;
-  font-weight: 400;
   font-size: 1.1rem;
   border-radius: 10px;
-}
-
-.prfl-btn {
-  margin-top: 1rem;
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: black !important;
 }
 </style>
