@@ -136,7 +136,7 @@ export default {
         if (request.status >= 200 & request.status < 300) {
           localStorage.setItem('token', request.data.data.token)
           localStorage.setItem('user', JSON.stringify(request.data.data.user))
-          this.goTo('/')
+          location.href = '/'
         }
       } catch (error) {
         this.alert('negative', error.response.data.error)
