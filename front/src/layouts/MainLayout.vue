@@ -1,5 +1,5 @@
 <template>
-  <q-layout view='hHh Lpr lFf'>
+  <q-layout view='hHh Lpr lFf' class="ov-h">
     <Navbar />
 
     <q-page-container>
@@ -29,3 +29,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.ov-h{
+  overflow: hidden !important;
+}
+</style>

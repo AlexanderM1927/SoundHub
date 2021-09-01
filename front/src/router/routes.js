@@ -8,17 +8,17 @@ const routes = [
   },
   {
     path: '/login',
-    component: () => import('layouts/LoginLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [
       { name: 'login', path: '', component: () => import('pages/Login.vue'), meta: { title: 'Login' } },
       { name: 'recovery', path: '/recovery', component: () => import('pages/Recovery.vue'), meta: { title: 'Recovery' } }
     ]
   },
   {
-    path: '/perfil/:id',
+    path: '/perfil',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { name: 'perfil', path: '', component: () => import('pages/Index.vue'), meta: { title: 'Profile' } }
+      { name: 'perfil', path: '', component: () => import('pages/Profile.vue'), meta: { title: 'Perfil' } }
     ]
   },
   {
@@ -33,6 +33,14 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { name: 'sound', path: '', component: () => import('pages/Sound.vue'), meta: { title: 'My songs' } }
+    ]
+  },
+
+  {
+    path: '/favoritos',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { name: 'Favoritos', path: '', component: () => import('pages/Favoritos.vue'), meta: { title: 'My Favorites', requireSession: true } }
     ]
   },
   {

@@ -1,47 +1,45 @@
 <template>
     <div id='player' class='inactive'>
-      <div class='row'>
+      <div class='row justify-center vertical-middle'>
         <div class='col-md-4 col-xs-2'>
-          <center>
-            <q-circular-progress v-if="isLoading" size="72px" indeterminate color="negative" />
-            <q-btn
+          <center class="row q-mt-xs">
+            <!--LOADING ICON-->
+            <q-circular-progress v-if="isLoading" size="72px" indeterminate color="pink" />
+            <!--PAUSE BUTTON-->
+            <q-icon
               v-if='isPlaying'
-              color='negative'
-              round
-              icon='pause'
-              size='xl'
+              name="fas fa-pause"
+              class="plyr-btn plyr-pink"
               @click='wavesurfer.playPause()'
             />
-            <q-btn
+            <!--PLAY BUTTON-->
+            <q-icon
               v-if="!isPlaying && !isLoading"
-              color="negative"
-              round
-              icon="play_arrow"
-              size="xl"
+              name="fas fa-play"
+              class="plyr-btn plyr-pink"
               @click="wavesurfer.playPause()"
             />
           </center>
         </div>
-        <div class='col-md-1 col-xs-2'>
-          <q-btn
-            color="negative"
-            flat
-            round
-            icon="fast_rewind"
-            size="xl"
+        <!--PREVIOUS SONG-->
+        <div class='col-md-1 col-xs-2 q-mt-xs'>
+          <q-icon
+            name="fas fa-backward"
+            color="pink"
+            class="plyr-btn"
             @click="wavesurfer.skipBackward(1)"
           />
         </div>
-        <div class="col-md-6 col-xs-6">
+        <!--SOUND WAVES-->
+        <div class="col-md-2 col-xs-6">
           <div id='waveform' style="width: 100%;"></div>
         </div>
-        <div class="col-md-1 col-xs-2">
-          <q-btn
-            color="negative"
-            flat
-            round
-            icon="fast_forward"
-            size="xl"
+        <!--NEXT SONG-->
+        <div class="col-md-1 col-xs-2 q-mt-xs">
+          <q-icon
+            name="fas fa-forward"
+            color="pink"
+            class="plyr-btn"
             @click="wavesurfer.skipForward(1)"
           />
         </div>
@@ -93,8 +91,8 @@ export default {
       this.wavesurfer = WaveSurfer.create({
         container: '#waveform',
         hideScrollbar: true,
-        waveColor: 'white',
-        progressColor: 'red(200, 100%, 30%, 0.5)',
+        waveColor: '#F5F5F5',
+        progressColor: '#CF2741',
         cursorColor: '#fff',
         barWidth: 3
       })
@@ -126,3 +124,29 @@ export default {
   }
 }
 </script>
+
+<style>
+.plyr-play {
+  margin: auto;
+}
+
+.asa {
+  margin: auto 0;
+}
+
+.plyr-btn {
+  margin: auto;
+  vertical-align: center;
+  width: 4rem;
+  height: 4rem;
+  font-size: 2rem;
+
+}
+
+.plyr-pink {
+  background-color: #CF2741;
+  border-radius: 50%;
+  font-weight: 600;
+  color: whitesmoke;
+}
+</style>

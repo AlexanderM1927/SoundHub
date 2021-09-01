@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'MainLayout',
+  name: 'LoginLayout',
   data () {
     return {
     }

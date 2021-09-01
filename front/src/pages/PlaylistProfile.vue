@@ -1,12 +1,13 @@
 <template>
   <div class="row justify-around">
-    <div class="col-md-8 col-xs-12 container">
-      <p class="title text-h6 q-ml-md q-mt-md">Canciones de: {{playlist.playlist_name}}</p>
-      <q-btn color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
+    <div class="custom-dark-bg q-pt-sm col-md-8 col-xs-12 container">
+      <div class="row custom-dark-div justify-around">
+        <p class="col-10 pl-name">{{playlist.playlist_name}}</p>
+        <q-btn class="col-2 play-btn" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
+      </div>
       <div v-bind:key="result.id" v-for="result in playlist.sounds">
-        <SearchResultSound v-if="result.type === 'sound'" :result="result" />
-        <SearchResultYoutube v-else :result="result" />
-        <q-separator></q-separator>
+        <SearchResultSound v-if="result.type === 'sound'" :result="result" :tiny="true" />
+        <SearchResultYoutube v-else :result="result" :tiny="true" />
       </div>
     </div>
   </div>
@@ -19,6 +20,7 @@ import SearchResultYoutube from '../components/SearchResultYoutube.vue'
 import PlaylistService from '../services/PlaylistService'
 
 export default {
+  name: 'PlaylistProfile',
   mixins: [functions],
   components: { SearchResultSound, SearchResultYoutube },
   data () {
@@ -55,3 +57,21 @@ export default {
   }
 }
 </script>
+
+<style>
+.pl-name {
+  margin: auto;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.4rem;
+  color: white;
+  text-transform: initial;
+}
+
+.play-btn {
+  margin: auto;
+  max-width: 80px;
+  height: 35px;
+}
+
+</style>
