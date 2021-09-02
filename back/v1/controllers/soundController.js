@@ -6,6 +6,7 @@ const multer  =  require('multer');
 const path = require('path');
 const storage =   multer.diskStorage({
   destination: function (req, file, callback) {
+    // try this route into the server save
     callback(null, '../../public/sounds/');
   },
   filename: function (req, file, callback) {
