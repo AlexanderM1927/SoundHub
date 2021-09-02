@@ -8,11 +8,6 @@ body {
   margin-bottom: 70px;
 }
 
-.options {
-  position: absolute;
-  right: 0;
-}
-
 .container {
   height: 100%;
   background-color: #36363b;
@@ -28,7 +23,7 @@ body {
   bottom: 0px;
   width: 100%;
   height: 70px;
-  background: #FFFFFF;
+  background: #2a2a2e;
   z-index: 9999;
   transition: all 350ms linear;
 }
@@ -39,4 +34,35 @@ body {
 
 #player.active {
   bottom: -0px;
+}
+
+.custom-dark-bg {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.custom-dark-div {
+  margin: 0.5rem 0.5rem;
+  padding: 0.7rem 0.5rem;
+  background-color: rgba(54, 54, 59, 0.9);
+  border-radius: 3px;
+}
+
+.margin-auto {
+  margin: auto;
+}
+
+.default-msg {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #000000;
+}
+
+.yellow-btn {
+  margin-top: 1rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: black !important;
+  border-radius: 3px;
 }

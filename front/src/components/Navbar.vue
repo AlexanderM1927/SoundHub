@@ -1,42 +1,66 @@
 <template>
+  <!-- NAVBAR COMPONENT -->
   <div>
+    <!-- HEADER ICON/NAME-->
     <q-header elevated class="bg-grey">
-        <q-toolbar class="row col-12 justify-between">
-          <div class="row" @click="goTo('/')">
-            <img src="/favicon.png" class="search-icon" />
-            <q-toolbar-title class="search-title vertical-middle">SoundHub</q-toolbar-title>
-          </div>
-          <q-btn flat @click="side_options = !side_options" round dense icon="fas fa-bars" />
-        </q-toolbar>
-      </q-header>
-
-      <q-drawer
-        v-model="side_options"
-        show-if-above
-        :width="300"
-        :breakpoint="500"
-        bordered
-        content-class="bg-grey q-pt-md"
-      >
-        <q-scroll-area class="fit">
-          <q-list>
-            <!--SEARCH BAR-->
-            <q-item>
-              <q-input dark dense borderless @keyup.enter="search()" v-model="search_content" class="q-ml-xs search-input full-width" placeholder="Buscar...">
-                <template v-slot:prepend>
-                    <q-icon v-if="search_content === ''" name="fas fa-search" />
-                    <q-icon v-else name="fas fa-times" class="cursor-pointer" @click="search_content = ''" />
-                </template>
-              </q-input>
-            </q-item>
-            <!--ITEMS-->
-            <template v-for="(menuItem, index) in menuList">
-              <NavLink :menuItem="menuItem" :token="token" :key="index" />
-            </template>
-          </q-list>
-        </q-scroll-area>
-      </q-drawer>
-    </div>
+      <q-toolbar class="row nav-height col-12 justify-between">
+        <div class="row" @click="goTo('/')">
+          <img src="/favicon.png" class="nav-icon" />
+          <q-toolbar-title class="nav-title vertical-middle">
+            SoundHub
+          </q-toolbar-title>
+        </div>
+        <q-btn
+          class="nav-burger"
+          flat
+          @click="side_options = !side_options"
+          round
+          dense
+          icon="fas fa-bars"
+        />
+      </q-toolbar>
+    </q-header>
+    <!-- SIDE DRAWER -->
+    <q-drawer
+      v-model="side_options"
+      show-if-above
+      :width="300"
+      :breakpoint="2000"
+      bordered
+      content-class="bg-grey"
+    >
+      <q-scroll-area class="fit">
+        <q-list>
+          <!-- SEARCH BAR -->
+          <q-item>
+            <q-input
+              dark
+              dense
+              borderless
+              @keyup.enter="search()"
+              v-model="search_content"
+              class="nav-input full-width"
+              placeholder="Buscar..."
+            >
+              <template v-slot:prepend>
+                <q-icon v-if="search_content === ''" name="fas fa-search" />
+                <q-icon
+                  v-else
+                  name="fas fa-times"
+                  class="cursor-pointer"
+                  @click="search_content = ''"
+                />
+              </template>
+            </q-input>
+          </q-item>
+          <!-- ITEMS -->
+          <template v-for="(menuItem, index) in menuList">
+            <NavLink :menuItem="menuItem" :token="token" :key="index" />
+          </template>
+        </q-list>
+      </q-scroll-area>
+    </q-drawer>
+  </div>
 </template>
 
 <script>
@@ -46,12 +70,14 @@ const menuList = [
   {
     title: 'Perfil',
     icon: 'far fa-user-circle',
+    to: '/perfil',
     separator: true,
     requireSession: true
   },
   {
     title: 'Favoritos',
     icon: 'fas fa-heart',
+    to: '/favoritos',
     separator: false,
     requireSession: true
   },
@@ -124,15 +150,12 @@ export default {
 </script>
 
 <style scoped>
-.search-title {
-  position: relative;
-  margin: auto;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  color: #f5f5f5;
+/* BASIC NAVBAR COMPONENTS */
+.nav-height {
+  height: 50px;
 }
 
-.search-icon{
+.nav-icon {
   width: 40px;
   height: 40px;
   margin: auto;
@@ -140,11 +163,71 @@ export default {
   font-size: 24px;
 }
 
-.search-input{
-  padding-left: 10px;
-  background-color: #505057;
+.nav-title {
+  position: relative;
+  margin: auto;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+/* DRAWER NAVBAR COMPONENTS */
+.nav-input {
+  margin: 12px;
+  background-color: rgba(47, 47, 51, 0.95);
   font-size: 18px;
   border-radius: 5px;
 }
 
+/* RESPONSIVE CSS */
+@media screen
+and (min-device-width : 376px)
+and (max-device-width : 769px) {
+  /* BASIC NAVBAR COMPONENTS */
+  .nav-height {
+    height: 70px;
+  }
+
+  .nav-icon {
+    width: 55px;
+    height: 55px;
+  }
+
+  .nav-title {
+    font-size: 1.5rem;
+  }
+
+  .nav-burger {
+    font-size: 1.1rem;
+  }
+  /* DRAWER NAVBAR COMPONENTS */
+  .nav-input {
+    padding: 5px;
+    font-size: 22px;
+  }
+}
+
+@media (min-device-width : 769px) {
+  /* BASIC NAVBAR COMPONENTS */
+  .nav-height {
+    height: 80px;
+  }
+
+  .nav-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .nav-title {
+    font-size: 1.7rem;
+  }
+
+  .nav-burger {
+    font-size: 1.2rem;
+  }
+  /* DRAWER NAVBAR COMPONENTS */
+  .nav-input {
+    font-size: 21px;
+  }
+}
 </style>

@@ -1,9 +1,6 @@
 <template>
   <q-page>
     <div class="lg_body">
-        <q-btn round color="grey" class="absolute-top-left q-mt-lg q-ml-md" @click="goTo('/')">
-            <i class="fas fa-arrow-left"></i>
-        </q-btn>
         <div class="row justify-around">
             <div v-if="$q.screen.gt.xs" class="col-md-7 col-sm-0 row">
                 <img class="lg_img" src="~/assets/login-img.svg">
@@ -38,12 +35,12 @@
                         @submit="login()"
                         action="submit"
                         class="col-md-4 col-xs-12">
-                            <q-input outlined v-model="user.user_email" label="Email" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input class="lg-inputs" outlined v-model="user.user_email" label="Email"  required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="mail" />
                                 </template>
                             </q-input><br>
-                            <q-input outlined v-model="user.user_password" label="Clave" stack-label :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input class="lg-inputs" outlined v-model="user.user_password" label="Clave" :type="isPwd ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="vpn_key" />
                                 </template>
@@ -52,11 +49,11 @@
                                 </template>
                             </q-input>
                             <div class="row q-mb-sm">
-                                <q-btn flat to="/recovery">¿Olvidaste tu contraseña?</q-btn>
+                                <q-btn class="inter" flat to="/recovery">¿Olvidaste tu contraseña?</q-btn>
                             </div>
-                            <q-btn type="submit" class="full-width q-mt-sm" label="login" color="grey"/>
+                            <q-btn type="submit" class="inter full-width q-mt-sm" label="login" color="grey"/>
                         </q-form>
-                        <q-btn type="submit" icon="facebook" class="full-width q-mt-sm" label="Iniciar con facebook" color="primary" @click="loginWithFacebook"/>
+                        <q-btn type="submit" icon="facebook" class="inter full-width q-mt-sm" label="Iniciar con facebook" color="primary" @click="loginWithFacebook"/>
                     </q-tab-panel>
                     <!--REGISTER-->
                     <q-tab-panel
@@ -66,17 +63,17 @@
                         @submit="register()"
                         action="submit"
                         class="col-md-4 col-xs-12">
-                            <q-input outlined v-model="user.user_name" label="Nombre" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input class="lg-inputs" outlined v-model="user.user_name" label="Nombre"  required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="badge" />
                                 </template>
                             </q-input><br>
-                            <q-input outlined type="mail" v-model="user.user_email" label="Email" stack-label  required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input class="lg-inputs" outlined type="mail" v-model="user.user_email" label="Email"  required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="email" />
                                 </template>
                             </q-input><br/>
-                            <q-input outlined v-model="user.user_password" label="Clave" stack-label :type="isPwd1 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input class="lg-inputs" outlined v-model="user.user_password" label="Clave" :type="isPwd1 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="vpn_key" />
                                 </template>
@@ -84,7 +81,7 @@
                                     <q-icon color="grey" :name="isPwd1 ? 'visibility_off' : 'visibility'" @click="isPwd1 = !isPwd1"/>
                                 </template>
                             </q-input><br/>
-                            <q-input outlined v-model="user.user_passwordConfirm" label="Confirmar clave" stack-label :type="isPwd2 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
+                            <q-input class="lg-inputs" outlined v-model="user.user_passwordConfirm" label="Confirmar clave" :type="isPwd2 ? 'password' : 'text'" required :rules="[val => !!val || 'Este campo es necesario']">
                                 <template v-slot:prepend>
                                     <q-icon color="grey" name="vpn_key" />
                                 </template>
@@ -92,7 +89,7 @@
                                     <q-icon color="grey" :name="isPwd2 ? 'visibility_off' : 'visibility'" @click="isPwd2 = !isPwd2"/>
                                 </template>
                             </q-input>
-                            <q-btn type="submit" class="full-width q-mt-sm" label="Register" color="grey"/>
+                            <q-btn type="submit" class="inter full-width q-mt-sm" label="Register" color="grey"/>
                         </q-form>
                     </q-tab-panel>
                 </q-tab-panels>
@@ -139,7 +136,7 @@ export default {
         if (request.status >= 200 & request.status < 300) {
           localStorage.setItem('token', request.data.data.token)
           localStorage.setItem('user', JSON.stringify(request.data.data.user))
-          this.goTo('/')
+          location.href = '/'
         }
       } catch (error) {
         this.alert('negative', error.response.data.error)
@@ -174,6 +171,10 @@ export default {
   background-position: center center;
 }
 
+.inter {
+  font-family: 'Inter', sans-serif;
+}
+
 .lg_card{
   width: 100%;
   background: #f5f5f5;
@@ -187,13 +188,19 @@ export default {
   margin: 11% auto 0 auto;
 }
 
-.lg_tab{
+.lg_tab {
   width: 100%;
   margin-top: 20%;
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+}
+
+.lg-inputs {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 1.1rem;
 }
 
 .tablinks{
