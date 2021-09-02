@@ -7,7 +7,7 @@ const path = require('path');
 const storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     // try this route into the server saving files
-    callback(null, '../../public/sounds/');
+    callback(null, './public/sounds/');
   },
   filename: function (req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
