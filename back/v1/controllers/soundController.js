@@ -35,7 +35,7 @@ exports.store = async function(req, res) {
     })
     upload(req,res, async function(err) {
       if(err) {
-        return res.end("Error uploading file." + err);
+        return res.status(400).json({err})
       } else {
         const sound = new Sound({
           user_id: user_id,
