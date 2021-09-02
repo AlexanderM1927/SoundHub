@@ -11,9 +11,9 @@
       </div>
     </div>
     <!--DELETE ICON-->
-    <tempalte v-if="tiny===false" class="margin-auto">
+    <template v-if="tiny===false" class="margin-auto">
       <a class="col-1 pl-delete text-red"> <q-icon name="fas fa-trash-alt"/></a>
-    </tempalte>
+    </template>
   </div>
 </template>
 
