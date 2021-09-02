@@ -10,6 +10,10 @@ script:
   - mkdir public
   - cd public
   - mkdir sounds
+  - cd sounds
+  - pwd
+  - ls
+  - cd ..
   - cd ..
   - npm install
   - npm start &
