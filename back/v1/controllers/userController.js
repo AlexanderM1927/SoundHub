@@ -36,6 +36,7 @@ exports.login = async function(req, res) {
       id: user._id
   }, process.env.TOKEN_SECRET)
 
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.header('auth-token', token).json({
       error: null,
       data: {
@@ -75,6 +76,7 @@ exports.register = async function(req, res) {
   });
   try {
     const savedUser = await user.save()
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: savedUser
@@ -95,6 +97,7 @@ exports.setRank = async function(req, res) {
 
   try {
     const savedUser = await user.save()
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: savedUser

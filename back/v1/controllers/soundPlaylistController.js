@@ -10,6 +10,7 @@ exports.store = async function(req, res) {
     else if (req.body.youtube_id) data.youtube_id = req.body.youtube_id
     const sound_paylist = new SoundPlaylist(data)
     await sound_paylist.save()
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: sound_paylist
@@ -31,6 +32,7 @@ exports.update = async function(req, res) {
     if (req.body.sound_id) sound_playlist.sound_id = req.body.sound_id
     else if (req.body.youtube_id) sound_playlist.youtube_id = req.body.youtube_id
     await sound_playlist.save()
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: sound_playlist
@@ -44,6 +46,7 @@ exports.delete = async function(req, res) {
   try {
     const sound_playlist = await Playlist.findAll({ sound_playlist_id: req.params.sound_playlist_id })
     await sound_playlist.delete()
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: sound_playlist
