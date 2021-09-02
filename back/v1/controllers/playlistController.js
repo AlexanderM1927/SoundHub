@@ -13,6 +13,7 @@ exports.store = async function(req, res) {
       playlist_name: req.body.playlist_name
     })
     await playlist.save()
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: playlist
@@ -29,6 +30,7 @@ exports.showByUser = async function(req, res) {
         user_id: req.params.user_id
       }
      })
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: playlists
@@ -65,6 +67,7 @@ exports.get = async function(req, res) {
         playlist.dataValues.sounds[i].sound.dataValues.type = 'sound'
       }
     }
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: playlist
@@ -84,6 +87,7 @@ exports.update = async function(req, res) {
     const playlist = playlists[0]
     playlist.playlist_name = req.body.playlist_name
     await playlist.save()
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: playlist

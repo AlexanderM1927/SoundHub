@@ -38,6 +38,7 @@ exports.search = async function(req, res) {
       }
     }
     results.nextPage = youtube.nextPage
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: results
@@ -52,6 +53,7 @@ exports.download = async function(req, res) {
     const url = req.params.url;
     const type = req.params.type;
     res.setHeader("Content-Type", "audio/mpeg");
+    res.setHeader("Access-Control-Allow-Origin", "*");
     if (type === 'video') {
       ytdl(url, {
         quality: 'lowestaudio'
