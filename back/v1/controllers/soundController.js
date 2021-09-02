@@ -45,6 +45,7 @@ exports.store = async function(req, res) {
         await sound.save().catch(function (error) {
           res.status(400).json({error})
         })
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.json({
           error: null,
           data: sound
@@ -74,6 +75,7 @@ exports.showByUser = async function(req, res) {
       Object.assign(sound, sounds[i].dataValues)
       results.items.push(sound)
     }
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({
       error: null,
       data: results
