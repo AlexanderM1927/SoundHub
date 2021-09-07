@@ -14,7 +14,7 @@ exports.search = async function(req, res) {
     const sounds = await Sound.findAll({
       where: {
         sound_name: {
-          [Op.iLike]: '%' + name + '%'
+          [Op.like]: '%' + name + '%'
         }
       }
     })
