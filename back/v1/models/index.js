@@ -9,13 +9,13 @@ const sequelize = new Sequelize(
     host: config.HOST,
     port: config.PORT,
     dialect: config.dialect,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    },
-    operatorsAliases: false,
+    // dialectOptions: {
+    //   ssl: {
+    //     require: false,
+    //     rejectUnauthorized: false
+    //   }
+    // },
+    operatorsAliases: 0,
     pool: {
       max: config.pool.max,
       min: config.pool.min,
