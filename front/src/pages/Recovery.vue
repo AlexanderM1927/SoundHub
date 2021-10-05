@@ -3,16 +3,19 @@
     <div class="lg_body row justify-around">
       <div class="col-md-4">
         <q-card class="my-card q-mt-xl">
+          <!-- TITLE -->
           <q-card-section class="bg-grey text-white">
             <div class="text-h6">Recuperar cuenta</div>
           </q-card-section>
 
           <q-separator />
 
+          <!--CONTENT-->
           <q-card-actions class="row col-12">
             <q-form class="row col-12 justify-around">
               <p class="p_recovery q-ma-md">
-                Ingresa el correo relaciondo a tu cuenta y te enviaremos un código de verificación
+                Ingresa el correo relaciondo a tu cuenta y te enviaremos un
+                código de verificación
               </p>
               <q-input
                 outlined
@@ -25,7 +28,7 @@
                   <q-icon color="grey" name="email" />
                 </template>
               </q-input>
-
+              <!-- SUBMIT BTN -->
               <q-btn
                 type="submit"
                 class="col-12 q-mt-sm"

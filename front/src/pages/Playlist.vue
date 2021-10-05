@@ -8,7 +8,7 @@
             <div v-if="mode === 'adding'">
               <q-btn class="pl-add-btn" round @click="$emit('addToPlaylist', result)" color="positive" icon="add" />
             </div>
-            <PlaylistResult :result="result" :tiny="mode === 'adding'" />
+            <PlaylistResult :result="result" :tiny="mode === 'adding'" :notmyprofile="false" />
           </div>
         </div>
         <div class="q-mx-md" v-else>
