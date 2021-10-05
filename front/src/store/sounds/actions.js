@@ -24,9 +24,23 @@ export const getSongById = async ({ commit }, payload) => {
     // const binary = convertDataURIToBinary(response)
     // const blob = new Blob([response], { type: 'audio/mp3' })
     const url = URL.createObjectURL(response.data)
-    if (payload.isFirstOnPlaylist) commit('setSongOnPlaylist', url)
-    if (!payload.playlistMode) commit('setSong', url)
-    else commit('setSongOnPlaylist', url)
+    if (payload.isFirstOnPlaylist) {
+      commit('setSongOnPlaylist', {
+        url: url,
+        payload: payload
+      })
+    }
+    if (!payload.playlistMode) {
+      commit('setSong', {
+        url: url,
+        payload: payload
+      })
+    } else {
+      commit('setSongOnPlaylist', {
+        url: url,
+        payload: payload
+      })
+    }
     return response
   } catch (error) {
     console.log(error)
@@ -35,9 +49,23 @@ export const getSongById = async ({ commit }, payload) => {
 
 export const getSongByUrl = ({ commit }, payload) => {
   try {
-    if (payload.isFirstOnPlaylist) commit('setSongOnPlaylist', payload.url)
-    if (!payload.playlistMode) commit('setSong', payload.url)
-    else commit('setSongOnPlaylist', payload.url)
+    if (payload.isFirstOnPlaylist) {
+      commit('setSongOnPlaylist', {
+        url: payload.url,
+        payload: payload
+      })
+    }
+    if (!payload.playlistMode) {
+      commit('setSong', {
+        url: payload.url,
+        payload: payload
+      })
+    } else {
+      commit('setSongOnPlaylist', {
+        url: payload.url,
+        payload: payload
+      })
+    }
   } catch (error) {
     console.log(error)
   }

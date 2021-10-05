@@ -1,9 +1,11 @@
 'use strict'
 const formidable = require('formidable')
 const Sound = require('../models').sound
+const User = require('../models').user
 const Joi = require('@hapi/joi');
 const multer  =  require('multer');
 const path = require('path');
+const youtubesearchapi = require('youtube-search-api')
 const storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     // try this route into the server saving files
@@ -93,4 +95,37 @@ exports.update = async function(req, res) {
 
 exports.delete = async function(req, res) {
 
+}
+
+exports.getSoundById = async function(req, res) {
+  try {
+    const type = req.params.type
+    const id = req.params.id
+    let sound = null
+    if (type === 'sound') {
+      const soundFromDB = await Sound.findOne({ 
+        where: {
+          sound_id: id
+        },
+        include: [{
+          model: User
+        }]
+      });
+      sound = {
+        type: 'sound'
+      }
+      Object.assign(sound, soundFromDB.dataValues)
+    } else {
+      const youtubeSearch = await youtubesearchapi.GetListByKeyword(id, false)
+      sound = youtubeSearch.items[0]
+    }
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.json({
+      error: null,
+      data: sound
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({error})
+  }
 }
