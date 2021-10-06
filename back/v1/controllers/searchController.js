@@ -5,6 +5,7 @@ const Sound = require('../models').sound
 const { Op } = require("sequelize");
 const path = require('path');
 const fileSystem = require('fs');
+const View = require('../models').view
 
 exports.search = async function(req, res) {
   try {
@@ -68,6 +69,12 @@ exports.download = async function(req, res) {
       const readStream = fileSystem.createReadStream(filePath);
       readStream.pipe(res)
     }
+    const data = {
+      sound_id: url,
+      view_type: type
+    }
+    const view = new View(data)
+    await view.save()
   } catch (e) {
     console.log(e);
   }

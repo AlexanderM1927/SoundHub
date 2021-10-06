@@ -43,7 +43,7 @@
             @click="wavesurfer.skipForward(1)"
           />
         </div>
-        <div class="col-md-1 col-xs-2 q-mt-xs">
+        <div v-if="song && (song.payload.type === 'sound' || song.payload.type === 'video')" class="col-md-1 col-xs-2 q-mt-xs">
           <q-icon
             name="fas fa-info"
             size="xs"
@@ -81,9 +81,12 @@
               </a>
             </span>
             <div v-if="soundInfo.type === 'sound' && token">
-              <br><br>
+              <br>
               <q-separator />
               <div class="text-h6">Comentarios:</div>
+              <div class="box__comments">
+                <comment v-for="(comment, i) in comments" :key="i" :info="comment"></comment>
+              </div>
               <q-editor content-class="bg-comment" toolbar-toggle-color="yellow-8" toolbar-bg="pink" v-model="comment" min-height="5rem" />
               <br>
               <q-btn class="full-width" label="Comentar" color="pink" @click="makeComment" />
@@ -99,10 +102,14 @@ import WaveSurfer from 'wavesurfer.js'
 import SoundService from '../services/SoundService'
 import CommentService from '../services/CommentService'
 import { functions } from '../functions.js'
+import Comment from './Comment.vue'
 
 export default {
   name: 'Player',
   mixins: [functions],
+  components: {
+    Comment
+  },
   data () {
     return {
       wavesurfer: null,
@@ -111,7 +118,8 @@ export default {
       soundInfo: {},
       comment: '',
       token: localStorage.getItem('token'),
-      user: JSON.parse(localStorage.getItem('user'))
+      user: JSON.parse(localStorage.getItem('user')),
+      comments: []
     }
   },
   computed: {
@@ -148,6 +156,14 @@ export default {
           user_id: this.user.user_id,
           sound_id: this.soundInfo.id
         }, this.token)
+        this.comments.unshift(
+          {
+            user: {
+              user_name: this.user.user_name
+            },
+            comment_msg: request.data.data.comment_msg
+          }
+        )
         this.comment = ''
         if (request.status === 200) this.alert('positive', 'Comentario enviado')
       } else {
@@ -155,10 +171,26 @@ export default {
       }
     },
     async openDialogInfo () {
-      this.dialogInfo = true
-      this.activateLoading('Loading...')
-      await this.getInformationSound()
-      this.disableLoading()
+      if (!this.dialogInfo) {
+        this.dialogInfo = true
+        this.activateLoading('Loading...')
+        await this.getInformationSound()
+        if (this.soundInfo.type === 'sound') await this.getComments()
+        this.disableLoading()
+      } else {
+        this.dialogInfo = false
+      }
+    },
+    async getComments () {
+      try {
+        const request = await CommentService.getCommentsBySound({
+          id: this.soundInfo.id
+        })
+        const res = request.data.data
+        this.comments = [...res]
+      } catch (error) {
+        console.error(error)
+      }
     },
     async getInformationSound () {
       let sound = this.song.payload
@@ -271,4 +303,8 @@ export default {
   background: #36363b;
 }
 
+.box__comments {
+  height: 35vh;
+  overflow-y: auto;
+}
 </style>

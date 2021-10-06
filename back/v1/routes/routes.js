@@ -3,12 +3,13 @@
 var verifyToken = reqlib('/v1/routes/verifyToken');
 
 // Controllers
-const UserController 	= reqlib('/v1/controllers/userController.js');
-const SearchController 	= reqlib('/v1/controllers/searchController.js');
-const SoundController 	= reqlib('/v1/controllers/soundController.js');
-const PlaylistController 	= reqlib('/v1/controllers/playlistController.js');
+const UserController 			= reqlib('/v1/controllers/userController.js');
+const SearchController 			= reqlib('/v1/controllers/searchController.js');
+const SoundController 			= reqlib('/v1/controllers/soundController.js');
+const PlaylistController 		= reqlib('/v1/controllers/playlistController.js');
 const SoundPlaylistController 	= reqlib('/v1/controllers/soundPlaylistController.js');
-const CommentController 	= reqlib('/v1/controllers/commentController.js');
+const CommentController 		= reqlib('/v1/controllers/commentController.js');
+const ViewController 			= reqlib('/v1/controllers/viewController.js');
 
 /* 
 METHODS
@@ -42,6 +43,9 @@ module.exports = function (app) {
 	// Comments
 	app.post('/v1/comments', verifyToken, CommentController.store)
 	app.get('/v1/comments/:sound_id', CommentController.getCommentsBySoundId)
+
+	// Views
+	app.get('/v1/views', ViewController.getViews)
 
 	// SoundPlaylist
 	app.post('/v1/sound-playlist', verifyToken, SoundPlaylistController.store)
