@@ -2,12 +2,6 @@
   <div class="row">
     <!--PROFILE HEAD-->
     <div class="row prfl-img-div col-12">
-      <!--FOLLOW ICON-->
-      <template v-if="notmyprofile === true">
-        <q-btn flat :ripple="false" class="prfl-favorite-btn q-mt-md" @click="follow = !follow">
-          <i :class="follow ? 'fas fa-heart prfl-fv-i-active' : 'far fa-heart prfl-fv-i-inactive'"></i>
-        </q-btn>
-      </template>
       <!--PROFILE IMAGE-->
       <div class="prfl-img">
         <label for="prfl-filepicker">
@@ -48,15 +42,10 @@ export default {
     notmyprofile: {
       type: Boolean,
       default: true
-    },
-    follower: {
-      type: Boolean,
-      default: true
     }
   },
   data () {
     return {
-      follow: this.follower,
       img: '../assets/default-user-img.png',
       name: '',
       email: '',

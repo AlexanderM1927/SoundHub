@@ -18,7 +18,7 @@ const routes = [
     path: '/perfil',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { name: 'perfil', path: '', component: () => import('pages/Profile.vue'), meta: { title: 'Perfil' } }
+      { name: 'perfil', path: '', props: { notmyprofile: false }, component: () => import('pages/Profile.vue'), meta: { title: 'Perfil' } }
     ]
   },
   {
