@@ -1,9 +1,10 @@
 <template>
   <div class="row pl-container">
+    <!--@click="goTo('playlist/' + result.playlist_id + '')"-->
     <div
-      @click="goTo('playlist/' + result.playlist_id + '')"
       style="cursor: pointer"
       class="row col-11 justify-around"
+      @click="goTo('playlist/' + result.playlist_id + '')"
     >
       <!--TEXT-->
       <div class="col-12 q-my-sm">
@@ -11,9 +12,9 @@
       </div>
     </div>
     <!--DELETE ICON-->
-    <div v-if="tiny===false" class="margin-auto">
-      <a class="col-1 pl-delete text-red"><q-icon name="fas fa-trash-alt"/></a>
-    </div>
+    <template v-if="tiny===false && notmyprofile===false" class="row">
+      <a class="col-1 pl-delete text-red margin-auto"> <q-icon name="fas fa-trash-alt"/></a>
+    </template>
   </div>
 </template>
 
@@ -23,7 +24,7 @@ import { functions } from '../functions.js'
 export default {
   name: 'PlaylistResult',
   mixins: [functions],
-  props: ['result', 'tiny'],
+  props: ['result', 'tiny', 'notmyprofile'],
   data () {
     return {
     }

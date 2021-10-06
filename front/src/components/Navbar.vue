@@ -39,7 +39,7 @@
               borderless
               @keyup.enter="search()"
               v-model="search_content"
-              class="nav-input full-width"
+              class="nav-input full-width q-pa-xs q-pl-sm"
               placeholder="Buscar..."
             >
               <template v-slot:prepend>
