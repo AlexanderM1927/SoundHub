@@ -49,4 +49,5 @@ module.exports = function (app) {
 
 	// SoundPlaylist
 	app.post('/v1/sound-playlist', verifyToken, SoundPlaylistController.store)
+	app.delete('/v1/sound-playlist/:sound_playlist_id', verifyToken, SoundPlaylistController.delete)
 }

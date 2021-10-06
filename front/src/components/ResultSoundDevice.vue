@@ -6,10 +6,6 @@
         <p class="rsd-text">{{result.sound_name}}</p>
       </div>
     </div>
-    <!--REMOVE BUTTON-->
-    <div class="zero">
-      <a class="rsd-delete text-black"> <q-icon name="fas fa-times"/></a>
-    </div>
   </div>
 </template>
 

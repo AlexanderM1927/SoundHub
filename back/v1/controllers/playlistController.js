@@ -62,6 +62,7 @@ exports.get = async function(req, res) {
         const searchYt = await youtubesearchapi.GetListByKeyword(playlist.dataValues.sounds[i].youtube_id, false)
         const element = searchYt.items[0]
         element.type = 'video'
+        element.sound_playlist_id = playlist.dataValues.sounds[i].sound_playlist_id
         playlist.dataValues.sounds[i] = element
       } else {
         playlist.dataValues.sounds[i].sound.dataValues.type = 'sound'
