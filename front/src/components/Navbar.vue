@@ -75,13 +75,6 @@ const menuList = [
     requireSession: true
   },
   {
-    title: 'Favoritos',
-    icon: 'fas fa-heart',
-    to: '/favoritos',
-    separator: false,
-    requireSession: true
-  },
-  {
     title: 'Mis listas',
     icon: 'fas fa-play',
     to: '/playlist',
