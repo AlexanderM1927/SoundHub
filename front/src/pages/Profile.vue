@@ -19,21 +19,9 @@
 
       <!--EMAIL INFORMATION-->
       <q-input class="prfl-input col-11" v-model="email" label="Correo" dark borderless></q-input>
-      <q-input class="prfl-input col-11" v-model="password" label="Contraseña" dark borderless :type="isHidden ? 'password' : 'text'" required>
-        <template v-slot:append>
-            <q-icon color="white" :name="isHidden ? 'visibility_off' : 'visibility'" @click="isHidden = !isHidden"/>
-        </template>
-      </q-input>
-
-      <q-input class="prfl-input col-11" v-model="password2" label="Confirmación" dark borderless :type="isHidden2 ? 'password' : 'text'" required>
-        <template v-slot:append>
-            <q-icon color="white" :name="isHidden2 ? 'visibility_off' : 'visibility'" @click="isHidden2 = !isHidden2"/>
-        </template>
-      </q-input>
       <!--BUTTON-->
       <div class="row full-width justify-around">
-        <q-btn class="yellow-btn col-5" label="Modificar" type="submit" color="orange"/>
-        <q-btn class="yellow-btn col-5" label="Reiniciar" type="reset" color="orange"/>
+        <q-btn class="yellow-btn col-11" label="Modificar" type="submit" color="orange"/>
       </div>
     </q-form>
   </div>
