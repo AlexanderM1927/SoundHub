@@ -52,20 +52,20 @@ export const functions = {
       this.$q.loading.hide()
     },
     async abrirReproductor (result) {
-      await this.$store.dispatch('sounds/reloadPlaylist')
+      this.$store.dispatch('sounds/reloadPlaylist')
       this.activateLoading()
       if (result.type === 'video') {
-        await this.$store.dispatch('sounds/getSongById', {
+        this.$store.dispatch('sounds/getSongById', {
           url: result.id,
           type: result.type
         })
       } else if (result.type === 'sound') {
-        await this.$store.dispatch('sounds/getSongById', {
+        this.$store.dispatch('sounds/getSongById', {
           url: result.sound_id,
           type: result.type
         })
       } else if (result.type === 'device') {
-        await this.$store.dispatch('sounds/getSongByUrl', {
+        this.$store.dispatch('sounds/getSongByUrl', {
           url: result.url
         })
       }
@@ -99,34 +99,34 @@ export const functions = {
       }
     },
     async playPlaylist (playlist) {
-      await this.$store.dispatch('sounds/reloadPlaylist')
-      this.activateLoading()
+      this.$store.dispatch('sounds/reloadPlaylist')
+      // this.activateLoading()
       let isNotFirst = false
       for (let i = 0; i < playlist.length; i++) {
         if (i > 0) isNotFirst = true
         if (playlist[i].type === 'video') {
-          await this.$store.dispatch('sounds/getSongById', {
+          this.$store.dispatch('sounds/getSongById', {
             url: playlist[i].id,
             type: playlist[i].type,
             playlistMode: isNotFirst,
             isFirstOnPlaylist: !isNotFirst
           })
-          this.disableLoading()
+          // this.disableLoading()
         } else if (playlist[i].type === 'sound') {
-          await this.$store.dispatch('sounds/getSongById', {
+          this.$store.dispatch('sounds/getSongById', {
             url: playlist[i].sound_id,
             type: playlist[i].type,
             playlistMode: isNotFirst,
             isFirstOnPlaylist: !isNotFirst
           })
-          this.disableLoading()
+          // this.disableLoading()
         } else if (playlist[i].type === 'device') {
-          await this.$store.dispatch('sounds/getSongByUrl', {
+          this.$store.dispatch('sounds/getSongByUrl', {
             url: playlist[i].url,
             playlistMode: isNotFirst,
             isFirstOnPlaylist: !isNotFirst
           })
-          this.disableLoading()
+          // this.disableLoading()
         }
         if (!isNotFirst) {
           if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
