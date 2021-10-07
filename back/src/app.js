@@ -3,13 +3,13 @@ require('dotenv').config()
 // Globals
 global.reqlib = require('app-root-path').require
 // Constants
-const express = require('express')
-const bodyP   = require('body-parser')
-const cors    = require('cors')
-const app     = express()
-const http    = require('http').Server(app)
-const db      = require('../v1/models')
-const Role    = db.role
+const express           = require('express')
+const bodyP             = require('body-parser')
+const cors              = require('cors')
+const app               = express()
+const http              = require('http').Server(app)
+const db                = require('../v1/models')
+const Role              = db.role
 app.use(express.static(__dirname+'/public'));
 
 db.sequelize.sync();

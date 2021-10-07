@@ -40,7 +40,7 @@ export default {
   methods: {
     async getPopularSounds () {
       try {
-        this.activateLoading('Cargando')
+        this.activateLoading()
         const request = await ViewService.getCommentsBySound()
         this.disableLoading()
         const items = request.data.data.items

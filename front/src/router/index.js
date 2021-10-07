@@ -39,6 +39,12 @@ export default function (/* { store, ssrContext } */) {
       location.href = 'login'
     }
 
+    if (to.name === 'facebook') {
+      localStorage.setItem('user', to.matched.some(route => route.props.user))
+      localStorage.setItem('token', to.matched.some(route => route.props.token))
+      location.href = '/'
+    }
+
     const reqSession = to.matched.some(route => route.meta.requireSession)
 
     if (!reqSession) {

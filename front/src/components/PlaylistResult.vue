@@ -4,7 +4,7 @@
     <div
       style="cursor: pointer"
       class="row col-11 justify-around"
-      @click="goTo('playlist/' + result.playlist_id + '')"
+      @click="goTo('/playlist/' + result.playlist_id + '')"
     >
       <!--TEXT-->
       <div class="col-12 q-my-sm">

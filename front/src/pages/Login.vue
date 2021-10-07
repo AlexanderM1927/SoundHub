@@ -122,9 +122,8 @@ export default {
     }
   },
   methods: {
-    async loginWithFacebook () {
-      console.log('login-facebook')
-      this.alert('warning', 'Proximamente')
+    loginWithFacebook () {
+      location.href = process.env.API_URL + 'auth/facebook'
     },
     async login () {
       try {

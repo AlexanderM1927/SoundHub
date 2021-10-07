@@ -13,31 +13,40 @@
     </div>
 
     <!--PROFILE DATA-->
-    <q-form class="row prfl-form justify-around full-width" action="submit">
+    <q-form class="row prfl-form justify-around full-width" action="submit" @submit="save">
       <!--BASIC INFORMATION-->
-      <q-input class="prfl-input col-11" v-model="name" label="Nombre" dark borderless :disable="notmyprofile"></q-input>
-      <q-input class="prfl-input col-11" v-model="country" label="País" dark borderless :disable="notmyprofile"></q-input>
+      <q-input class="prfl-input col-11" v-model="user.user_name" label="Nombre" dark borderless :disable="notmyprofile"></q-input>
+      <q-input class="prfl-input col-11" v-model="user.user_country" label="País" dark borderless :disable="notmyprofile"></q-input>
 
       <template v-if="!notmyprofile">
         <!--EMAIL INFORMATION-->
-        <q-input class="prfl-input col-11" v-model="email" label="Correo" dark borderless></q-input>
+        <q-input class="prfl-input col-11" v-model="user.user_email" label="Correo" dark borderless></q-input>
         <!--BUTTONS-->
         <div class="row full-width justify-around">
           <q-btn class="yellow-btn col-5" label="Modificar" type="submit" color="orange"/>
-          <q-btn class="yellow-btn col-5" label="Reiniciar" type="reset" color="orange"/>
+          <q-btn class="yellow-btn col-5" label="Reiniciar" @click="reset" type="reset" color="orange"/>
         </div>
       </template>
     </q-form>
-    <template v-if="notmyprofile">
-      <p class="title text-h6 q-ml-md">Listas de {{name}}</p>
-      <PlaylistResult :result="result" :tiny="mode === 'adding'" :notmyprofile="false" />
-    </template>
+    <div class="col-12" v-if="notmyprofile">
+      <p class="title text-h6 q-ml-md">Listas de {{user.user_name}}</p>
+      <div class="q-mx-xs" v-bind:key="result.id" v-for="result in playlists">
+        <PlaylistResult :result="result" :notmyprofile="false" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import UserService from '../services/UserService'
+import PlaylistService from '../services/PlaylistService'
+import { functions } from '../functions.js'
+import PlaylistResult from '../components/PlaylistResult.vue'
+
 export default {
+  mixins: [functions],
   name: 'profile',
+  components: { PlaylistResult },
   props: {
     notmyprofile: {
       type: Boolean,
@@ -47,14 +56,61 @@ export default {
   data () {
     return {
       img: '../assets/default-user-img.png',
-      name: '',
-      email: '',
-      password: '',
-      password2: '',
-      country: '',
-      cel: '',
-      isHidden: true,
-      isHidden2: true
+      profile: null,
+      userLogin: JSON.parse(localStorage.getItem('user')),
+      playlists: [],
+      user: {}
+    }
+  },
+  mounted () {
+    this.getProfileInfo()
+    this.getPlaylists()
+  },
+  methods: {
+    async getProfileInfo () {
+      try {
+        this.activateLoading()
+        const request = await UserService.getUser({
+          id: (this.notmyprofile ? this.$route.params.id : this.userLogin.user_id)
+        })
+        this.user = request.data.data
+        this.disableLoading()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async getPlaylists () {
+      this.activateLoading()
+      try {
+        const params = {
+          user_id: (this.notmyprofile ? this.$route.params.id : this.userLogin.user_id)
+        }
+        const request = await PlaylistService.getPlaylists(params)
+        this.playlists = request.data.data
+      } catch (error) {
+        console.log(error)
+      }
+      this.disableLoading()
+    },
+    reset () {
+      this.getProfileInfo()
+    },
+    async save () {
+      this.activateLoading()
+      try {
+        const params = {
+          id: this.userLogin.user_id,
+          token: localStorage.getItem('token'),
+          user_name: this.user.user_name,
+          user_country: this.user.user_country,
+          user_email: this.user.user_email
+        }
+        const request = await UserService.modifyUser(params)
+        if (request.status === 200) this.alert('positive', 'Perfil actualizado')
+      } catch (error) {
+        console.log(error)
+      }
+      this.disableLoading()
     }
   }
 }

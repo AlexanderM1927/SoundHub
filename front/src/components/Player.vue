@@ -173,7 +173,7 @@ export default {
     async openDialogInfo () {
       if (!this.dialogInfo) {
         this.dialogInfo = true
-        this.activateLoading('Loading...')
+        this.activateLoading()
         await this.getInformationSound()
         if (this.soundInfo.type === 'sound') await this.getComments()
         this.disableLoading()

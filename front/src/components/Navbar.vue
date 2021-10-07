@@ -68,9 +68,9 @@ import { functions } from '../functions.js'
 import NavLink from './NavLink'
 const menuList = [
   {
-    title: 'Perfil',
+    title: 'Mi perfil',
     icon: 'far fa-user-circle',
-    to: '/perfil',
+    to: '/profile',
     separator: true,
     requireSession: true
   },

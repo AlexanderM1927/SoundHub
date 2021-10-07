@@ -14,10 +14,10 @@ export default {
     return Api().post('register', params, { headers: { Authorization: params.token } })
   },
   getUser (params) {
-    return Api().get('user/' + params.id, { headers: { Authorization: params.token } })
+    return Api().get('user/' + params.id)
   },
   modifyUser (params) {
-    return Api().post('user/' + params.id, params, { headers: { Authorization: params.token } })
+    return Api().put('user/' + params.id, params, { headers: { Authorization: params.token } })
   },
   deleteUser (params) {
     return Api().delete('user/' + params.id, { headers: { Authorization: params.token } })

@@ -13,7 +13,7 @@ export default {
   delete (params) {
     return Api().delete('playlists/' + params.sound_id, { headers: { Authorization: params.token } })
   },
-  getMyPlaylists (params) {
-    return Api().get('playlists-user/' + params.user_id, { headers: { Authorization: params.token } })
+  getPlaylists (params) {
+    return Api().get('playlists-user/' + params.user_id)
   }
 }
