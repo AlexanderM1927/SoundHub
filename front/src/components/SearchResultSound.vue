@@ -117,7 +117,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 /*BIG VERSION STYLES */
 .rslt_div_title{
   background-color: #36363b;

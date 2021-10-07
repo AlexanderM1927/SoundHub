@@ -5,6 +5,6 @@ export default {
     return Api().get('search/' + params.name)
   },
   getSongById (params) {
-    return Api().get('download/' + params.type + '/' + params.url, { responseType: 'blob' })
+    return process.env.API_URL + 'download/' + params.type + '/' + params.url
   }
 }

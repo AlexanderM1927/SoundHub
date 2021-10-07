@@ -18,12 +18,12 @@ export const getItemsByName = async ({ commit }, payload) => {
   }
 }
 
-export const getSongById = async ({ commit }, payload) => {
+export const getSongById = ({ commit }, payload) => {
   try {
-    const response = await SearchService.getSongById(payload)
+    const url = SearchService.getSongById(payload)
     // const binary = convertDataURIToBinary(response)
     // const blob = new Blob([response], { type: 'audio/mp3' })
-    const url = URL.createObjectURL(response.data)
+    // const url = URL.createObjectURL(response.data)
     if (payload.isFirstOnPlaylist) {
       commit('setSongOnPlaylist', {
         url: url,
@@ -41,7 +41,7 @@ export const getSongById = async ({ commit }, payload) => {
         payload: payload
       })
     }
-    return response
+    return url
   } catch (error) {
     console.log(error)
   }
