@@ -10,7 +10,7 @@
             <div class="card-title">La mejor música a un par de clicks</div>
           </q-card-section>
           <q-card-section class="q-pt-none card-text">
-            Con SoundHub puedes escuchar y descargar tú música favorita, además puedes compartir tus gustos músicales con otros usuarios e intercambiar opiniones. <br> ¿A que estás esperando para compartir tu pasión por la música?
+            Con SoundHub puedes escuchar y descargar tú música favorita, además puedes compartir tus gustos músicales con otros usuarios e intercambiar opiniones. <br> ¿Que estás esperando para compartir tu pasión por la música?
           </q-card-section>
         </q-card>
       </div>
