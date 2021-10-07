@@ -19,9 +19,11 @@
 
 <script>
 import FavoriteItem from '../components/FavoriteItem.vue'
+import { functions } from '../functions.js'
 
 export default {
   name: 'Favoritos',
+  mixins: [functions],
   components: { FavoriteItem },
   data () {
     return {

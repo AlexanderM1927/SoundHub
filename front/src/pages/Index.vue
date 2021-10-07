@@ -25,8 +25,11 @@
 <script>
 import BestSongs from '../components/BestSongsSection'
 import SoundFooter from '../components/Footer.vue'
+import { functions } from '../functions.js'
+
 export default {
   name: 'PageIndex',
+  mixins: [functions],
   components: {
     BestSongs,
     SoundFooter
