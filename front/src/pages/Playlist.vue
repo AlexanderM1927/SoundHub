@@ -49,7 +49,7 @@ export default {
             user_id: JSON.parse(localStorage.getItem('user')).user_id,
             token: this.token
           }
-          const request = await PlaylistService.getMyPlaylists(params)
+          const request = await PlaylistService.getPlaylists(params)
           this.playlists = request.data.data
         }
       } catch (error) {
@@ -92,6 +92,7 @@ export default {
   position: absolute;
   width: 40px;
   height: 40px;
-  right: 5px;
+  right: 10px;
+  margin-top: 7px;
 }
 </style>

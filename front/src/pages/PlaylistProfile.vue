@@ -6,8 +6,8 @@
         <q-btn class="col-2 play-btn" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
       </div>
       <div v-bind:key="result.id" v-for="result in playlist.sounds">
-        <SearchResultSound v-if="result.type === 'sound'" :result="result" :tiny="true" />
-        <SearchResultYoutube v-else :result="result" :tiny="true" />
+        <SearchResultSound v-if="result.type === 'sound'" :result="result" :tiny="true" :playlist="true" />
+        <SearchResultYoutube v-else :result="result" :tiny="true" :playlist="true" />
       </div>
     </div>
   </div>

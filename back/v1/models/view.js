@@ -5,14 +5,14 @@ module.exports = (sequelize, DateType) => {
       primaryKey: true,
       autoIncrement: true
     },
-    user_id: {
-      type: DateType.INTEGER
-    },
     playlist_id: {
       type: DateType.INTEGER
     },
     sound_id: {
-      type: DateType.INTEGER
+      type: DateType.STRING
+    },
+    view_type: {
+      type: DateType.STRING
     }
   });
 

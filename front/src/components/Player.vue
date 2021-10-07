@@ -31,7 +31,7 @@
           />
         </div>
         <!--SOUND WAVES-->
-        <div class="col-md-2 col-xs-6">
+        <div class="col-md-2 col-xs-4">
           <div id='waveform' style="width: 100%;"></div>
         </div>
         <!--NEXT SONG-->
@@ -43,21 +43,83 @@
             @click="wavesurfer.skipForward(1)"
           />
         </div>
+        <div v-if="song && (song.payload.type === 'sound' || song.payload.type === 'video')" class="col-md-1 col-xs-2 q-mt-xs">
+          <q-icon
+            name="fas fa-info"
+            size="xs"
+            class="plyr-btn plyr-pink"
+            @click="openDialogInfo"
+          />
+        </div>
       </div>
+      <q-dialog
+        v-model="dialogInfo"
+        transition-show="slide-up"
+        transition-hide="slide-down"
+        :maximized="true"
+      >
+        <q-card class="pl-card-body">
+          <q-bar>
+            <q-space />
+            <q-btn dense flat icon="close" v-close-popup>
+              <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+            </q-btn>
+          </q-bar>
+          <div class="content">
+            <div class="text-h5" style="font-weight: bold;">{{ soundInfo.title }}</div>
+            <span v-if="soundInfo.type === 'sound'">
+              Uploaded By:
+              <a
+                style="
+                  text-decoration: none;
+                  color: #DEA559;
+                  font-weight: bold;
+                "
+                :href="'/profile/' + soundInfo.user_id"
+              >
+                {{ soundInfo.user }}
+              </a>
+            </span>
+            <div v-if="soundInfo.type === 'sound' && token">
+              <br>
+              <q-separator />
+              <div class="text-h6">Comentarios:</div>
+              <div class="box__comments">
+                <comment v-for="(comment, i) in comments" :key="i" :info="comment"></comment>
+              </div>
+              <q-editor content-class="bg-comment" toolbar-toggle-color="yellow-8" toolbar-bg="pink" v-model="comment" min-height="5rem" />
+              <br>
+              <q-btn class="full-width" label="Comentar" color="pink" @click="makeComment" />
+            </div>
+          </div>
+        </q-card>
+      </q-dialog>
     </div>
 </template>
 
 <script>
 import WaveSurfer from 'wavesurfer.js'
+import SoundService from '../services/SoundService'
+import CommentService from '../services/CommentService'
 import { functions } from '../functions.js'
+import Comment from './Comment.vue'
 
 export default {
-  name: 'MainLayout',
+  name: 'Player',
   mixins: [functions],
+  components: {
+    Comment
+  },
   data () {
     return {
       wavesurfer: null,
-      isLoading: false
+      isLoading: false,
+      dialogInfo: false,
+      soundInfo: {},
+      comment: '',
+      token: localStorage.getItem('token'),
+      user: JSON.parse(localStorage.getItem('user')),
+      comments: []
     }
   },
   computed: {
@@ -83,10 +145,82 @@ export default {
   },
   watch: {
     song () {
-      this.loadFile(this.song)
+      if (this.song) this.loadFile(this.song.url)
     }
   },
   methods: {
+    async makeComment () {
+      if (this.comment.length > 0) {
+        const request = await CommentService.store({
+          comment: this.comment,
+          user_id: this.user.user_id,
+          sound_id: this.soundInfo.id
+        }, this.token)
+        this.comments.unshift(
+          {
+            user: {
+              user_name: this.user.user_name
+            },
+            comment_msg: request.data.data.comment_msg
+          }
+        )
+        this.comment = ''
+        if (request.status === 200) this.alert('positive', 'Comentario enviado')
+      } else {
+        this.alert('warning', 'Please, introduce some text')
+      }
+    },
+    async openDialogInfo () {
+      if (!this.dialogInfo) {
+        this.dialogInfo = true
+        this.activateLoading()
+        await this.getInformationSound()
+        if (this.soundInfo.type === 'sound') await this.getComments()
+        this.disableLoading()
+      } else {
+        this.dialogInfo = false
+      }
+    },
+    async getComments () {
+      try {
+        const request = await CommentService.getCommentsBySound({
+          id: this.soundInfo.id
+        })
+        const res = request.data.data
+        this.comments = [...res]
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async getInformationSound () {
+      let sound = this.song.payload
+      if (this.playlist.length > 0) sound = this.playlist[this.position - 1].payload
+      if (sound.type === 'device') {
+        console.log('sound device')
+        console.log(sound)
+      } else {
+        try {
+          const request = await SoundService.getSoundById(sound)
+          const res = request.data.data
+          if (sound.type === 'sound') {
+            this.soundInfo = {
+              title: res.sound_name,
+              id: res.sound_id,
+              user_id: res.user_id,
+              user: res.user.user_name
+            }
+          } else {
+            this.soundInfo = {
+              title: res.title,
+              id: res.id
+            }
+          }
+          this.soundInfo.type = sound.type
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    },
     createWaveSurfer () {
       this.wavesurfer = WaveSurfer.create({
         container: '#waveform',
@@ -112,7 +246,7 @@ export default {
       })
       this.wavesurfer.on('finish', () => {
         if (this.playlist.length > 0 && this.playlist.length > this.position) {
-          this.loadFile(this.playlist[this.position])
+          this.loadFile(this.playlist[this.position].url)
           this.$store.dispatch('sounds/setPosition', (this.position + 1))
         }
       })
@@ -148,5 +282,29 @@ export default {
   border-radius: 50%;
   font-weight: 600;
   color: whitesmoke;
+}
+
+.pl-card-body {
+  background-color: #36363b;
+  max-width: 90vw;
+  width: 800px;
+  overflow: hidden !important;
+  color: white;
+}
+
+.content {
+  color: white;
+  height: 90%;
+  overflow-y: auto;
+  padding: 7px;
+}
+
+.bg-comment {
+  background: #36363b;
+}
+
+.box__comments {
+  height: 35vh;
+  overflow-y: auto;
 }
 </style>

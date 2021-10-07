@@ -15,62 +15,57 @@
       <TopSong
        v-for="song in songs"
        :key="song.title"
-       v-bind="song"/>
+       :song="song"/>
     </div>
   </div>
 </template>
 
 <script>
 import TopSong from './TopSong'
+import ViewService from '../services/ViewService'
+import { functions } from '../functions.js'
 
 export default {
   name: 'BestSongsSection',
+  mixins: [functions],
   components: { TopSong },
   data () {
     return {
-      songs: [
-        {
-          title: 'Yoasobi - Yure Ni Kakeru',
-          img: 'popular-song-1.jpg',
-          firstOne: true
-        },
-        {
-          title: 'Luis Fonsi - Despacito ft. Daddy Yankee',
-          img: 'popular-song-2.png'
-        },
-        {
-          title: 'Hollow Knight - Enter Hallownest',
-          img: 'popular-song-3.png'
-        },
-        {
-          title: 'Bloodborne Soundtrack OST - Lady Maria (The Old Hunters)',
-          img: 'popular-song-4.jpeg'
-        },
-        {
-          title: 'Don Omar - El señor de la noche',
-          img: 'popular-song-5.jpg'
-        },
-        {
-          title: 'Rell, la Doncella de Hierro | Tema de campeona (ft. Ecca Vandal) - League of Legends',
-          img: 'popular-song-6.jpg'
-        },
-        {
-          title: 'Transistor Original Sountrack - The Spine',
-          img: 'popular-song-7.jpg'
-        },
-        {
-          title: 'Black Coast - TRNDSTTR (Lucian Remix)',
-          img: 'popular-song-8.jpg'
-        },
-        {
-          title: 'Cécile Corbel - Le bal des chats',
-          img: 'popular-song-9.jpg'
-        },
-        {
-          title: 'Bruno Mars - Locked out of Heaven (Official Music Video)',
-          img: 'popular-song-10.jpg'
-        }
-      ]
+      songs: []
+    }
+  },
+  mounted () {
+    this.getPopularSounds()
+  },
+  methods: {
+    async getPopularSounds () {
+      try {
+        this.activateLoading()
+        const request = await ViewService.getCommentsBySound()
+        this.disableLoading()
+        const items = request.data.data.items
+        this.songs = items.map(element => {
+          let objRes = {}
+          if (element.type === 'sound') {
+            objRes = {
+              sound_id: element.sound_id,
+              title: element.sound_name,
+              img: this.getSrcFromBackend(element.sound_thumbnail_url)
+            }
+          } else {
+            objRes = {
+              id: element.id,
+              title: element.title,
+              img: element.thumbnail.thumbnails[0].url
+            }
+          }
+          objRes.firstOne = (items.indexOf(element) === 0 ?? false)
+          objRes.type = element.type
+          return objRes
+        })
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 }

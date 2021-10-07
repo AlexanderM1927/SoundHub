@@ -21,9 +21,9 @@
       </div>
     </div>
     <!--REMOVE BUTTON-->
-    <div v-if="tiny === true">
+    <div v-if="playlist === true">
       <div class="zero">
-        <a class="pli-delete text-black"> <q-icon name="fas fa-times"/></a>
+        <a class="pli-delete text-black" @click="removeFromPlaylist"> <q-icon name="fas fa-times"/></a>
       </div>
     </div>
     <!--ACTION BUTTONS-->
@@ -72,7 +72,7 @@ export default {
   mixins: [functions],
   components: { Playlist },
   name: 'SearchResult',
-  props: ['result', 'download', 'tiny'],
+  props: ['result', 'download', 'tiny', 'playlist'],
   data () {
     return {
       token: localStorage.getItem('token'),
@@ -102,6 +102,22 @@ export default {
         console.log(error)
       }
       this.dialogPlaylist = false
+    },
+    async removeFromPlaylist () {
+      try {
+        const data = {
+          sound_playlist_id: this.result.sound_playlist_id,
+          token: this.token
+        }
+        const request = await SoundPlaylistService.remove(data)
+        if (request.status >= 200 && request.status < 300) {
+          this.alert('positive', 'Canción eliminada del playlist correctamente')
+          this.$destroy()
+          this.$el.parentNode.removeChild(this.$el)
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

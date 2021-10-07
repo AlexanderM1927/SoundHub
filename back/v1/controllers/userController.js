@@ -58,8 +58,6 @@ exports.register = async function(req, res) {
     where: {
       user_email: req.body.user_email
     } });
-  console.log('isEmailExist')
-  console.log(isEmailExist)
   if (isEmailExist) {
     return res.status(400).json({error: 'Email ya registrado'})
   }
@@ -104,5 +102,71 @@ exports.setRank = async function(req, res) {
     })
   } catch (error) {
     res.status(400).json({error})
+  }
+}
+
+exports.getUserById = async function(req, res) {
+  try {
+    const id = req.params.id
+    const user = await User.findOne({ 
+      where: {
+        user_id: id
+      }
+    });
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.json({
+      error: null,
+      data: user
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({error})
+  }
+}
+
+exports.update = async function(req, res) {
+  try {
+    const id = req.params.id
+    const user = await User.findOne({ 
+      where: {
+        user_id: id
+      }
+    })
+    if (user) {
+      await user.update({
+        user_name: req.body.user_name,
+        user_country: req.body.user_country,
+        user_email: req.body.user_email
+      })
+    }
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.json({
+      error: null,
+      data: user
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({error})
+  }
+}
+
+exports.authFacebook = async function(user) {
+  const isEmailExist = await User.findOne({ 
+    where: {
+      user_email: user.user_email
+    } 
+  })
+  
+  if (isEmailExist) {
+    return isEmailExist
+  } else {
+    const userSave = new User({
+      user_name: user.user_name,
+      user_email: user.user_email,
+      user_password: password,
+      role_id: 1 
+    });
+    await userSave.save()
+    return userSave
   }
 }
