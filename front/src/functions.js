@@ -6,6 +6,8 @@ const { Filesystem } = Plugins
 export const functions = {
   data () {
   },
+  mounted () {
+  },
   methods: {
     validateForm (array, fun) {
       let isComplete = true

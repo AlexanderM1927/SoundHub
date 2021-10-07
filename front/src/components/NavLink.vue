@@ -32,7 +32,9 @@ export default {
     }
   },
   name: 'NavLink',
-  props: ['menuItem', 'token']
+  props: ['menuItem', 'token'],
+  mounted () {
+  }
 }
 </script>
 

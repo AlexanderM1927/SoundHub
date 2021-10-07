@@ -28,12 +28,17 @@
         </div>
       </template>
     </q-form>
-    <div class="col-12" v-if="notmyprofile">
-      <p class="title text-h6 q-ml-md">Listas de {{user.user_name}}</p>
-      <div class="q-mx-xs" v-bind:key="result.id" v-for="result in playlists">
-        <PlaylistResult :result="result" :notmyprofile="false" />
+    <div class="row justify-around full-width" v-if="notmyprofile">
+      <div class="col-11">
+        <p class="title text-h6 q-ml-md">Listas de {{user.user_name}}</p>
+        <div class="q-mx-xs" v-bind:key="result.id" v-for="result in playlists">
+          <PlaylistResult :result="result" :notmyprofile="false" />
+        </div>
       </div>
     </div>
+    <q-page-sticky position="top-right" :offset="[18, 18]">
+      <q-btn fab icon="message" color="pink" />
+    </q-page-sticky>
   </div>
 </template>
 
