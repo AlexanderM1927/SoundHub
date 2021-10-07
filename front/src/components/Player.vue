@@ -68,14 +68,15 @@
           <div class="content">
             <div class="text-h5" style="font-weight: bold;">{{ soundInfo.title }}</div>
             <span v-if="soundInfo.type === 'sound'">
-              Uploaded By:
+              Publicada por:
               <a
                 style="
                   text-decoration: none;
                   color: #DEA559;
                   font-weight: bold;
+                  cursor: pointer;
                 "
-                :href="'/profile/' + soundInfo.user_id"
+                @click="goTo('/profile/' + soundInfo.user_id)"
               >
                 {{ soundInfo.user }}
               </a>

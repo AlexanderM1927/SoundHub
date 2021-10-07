@@ -136,13 +136,10 @@ export const functions = {
       }
     },
     async downloadFile (payload) {
-      console.log('unu')
       try {
-        console.log('unu')
+        this.alert('warning', 'Descargando... En un rato aparecerá en "Mis canciones"')
         const request = await SearchService.getSongById(payload)
-        console.log('unu')
         const blob = request.data
-        console.log('unu')
         this.convertBlobToBase64(blob).then(async (str) => {
           await this.verifyAndCreateFolder()
           await Filesystem.writeFile({
@@ -150,6 +147,7 @@ export const functions = {
             path: 'soundhub/' + payload.name + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.')),
             directory: FilesystemDirectory.Data
           })
+          this.alert('positive', 'Archivo descargado.')
         })
         console.log('Wrote file')
       } catch (e) {
