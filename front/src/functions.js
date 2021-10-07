@@ -52,6 +52,7 @@ export const functions = {
       this.$q.loading.hide()
     },
     async abrirReproductor (result) {
+      await this.$store.dispatch('sounds/reloadPlaylist')
       this.activateLoading()
       if (result.type === 'video') {
         await this.$store.dispatch('sounds/getSongById', {

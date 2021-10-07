@@ -1,32 +1,25 @@
 <template>
-  <q-card class="popular-card">
-    <q-img :src="require(`../assets/${img}`)" class="p-card-img" basic>
-      <div v-if="firstOne" style="background-color: transparent">
+  <q-card class="popular-card" @click="abrirReproductor(song)">
+    <q-img :src="song.img" class="p-card-img" basic>
+      <div v-if="song.firstOne" style="background-color: transparent">
         <q-icon name="fas fa-crown" class="crown"></q-icon>
       </div>
       <q-card-section class="p-card-text">
-        <p class="p-card-p">{{ title }}</p>
+        <p class="p-card-p">{{ song.title }}</p>
       </q-card-section>
     </q-img>
   </q-card>
 </template>
 
 <script>
+import { functions } from '../functions.js'
+
 export default {
   name: 'TopSong',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    img: {
-      type: String,
-      required: true
-    },
-    firstOne: {
-      type: Boolean,
-      required: false
-    }
+  mixins: [functions],
+  props: ['song'],
+  data () {
+    return {}
   }
 }
 </script>

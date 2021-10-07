@@ -16,15 +16,21 @@
       </div>
       <!--TOP 10 SONGS OF THE WEEK-->
       <BestSongs/>
+      <!--FOOTER-->
+      <SoundFooter/>
     </div>
   </q-page>
 </template>
 
 <script>
 import BestSongs from '../components/BestSongsSection'
+import SoundFooter from '../components/Footer.vue'
 export default {
   name: 'PageIndex',
-  components: { BestSongs },
+  components: {
+    BestSongs,
+    SoundFooter
+  },
   data () {
     return {
     }

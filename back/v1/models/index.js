@@ -158,20 +158,6 @@ db.favorite.belongsTo(db.playlist, {
   }
 });
 
-db.view.belongsTo(db.user, {
-  foreignKey: { 
-    name: "user_id",
-    allowNull: false
-  }
-});
-
-db.view.belongsTo(db.sound, {
-  foreignKey: { 
-    name: "sound_id",
-    allowNull: true
-  }
-});
-
 db.view.belongsTo(db.playlist, {
   foreignKey: { 
     name: "playlist_id",

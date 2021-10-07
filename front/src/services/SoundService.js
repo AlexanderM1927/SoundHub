@@ -12,5 +12,8 @@ export default {
   },
   getMySounds (params) {
     return Api().get('sounds/' + params.user_id, { headers: { Authorization: params.token } })
+  },
+  getSoundById (params) {
+    return Api().get('sounds_id/' + params.type + '/' + params.url, { headers: { Authorization: params.token } })
   }
 }

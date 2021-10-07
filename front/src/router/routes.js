@@ -15,10 +15,17 @@ const routes = [
     ]
   },
   {
-    path: '/perfil',
+    path: '/profile',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { name: 'perfil', path: '', component: () => import('pages/Profile.vue'), meta: { title: 'Perfil' } }
+      { name: 'profile', path: '', props: { notmyprofile: false }, component: () => import('pages/Profile.vue'), meta: { title: 'Profile' } }
+    ]
+  },
+  {
+    path: '/profile/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { name: 'profile other', path: '', props: { notmyprofile: true }, component: () => import('pages/Profile.vue'), meta: { title: 'Profile' } }
     ]
   },
   {
@@ -56,6 +63,14 @@ const routes = [
     children: [
       { name: 'playlist-profile', path: '', component: () => import('pages/PlaylistProfile.vue'), meta: { title: 'Playlist' } }
     ]
+  },
+  {
+    name: 'facebook',
+    path: '/facebook/:token/:user',
+    meta: {
+      title: 'Login facebook'
+    },
+    props: route => ({ token: route.params.token, user: JSON.parse(route.params.user) })
   },
   {
     name: 'logout',

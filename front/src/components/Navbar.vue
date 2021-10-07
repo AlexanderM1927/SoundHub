@@ -39,7 +39,7 @@
               borderless
               @keyup.enter="search()"
               v-model="search_content"
-              class="nav-input full-width"
+              class="nav-input full-width q-pa-xs q-pl-sm"
               placeholder="Buscar..."
             >
               <template v-slot:prepend>
@@ -68,17 +68,10 @@ import { functions } from '../functions.js'
 import NavLink from './NavLink'
 const menuList = [
   {
-    title: 'Perfil',
+    title: 'Mi perfil',
     icon: 'far fa-user-circle',
-    to: '/perfil',
+    to: '/profile',
     separator: true,
-    requireSession: true
-  },
-  {
-    title: 'Favoritos',
-    icon: 'fas fa-heart',
-    to: '/favoritos',
-    separator: false,
     requireSession: true
   },
   {
