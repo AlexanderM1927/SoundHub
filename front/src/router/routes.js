@@ -15,10 +15,10 @@ const routes = [
     ]
   },
   {
-    path: '/profile',
+    path: '/myprofile',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { name: 'profile', path: '', props: { notmyprofile: false }, component: () => import('pages/Profile.vue'), meta: { title: 'Profile' } }
+      { name: 'myprofile', path: '', props: { notmyprofile: false }, component: () => import('pages/Profile.vue'), meta: { title: 'Profile' } }
     ]
   },
   {
