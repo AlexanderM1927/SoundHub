@@ -234,6 +234,9 @@ export default {
       })
       this.wavesurfer.on('loading', (e) => {
         this.isLoading = true
+        if (e === 100) {
+          this.isLoading = false
+        }
       })
       this.wavesurfer.on('ready', () => {
         this.isLoading = false
