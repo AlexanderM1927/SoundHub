@@ -53,13 +53,12 @@ exports.download = async function(req, res) {
   try {
     const url = req.params.url;
     const type = req.params.type;
-    let pipe = ''
     res.setHeader("Content-Type", "audio/mpeg");
     res.setHeader("Access-Control-Allow-Origin", "*");
     if (type === 'video') {
-      pipe = ytdl(url, {
+      ytdl(url, {
         quality: 'lowestaudio'
-      });
+      }).pipe(res)
     } else {
       const sound = await Sound.findAll({ 
         where: {
@@ -68,19 +67,8 @@ exports.download = async function(req, res) {
       })
       const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound[0].sound_file_url);
       const readStream = fileSystem.createReadStream(filePath);
-      pipe = readStream
+      readStream.pipe(res)
     }
-    pipe.on("data", (chunk) => {
-      res.write(chunk);
-    });
-
-    pipe.on("error", (err) => {
-      res.sendStatus(404);
-    });
-
-    pipe.on("end", () => {
-      res.end();
-    });
     const data = {
       sound_id: url,
       view_type: type
