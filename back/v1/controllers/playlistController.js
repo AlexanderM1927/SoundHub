@@ -66,6 +66,7 @@ exports.get = async function(req, res) {
         playlist.dataValues.sounds[i] = element
       } else {
         playlist.dataValues.sounds[i].sound.dataValues.type = 'sound'
+        playlist.dataValues.sounds[i].sound.dataValues.sound_playlist_id = playlist.dataValues.sounds[i].sound_playlist_id
       }
     }
     res.setHeader("Access-Control-Allow-Origin", "*");
