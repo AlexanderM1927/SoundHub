@@ -28,12 +28,35 @@
         </div>
       </template>
     </q-form>
-    <div class="col-12" v-if="notmyprofile">
-      <p class="title text-h6 q-ml-md">Listas de {{user.user_name}}</p>
-      <div class="q-mx-xs" v-bind:key="result.id" v-for="result in playlists">
-        <PlaylistResult :result="result" :notmyprofile="false" />
+    <div class="row justify-around full-width" v-if="notmyprofile">
+      <div class="col-11">
+        <p class="title text-h6 q-ml-md">Listas de {{user.user_name}}</p>
+        <div class="q-mx-xs" v-bind:key="result.id" v-for="result in playlists">
+          <PlaylistResult :result="result" :notmyprofile="false" />
+        </div>
       </div>
     </div>
+    <q-page-sticky position="top-right" :offset="[18, 18]" v-if="token && user.user_id !== userLogin.user_id">
+      <q-btn @click="modalChat = !modalChat" fab icon="message" color="pink" />
+    </q-page-sticky>
+    <q-dialog
+      v-model="modalChat"
+      transition-show="slide-up"
+      transition-hide="slide-down"
+      :maximized="true"
+    >
+      <q-card class="pl-card-body">
+        <q-bar>
+          <q-space />
+          <q-btn dense flat icon="close" v-close-popup>
+            <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+          </q-btn>
+        </q-bar>
+        <div class="content">
+          <ChatBox :userTo="user"></ChatBox>
+        </div>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -42,11 +65,12 @@ import UserService from '../services/UserService'
 import PlaylistService from '../services/PlaylistService'
 import { functions } from '../functions.js'
 import PlaylistResult from '../components/PlaylistResult.vue'
+import ChatBox from '../components/ChatBox.vue'
 
 export default {
   mixins: [functions],
   name: 'profile',
-  components: { PlaylistResult },
+  components: { PlaylistResult, ChatBox },
   props: {
     notmyprofile: {
       type: Boolean,
@@ -58,8 +82,10 @@ export default {
       img: '../assets/default-user-img.png',
       profile: null,
       userLogin: JSON.parse(localStorage.getItem('user')),
+      token: localStorage.getItem('token'),
       playlists: [],
-      user: {}
+      user: {},
+      modalChat: false
     }
   },
   mounted () {

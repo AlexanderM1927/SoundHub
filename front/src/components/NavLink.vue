@@ -7,7 +7,7 @@
       (menuItem.requireSession && token) ||
       (!menuItem.requireSession && !token)
     "
-    class="NI-container"
+    :class="'NI-container ' + (menuItem.active ? 'bg-pink' : '')"
     clickable
     :active="menuItem.label === 'Outbox'"
     v-ripple
@@ -32,7 +32,9 @@ export default {
     }
   },
   name: 'NavLink',
-  props: ['menuItem', 'token']
+  props: ['menuItem', 'token'],
+  mounted () {
+  }
 }
 </script>
 

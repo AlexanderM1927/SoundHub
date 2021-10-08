@@ -66,4 +66,4 @@ app.get('/download', async (req, res) => {
 });
 
 // eslint-disable-next-line no-console
-app.listen({ port: 8000 }, () => console.log('🚀 Server ready at http://localhost:8000'));
+app.listen({ port: 8000 }, () => console.log('🚀 Server ready at http://soundhub.soft-corp.online:8000'));
