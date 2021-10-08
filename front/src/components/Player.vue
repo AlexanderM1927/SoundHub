@@ -236,14 +236,16 @@ export default {
         this.isLoading = true
       })
       this.wavesurfer.on('ready', () => {
-        this.disableLoading()
         this.isLoading = false
+        this.disableLoading()
         this.wavesurfer.playPause()
       })
       this.wavesurfer.on('play', () => {
+        this.isLoading = false
         this.isPlaying = true
       })
       this.wavesurfer.on('pause', () => {
+        this.isLoading = false
         this.isPlaying = false
       })
       this.wavesurfer.on('finish', () => {
