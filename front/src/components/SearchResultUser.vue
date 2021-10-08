@@ -2,11 +2,11 @@
   <div class="q-mb-sm">
     <!--VIDEO CONTENT-->
     <div
-      :class="'row custom-dark-div'"
+      :class="'row justify-around'"
       @click="goTo('/profile/' + result.user_id)"
     >
       <div :class="'rslt_div_title col-12'">
-        <p :class="'rslt_title'">{{ result.user_name }}</p>
+        <p :class="'rslt_title'"><q-icon name="fas fa-user"/> {{ result.user_name }}</p>
       </div>
     </div>
   </div>
