@@ -15,24 +15,14 @@
     <!--PROFILE DATA-->
     <q-form class="row prfl-form justify-around full-width" action="submit" @submit="save">
       <!--BASIC INFORMATION-->
-      <q-input class="prfl-input col-11" v-model="user.user_name" label="Nombre" dark borderless :disable="notmyprofile"></q-input>
-      <q-input class="prfl-input col-11" v-model="user.user_country" label="País" dark borderless :disable="notmyprofile"></q-input>
-
-      <template v-if="!notmyprofile">
-        <!--EMAIL INFORMATION-->
-        <q-input class="prfl-input col-11" v-model="user.user_email" label="Correo" dark borderless></q-input>
-        <!--BUTTONS-->
-        <div class="row full-width justify-around">
-          <q-btn class="yellow-btn col-5" label="Modificar" type="submit" color="orange"/>
-          <q-btn class="yellow-btn col-5" label="Reiniciar" @click="reset" type="reset" color="orange"/>
-        </div>
-      </template>
+      <q-input class="prfl-input col-11" v-model="user.user_name" label="Nombre" dark borderless :disable="true"></q-input>
+      <q-input class="prfl-input col-11" v-model="user.user_country" label="País" dark borderless :disable="true"></q-input>
     </q-form>
-    <div class="row justify-around full-width" v-if="notmyprofile">
+    <div class="row justify-around full-width">
       <div class="col-11">
         <p class="title text-h6 q-ml-md">Listas de {{user.user_name}}</p>
         <div class="q-mx-xs" v-bind:key="result.id" v-for="result in playlists">
-          <PlaylistResult :result="result" :notmyprofile="false" />
+          <PlaylistResult :result="result"/>
         </div>
       </div>
     </div>
@@ -71,12 +61,6 @@ export default {
   mixins: [functions],
   name: 'profile',
   components: { PlaylistResult, ChatBox },
-  props: {
-    notmyprofile: {
-      type: Boolean,
-      default: true
-    }
-  },
   data () {
     return {
       img: '../assets/default-user-img.png',
@@ -97,7 +81,7 @@ export default {
       try {
         this.activateLoading()
         const request = await UserService.getUser({
-          id: (this.notmyprofile ? this.$route.params.id : this.userLogin.user_id)
+          id: this.$route.params.id
         })
         this.user = request.data.data
         this.disableLoading()
@@ -109,7 +93,7 @@ export default {
       this.activateLoading()
       try {
         const params = {
-          user_id: (this.notmyprofile ? this.$route.params.id : this.userLogin.user_id)
+          user_id: this.$route.params.id
         }
         const request = await PlaylistService.getPlaylists(params)
         this.playlists = request.data.data

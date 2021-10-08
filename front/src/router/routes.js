@@ -15,17 +15,17 @@ const routes = [
     ]
   },
   {
-    path: '/myprofile',
+    path: '/profile',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { name: 'myprofile', path: '', props: { notmyprofile: false }, component: () => import('pages/Profile.vue'), meta: { title: 'Profile' } }
+      { name: 'myprofile', path: '', props: { notmyprofile: false }, component: () => import('pages/MyProfile.vue'), meta: { title: 'Profile' } }
     ]
   },
   {
     path: '/profile/:id',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { name: 'profile other', path: '', props: { notmyprofile: true }, component: () => import('pages/Profile.vue'), meta: { title: 'Profile' } }
+      { name: 'profile', path: '/profile/:id', props: { notmyprofile: true }, component: () => import('pages/Profile.vue'), meta: { title: 'Profile' } }
     ]
   },
   {

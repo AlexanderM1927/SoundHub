@@ -72,7 +72,7 @@ const menuList = [
   {
     title: 'Mi perfil',
     icon: 'far fa-user-circle',
-    to: '/myprofile',
+    to: '/profile',
     separator: true,
     requireSession: true
   },
