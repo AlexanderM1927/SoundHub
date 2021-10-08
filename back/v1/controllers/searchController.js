@@ -72,7 +72,7 @@ exports.download = async function(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     if (type === 'video') {
       ytdl(url, {
-        quality: 'lowestaudio'
+        quality: 'highestaudio'
       }).pipe(res)
     } else {
       const sound = await Sound.findAll({ 
