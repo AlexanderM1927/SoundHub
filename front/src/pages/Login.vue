@@ -123,7 +123,8 @@ export default {
   },
   methods: {
     loginWithFacebook () {
-      location.href = process.env.API_URL + 'auth/facebook'
+      this.alert('warning', 'Muy pronto...')
+      // location.href = process.env.API_URL + 'auth/facebook'
     },
     async login () {
       try {

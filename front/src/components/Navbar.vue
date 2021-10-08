@@ -95,13 +95,6 @@ const menuList = [
     to: '/login',
     separator: true,
     requireSession: false
-  },
-  {
-    title: 'Salir',
-    icon: 'fas fa-sign-out-alt',
-    to: '/logout',
-    separator: false,
-    requireSession: true
   }
 ]
 export default {
@@ -151,6 +144,13 @@ export default {
       separator: false,
       requireSession: true,
       active: (this.notifications.length > 0)
+    })
+    this.menuList.push({
+      title: 'Salir',
+      icon: 'fas fa-sign-out-alt',
+      to: '/logout',
+      separator: false,
+      requireSession: true
     })
   },
   methods: {
