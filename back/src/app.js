@@ -7,10 +7,11 @@ const express           = require('express')
 const bodyP             = require('body-parser')
 const cors              = require('cors')
 const app               = express()
-const http              = require('http').Server(app)
+const http              = require('http')
+const server            = http.createServer(app)
 const db                = require('../v1/models')
 const Role              = db.role
-const socket            = require('socket.io')
+const { Server }        = require('socket.io')
 app.use(express.static(__dirname+'/public'));
 
 db.sequelize.sync();
@@ -45,16 +46,19 @@ app.use(cors())
 
 require('../v1/routes/routes')(app)
 
-// Deploy
-const server = http.listen(process.env.PORT, function () {
-    console.log('listening on *:' + process.env.PORT)
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+    }
+})
+io.on('connect', (socket) => {
+    socket.on('message', (data) => {
+        console.log(data)
+        io.sockets.emit('message', data)
+    })
 })
 
-const io = socket(server)
-io.on('connection', () => {
-    console.log('new connection')
-
-    socket.on('chat:message', (data) => {
-        io.sockets.emit('chat:message', data)
-    })
+// Deploy
+server.listen(process.env.PORT, function () {
+    console.log('listening on *:' + process.env.PORT)
 })

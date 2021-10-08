@@ -36,9 +36,27 @@
         </div>
       </div>
     </div>
-    <q-page-sticky position="top-right" :offset="[18, 18]">
-      <q-btn fab icon="message" color="pink" />
+    <q-page-sticky position="top-right" :offset="[18, 18]" v-if="token && user.user_id !== userLogin.user_id">
+      <q-btn @click="modalChat = !modalChat" fab icon="message" color="pink" />
     </q-page-sticky>
+    <q-dialog
+      v-model="modalChat"
+      transition-show="slide-up"
+      transition-hide="slide-down"
+      :maximized="true"
+    >
+      <q-card class="pl-card-body">
+        <q-bar>
+          <q-space />
+          <q-btn dense flat icon="close" v-close-popup>
+            <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+          </q-btn>
+        </q-bar>
+        <div class="content">
+          <Chat :userTo="user"></Chat>
+        </div>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -47,11 +65,12 @@ import UserService from '../services/UserService'
 import PlaylistService from '../services/PlaylistService'
 import { functions } from '../functions.js'
 import PlaylistResult from '../components/PlaylistResult.vue'
+import Chat from '../components/Chat.vue'
 
 export default {
   mixins: [functions],
   name: 'profile',
-  components: { PlaylistResult },
+  components: { PlaylistResult, Chat },
   props: {
     notmyprofile: {
       type: Boolean,
@@ -63,8 +82,10 @@ export default {
       img: '../assets/default-user-img.png',
       profile: null,
       userLogin: JSON.parse(localStorage.getItem('user')),
+      token: localStorage.getItem('token'),
       playlists: [],
-      user: {}
+      user: {},
+      modalChat: false
     }
   },
   mounted () {
