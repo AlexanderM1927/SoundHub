@@ -108,7 +108,11 @@ export default {
           token: this.token
         }
         const request = await SoundPlaylistService.remove(data)
-        if (request.status >= 200 && request.status < 300) this.alert('positive', 'Canción eliminada del playlist correctamente')
+        if (request.status >= 200 && request.status < 300) {
+          this.alert('positive', 'Canción eliminada del playlist correctamente')
+          this.$destroy()
+          this.$el.parentNode.removeChild(this.$el)
+        }
       } catch (error) {
         console.log(error)
       }
