@@ -6,5 +6,8 @@ export default {
   },
   getSongById (params) {
     return process.env.API_URL + 'download/' + params.type + '/' + params.url
+  },
+  download (params) {
+    return Api().get('download/' + params.type + '/' + params.url)
   }
 }

@@ -2,6 +2,7 @@
 const ytdl = require('ytdl-core'); // this is for download
 const youtubesearchapi = require('youtube-search-api');
 const Sound = require('../models').sound
+const User = require('../models').user
 const { Op } = require("sequelize");
 const path = require('path');
 const fileSystem = require('fs');
@@ -19,6 +20,13 @@ exports.search = async function(req, res) {
         }
       }
     })
+    const users = await User.findAll({
+      where: {
+        sound_name: {
+          [Op.like]: '%' + name + '%'
+        }
+      }
+    })
     const results = {
       items: [],
       nextPage: {}
@@ -29,6 +37,13 @@ exports.search = async function(req, res) {
       }
       Object.assign(sound, sounds[i].dataValues)
       results.items.push(sound)
+    }
+    for (let i = 0; i < users.length; i++) {
+      const user = {
+        type: 'user'
+      }
+      Object.assign(user, users[i].dataValues)
+      results.items.push(user)
     }
     for (let i = 0; i < youtube.items.length; i++) {
       const video = youtube.items[i]
