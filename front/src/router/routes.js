@@ -73,6 +73,13 @@ const routes = [
     props: route => ({ token: route.params.token, user: JSON.parse(route.params.user) })
   },
   {
+    path: '/chat',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { name: 'chat', path: '', component: () => import('pages/Chat.vue'), meta: { title: 'My chats', requireSession: true } }
+    ]
+  },
+  {
     name: 'logout',
     path: '/logout',
     meta: {
