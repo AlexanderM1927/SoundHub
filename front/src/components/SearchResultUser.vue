@@ -6,7 +6,7 @@
       @click="goTo('/profile/' + result.user_id)"
     >
       <div :class="'rslt_div_title col-12'">
-        <p :class="'rslt_title'">{{ result.sound_name }}</p>
+        <p :class="'rslt_title'">{{ result.user_name }}</p>
       </div>
     </div>
   </div>

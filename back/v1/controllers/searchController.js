@@ -22,7 +22,7 @@ exports.search = async function(req, res) {
     })
     const users = await User.findAll({
       where: {
-        sound_name: {
+        user_name: {
           [Op.like]: '%' + name + '%'
         }
       }
