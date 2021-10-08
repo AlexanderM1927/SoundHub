@@ -140,7 +140,7 @@ export const functions = {
     async downloadFile (payload) {
       try {
         this.alert('warning', 'Descargando... En un rato aparecerá en "Mis canciones"')
-        const request = await SearchService.getSongById(payload)
+        const request = await SearchService.download(payload)
         const blob = request.data
         this.convertBlobToBase64(blob).then(async (str) => {
           await this.verifyAndCreateFolder()
