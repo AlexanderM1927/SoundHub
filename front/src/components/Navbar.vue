@@ -66,6 +66,8 @@
 <script>
 import { functions } from '../functions.js'
 import NavLink from './NavLink'
+import { io } from 'socket.io-client'
+
 const menuList = [
   {
     title: 'Mi perfil',
@@ -111,7 +113,8 @@ export default {
       search_content: '',
       side_options: false,
       menuList,
-      token: localStorage.getItem('token')
+      token: localStorage.getItem('token'),
+      user: JSON.parse(localStorage.getItem('user'))
     }
   },
   computed: {
@@ -119,12 +122,36 @@ export default {
       get () {
         return this.$store.state.sounds.searchText
       }
+    },
+    notifications: {
+      get () {
+        return this.$store.state.chat.notifications
+      }
     }
   },
   watch: {
     searchText () {
       this.search_content = this.searchText
+    },
+    notifications () {
+      this.menuList = this.menuList.map((menu) => {
+        if (menu.to === '/chat') {
+          menu.active = this.notifications.length > 0
+        }
+        return menu
+      })
     }
+  },
+  mounted () {
+    this.getChats()
+    this.menuList.push({
+      title: 'Chats',
+      icon: 'fas fa-bells',
+      to: '/chat',
+      separator: false,
+      requireSession: true,
+      active: (this.notifications.length > 0)
+    })
   },
   methods: {
     delete_search () {
@@ -137,6 +164,19 @@ export default {
       })
       this.goTo('/search/' + this.search_content)
       // location.href = '/search/' + this.search_content
+    },
+    getChats () {
+      const server = process.env.API_URL.replace('/v1/', '')
+      this.socket = io(server)
+      this.socket.on('message', message => {
+        if (message.userTo.user_id === this.user.user_id) {
+          this.$store.dispatch('chat/addChats', {
+            chat: message
+          })
+          if (this.notifications.indexOf(message.user.user_id) === -1) this.$store.dispatch('chat/addNotification', message.user.user_id)
+          this.alert('primary', `${message.user.user_name} te ha enviado un mensaje`)
+        }
+      })
     }
   }
 }

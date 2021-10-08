@@ -29,9 +29,9 @@ import { functions } from '../functions.js'
 import { io } from 'socket.io-client'
 
 export default {
-  name: 'Chat',
+  name: 'ChatBox',
   mixins: [functions],
-  props: ['userTo'],
+  props: ['userTo', 'messagesProp'],
   data () {
     return {
       socket: {},
@@ -43,6 +43,7 @@ export default {
   },
   mounted () {
     this.connectSocket()
+    this.getMessagesByProp()
   },
   methods: {
     connectSocket () {
@@ -61,12 +62,23 @@ export default {
       }
       this.socket.emit('message', message)
       this.messages.push(message)
+      this.$store.dispatch('chat/addChats', {
+        chat: message
+      })
       this.message = ''
       this.scroll()
     },
     scroll () {
       const chatBox = document.getElementById('chatBox')
       chatBox.scrollTop = chatBox.scrollHeight
+    },
+    getMessagesByProp () {
+      for (let i = 0; i < this.messagesProp.length; i++) {
+        if (this.messagesProp[i].chat.userTo.user_id === this.user.user_id ||
+        this.messagesProp[i].chat.user.user_id === this.user.user_id) {
+          this.messages.push(this.messagesProp[i].chat)
+        }
+      }
     }
   }
 }

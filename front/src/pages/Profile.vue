@@ -53,7 +53,7 @@
           </q-btn>
         </q-bar>
         <div class="content">
-          <Chat :userTo="user"></Chat>
+          <ChatBox :userTo="user"></ChatBox>
         </div>
       </q-card>
     </q-dialog>
@@ -65,12 +65,12 @@ import UserService from '../services/UserService'
 import PlaylistService from '../services/PlaylistService'
 import { functions } from '../functions.js'
 import PlaylistResult from '../components/PlaylistResult.vue'
-import Chat from '../components/Chat.vue'
+import ChatBox from '../components/ChatBox.vue'
 
 export default {
   mixins: [functions],
   name: 'profile',
-  components: { PlaylistResult, Chat },
+  components: { PlaylistResult, ChatBox },
   props: {
     notmyprofile: {
       type: Boolean,
