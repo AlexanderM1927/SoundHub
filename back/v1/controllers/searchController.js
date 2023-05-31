@@ -114,6 +114,6 @@ exports.download = async function(req, res) {
     const view = new View(data)
     await view.save();
   } catch (e) {
-    console.log(e);
+    alert(e)
   }
 }
