@@ -68,15 +68,15 @@ exports.download = async function(req, res) {
   try {
     const url = req.params.url;
     const type = req.params.type;
-    res.setHeader("Content-Type", "audio/mp3");
+    res.setHeader("Content-Type", "audio/x-m4a");
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Accept-Ranges", "bytes");
     if (type === 'video') {
       ytdl(url, {
         filter: 'audioonly',
-        quality: 'lowestaudio'
-      }).pipe(fs.createWriteStream('/tmp/file.mp3'))
-      console.log('esta haciendo esto')
+        quality: 'lowestaudio',
+        format: 'm4a'
+      }).pipe(res)
     } else {
       const sound = await Sound.findAll({ 
         where: {
@@ -116,6 +116,6 @@ exports.download = async function(req, res) {
     const view = new View(data)
     await view.save();
   } catch (e) {
-    alert(e)
+    console.log(e)
   }
 }

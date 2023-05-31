@@ -32,7 +32,10 @@
         </div>
         <!--SOUND WAVES-->
         <div :class="(playlist.length > 0 ? 'col-md-2 col-xs-4' : 'col-md-10 col-xs-7')">
-          <audio ref="audio"></audio>
+          <audio ref="audio">
+            <source :src="song.url" type="audio/ogg">
+            <source :src="song.url" type="audio/mp4">
+          </audio>
           <div id="seek">
             <div class="player-timeline">
               <div class="player-progress"></div>
@@ -163,7 +166,6 @@ export default {
     async loadFile (url) {
       this.activateLoading()
       this.isLoading = true
-      this.$refs.audio.src = url
       await this.$refs.audio.play()
       this.isPlaying = true
       this.isLoading = false
