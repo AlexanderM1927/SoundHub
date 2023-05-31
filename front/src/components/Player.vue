@@ -10,14 +10,14 @@
               v-if='isPlaying'
               name="fas fa-pause"
               class="plyr-btn plyr-pink"
-              @click='wavesurfer.playPause()'
+              @click='playPause()'
             />
             <!--PLAY BUTTON-->
             <q-icon
               v-if="!isPlaying && !isLoading"
               name="fas fa-play"
               class="plyr-btn plyr-pink"
-              @click="wavesurfer.playPause()"
+              @click="playPause()"
             />
           </center>
         </div>
@@ -32,7 +32,13 @@
         </div>
         <!--SOUND WAVES-->
         <div :class="(playlist.length > 0 ? 'col-md-2 col-xs-4' : 'col-md-10 col-xs-7')">
-          <div id='waveform' style="width: 100%;"></div>
+          <audio ref="audio"></audio>
+          <div id="seek">
+            <div class="player-timeline">
+              <div class="player-progress"></div>
+              <div class="player-seeker" title="Seek"></div>
+            </div>
+          </div>
         </div>
         <!--NEXT SONG-->
         <div v-if="playlist.length > 0" class="col-md-1 col-xs-2 q-mt-xs">
@@ -99,7 +105,6 @@
 </template>
 
 <script>
-import WaveSurfer from 'wavesurfer.js'
 import SoundService from '../services/SoundService'
 import CommentService from '../services/CommentService'
 import { functions } from '../functions.js'
@@ -124,6 +129,11 @@ export default {
       isPlaying: true
     }
   },
+  watch: {
+    song () {
+      if (this.song) this.loadFile(this.song.url)
+    }
+  },
   computed: {
     song: {
       get () {
@@ -141,12 +151,24 @@ export default {
       }
     }
   },
-  watch: {
-    song () {
-      if (this.song) this.loadFile(this.song.url)
-    }
-  },
   methods: {
+    playPause () {
+      this.isPlaying = !this.isPlaying
+      if (!this.isPlaying) {
+        this.$refs.audio.pause()
+      } else {
+        this.$refs.audio.play()
+      }
+    },
+    async loadFile (url) {
+      this.activateLoading()
+      this.isLoading = true
+      this.$refs.audio.src = url
+      await this.$refs.audio.play()
+      this.isPlaying = true
+      this.isLoading = false
+      this.disableLoading()
+    },
     async makeComment () {
       if (this.comment.length > 0) {
         const request = await CommentService.store({
@@ -219,47 +241,6 @@ export default {
         }
       }
     },
-    createWaveSurfer () {
-      this.wavesurfer = WaveSurfer.create({
-        container: '#waveform',
-        hideScrollbar: true,
-        waveColor: '#F5F5F5',
-        progressColor: '#CF2741',
-        cursorColor: '#fff',
-        barWidth: 3,
-        backend: 'MediaElement'
-      })
-      this.wavesurfer.on('error', err => {
-        console.error(err)
-      })
-      this.wavesurfer.on('loading', (e) => {
-        this.isLoading = true
-        if (e === 100) {
-          this.isLoading = false
-        }
-      })
-      this.wavesurfer.on('ready', () => {
-        this.isLoading = false
-        this.disableLoading()
-        // this.wavesurfer.playPause()
-      })
-      this.wavesurfer.on('play', () => {
-        this.isLoading = false
-        this.isPlaying = true
-      })
-      this.wavesurfer.on('pause', () => {
-        this.isLoading = false
-        this.isPlaying = false
-      })
-      this.wavesurfer.on('finish', () => {
-        this.setNewSong('next')
-      })
-    },
-    async loadFile (url) {
-      if (!this.wavesurfer) this.createWaveSurfer()
-      this.wavesurfer.load(url)
-      this.activateLoading()
-    },
     setNewSong (type) {
       if (this.playlist.length > 0) {
         if (type === 'next' && this.playlist.length > this.position) {
@@ -277,7 +258,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .plyr-play {
   margin: auto;
 }
@@ -324,5 +305,32 @@ export default {
 .box__comments {
   height: 35vh;
   overflow-y: auto;
+}
+
+.player-timeline {
+  background-color: #FFFFFF;
+  height: 50%;
+  min-width: 200px;
+  position: relative;
+
+  .player-progress,
+  .player-seeker {
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+  }
+
+  .player-progress {
+    background-color: #000;
+    z-index: 1;
+  }
+
+  .player-seeker {
+  cursor: pointer;
+    width: 100%;
+    z-index: 2;
+  }
 }
 </style>
