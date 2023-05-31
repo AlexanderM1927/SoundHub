@@ -70,8 +70,8 @@ exports.download = async function(req, res) {
     const type = req.params.type;
     res.setHeader("Content-Type", "audio/mpeg");
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("'Content-Transfer-Encoding", "binary");
-    res.setHeader("'Accept-Ranges", "bytes");
+    res.setHeader("Content-Transfer-Encoding", "binary");
+    res.setHeader("Accept-Ranges", "bytes");
     if (type === 'video') {
       ytdl(url, {
         quality: 'lowestaudio'
@@ -81,10 +81,33 @@ exports.download = async function(req, res) {
         where: {
           sound_id: url 
         }
-      })
+      });
       const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound[0].sound_file_url);
       const readStream = fileSystem.createReadStream(filePath);
-      readStream.pipe(res)
+      
+      // Obtener información sobre el archivo
+      const stat = fileSystem.statSync(filePath);
+      const fileSize = stat.size;
+      
+      // Obtener el rango de bytes solicitado
+      const range = req.headers.range;
+      const parts = range.replace(/bytes=/, "").split("-");
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      
+      // Calcular el tamaño del contenido parcial
+      const chunkSize = (end - start) + 1;
+      
+      // Configurar el encabezado Content-Range
+      res.setHeader("Content-Range", `bytes ${start}-${end}/${fileSize}`);
+      res.setHeader("Content-Length", chunkSize);
+      res.setHeader("Accept-Ranges", "bytes");
+      
+      // Leer y enviar el contenido parcial
+      const stream = readStream.pipe(res);
+      stream.on("error", function(err) {
+        // Manejar errores
+      });
     }
     const data = {
       sound_id: url,
