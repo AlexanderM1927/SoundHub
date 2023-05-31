@@ -70,6 +70,8 @@ exports.download = async function(req, res) {
     const type = req.params.type;
     res.setHeader("Content-Type", "audio/mpeg");
     res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("'Content-Transfer-Encoding", "binary");
+    res.setHeader("'Accept-Ranges", "bytes");
     if (type === 'video') {
       ytdl(url, {
         quality: 'lowestaudio'
