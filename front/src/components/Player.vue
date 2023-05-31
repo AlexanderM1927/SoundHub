@@ -241,7 +241,7 @@ export default {
       this.wavesurfer.on('ready', () => {
         this.isLoading = false
         this.disableLoading()
-        this.wavesurfer.playPause()
+        // this.wavesurfer.playPause()
       })
       this.wavesurfer.on('play', () => {
         this.isLoading = false
