@@ -163,7 +163,7 @@ export default {
     async loadFile (url) {
       this.activateLoading()
       this.isLoading = true
-      this.$refs.audio.src = url.slice(url.indexOf('/v1'))
+      this.$refs.audio.src = url
       await this.$refs.audio.play()
       this.isPlaying = true
       this.isLoading = false
