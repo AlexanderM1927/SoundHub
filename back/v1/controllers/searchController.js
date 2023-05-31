@@ -76,6 +76,7 @@ exports.download = async function(req, res) {
         filter: 'audioonly',
         quality: 'lowestaudio'
       }).pipe(fs.createWriteStream('/tmp/file.mp3'))
+      console.log('esta haciendo esto')
     } else {
       const sound = await Sound.findAll({ 
         where: {
