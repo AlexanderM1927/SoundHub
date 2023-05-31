@@ -126,8 +126,7 @@ export default {
       token: localStorage.getItem('token'),
       user: JSON.parse(localStorage.getItem('user')),
       comments: [],
-      isPlaying: true,
-      audio: null
+      isPlaying: true
     }
   },
   watch: {
@@ -156,17 +155,16 @@ export default {
     playPause () {
       this.isPlaying = !this.isPlaying
       if (!this.isPlaying) {
-        this.audio.pause()
+        this.$refs.audio.pause()
       } else {
-        this.audio.play()
+        this.$refs.audio.play()
       }
     },
     async loadFile (url) {
       this.activateLoading()
       this.isLoading = true
-      this.audio = new Audio()
-      this.audio.autoplay = true
-      this.audio.src = url
+      this.$refs.audio.src = url.slice(url.indexOf('/v1'))
+      await this.$refs.audio.play()
       this.isPlaying = true
       this.isLoading = false
       this.disableLoading()
