@@ -68,9 +68,8 @@ exports.download = async function(req, res) {
   try {
     const url = req.params.url;
     const type = req.params.type;
-    res.setHeader("Content-Type", "audio/mpeg");
+    res.setHeader("Content-Type", "audio/mp3");
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Content-Transfer-Encoding", "binary");
     res.setHeader("Accept-Ranges", "bytes");
     if (type === 'video') {
       ytdl(url, {
@@ -101,7 +100,6 @@ exports.download = async function(req, res) {
       // Configurar el encabezado Content-Range
       res.setHeader("Content-Range", `bytes ${start}-${end}/${fileSize}`);
       res.setHeader("Content-Length", chunkSize);
-      res.setHeader("Accept-Ranges", "bytes");
       
       // Leer y enviar el contenido parcial
       const stream = readStream.pipe(res);
@@ -114,7 +112,7 @@ exports.download = async function(req, res) {
       view_type: type
     }
     const view = new View(data)
-    await view.save()
+    await view.save();
   } catch (e) {
     console.log(e);
   }
