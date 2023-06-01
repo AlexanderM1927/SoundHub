@@ -72,6 +72,7 @@ exports.download = async function(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Accept-Ranges", "bytes");
     if (type === 'video') {
+      const file = null
       ytdl(url, {
         filter: 'audioonly',
         quality: 'lowestaudio',
