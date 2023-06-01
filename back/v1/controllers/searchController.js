@@ -68,7 +68,7 @@ exports.download = async function(req, res) {
   try {
     const url = req.params.url;
     const type = req.params.type;
-    res.setHeader("Content-Type", "audio/x-m4a");
+    res.setHeader("Content-Type", "audio/mpeg");
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Accept-Ranges", "bytes");
     if (type === 'video') {
