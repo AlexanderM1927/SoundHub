@@ -2,7 +2,6 @@
 const ytdl = require('ytdl-core'); // this is for download
 const youtubesearchapi = require('youtube-search-api');
 const Sound = require('../models').sound
-const User = require('../models').user
 const { Op } = require("sequelize");
 const path = require('path');
 const fileSystem = require('fs');
@@ -20,13 +19,6 @@ exports.search = async function(req, res) {
         }
       }
     })
-    const users = await User.findAll({
-      where: {
-        user_name: {
-          [Op.like]: '%' + name + '%'
-        }
-      }
-    })
     const results = {
       items: [],
       nextPage: {}
@@ -37,13 +29,6 @@ exports.search = async function(req, res) {
       }
       Object.assign(sound, sounds[i].dataValues)
       results.items.push(sound)
-    }
-    for (let i = 0; i < users.length; i++) {
-      const user = {
-        type: 'user'
-      }
-      Object.assign(user, users[i].dataValues)
-      results.items.push(user)
     }
     for (let i = 0; i < youtube.items.length; i++) {
       const video = youtube.items[i]
@@ -68,35 +53,43 @@ exports.download = async function(req, res) {
   try {
     const url = req.params.url;
     const type = req.params.type;
+    let pipe = ''
     res.setHeader("Content-Type", "audio/mpeg");
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Accept-Ranges", "bytes");
     if (type === 'video') {
-      const file = null
-      ytdl(url, {
+      pipe = ytdl(url, {
         filter: 'audioonly',
         quality: 'lowestaudio',
-        format: 'm4a'
-      }).pipe(res)
+        format: 'mp3'
+      })
     } else {
       const sound = await Sound.findAll({ 
         where: {
           sound_id: url 
         }
-      });
+      })
       const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound[0].sound_file_url);
       const readStream = fileSystem.createReadStream(filePath);
-      
-      // Leer y enviar el contenido parcial
-      readStream.pipe(res);
+      pipe = readStream
     }
+    pipe.on("data", (chunk) => {
+      res.write(chunk);
+    });
+
+    pipe.on("error", (err) => {
+      res.sendStatus(404);
+    });
+
+    pipe.on("end", () => {
+      res.end();
+    });
     const data = {
       sound_id: url,
       view_type: type
     }
     const view = new View(data)
-    await view.save();
+    await view.save()
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
 }
