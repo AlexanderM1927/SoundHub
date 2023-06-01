@@ -33,8 +33,8 @@
         <!--SOUND WAVES-->
         <div :class="(playlist.length > 0 ? 'col-md-2 col-xs-4' : 'col-md-10 col-xs-7')">
           <audio ref="audio">
-            <source :src="song.url" type="audio/ogg">
-            <source :src="song.url" type="audio/mp4">
+            <source :src="source" type="audio/ogg">
+            <source :src="source" type="audio/mp4">
           </audio>
           <div id="seek">
             <div class="player-timeline">
@@ -129,7 +129,8 @@ export default {
       token: localStorage.getItem('token'),
       user: JSON.parse(localStorage.getItem('user')),
       comments: [],
-      isPlaying: true
+      isPlaying: true,
+      source: null
     }
   },
   watch: {
@@ -166,6 +167,7 @@ export default {
     async loadFile (url) {
       this.activateLoading()
       this.isLoading = true
+      this.source = url
       await this.$refs.audio.play()
       this.isPlaying = true
       this.isLoading = false
