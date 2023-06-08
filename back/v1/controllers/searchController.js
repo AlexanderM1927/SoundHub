@@ -59,7 +59,8 @@ exports.download = async function(req, res) {
     if (type === 'video') {
       ytdl(url, {
         filter: 'audioonly',
-        quality: 'audioonly'
+        quality: 'audioonly',
+        format: 'mp3'
       }).pipe(res)
     } else {
       const sound = await Sound.findAll({ 
