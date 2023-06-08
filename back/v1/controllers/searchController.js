@@ -53,13 +53,13 @@ exports.download = async function(req, res) {
   try {
     const url = req.params.url;
     const type = req.params.type;
-    res.setHeader("Content-Type", "audio/mpeg");
-    res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.mp3');
+    res.setHeader("Content-Type", "audio/m4a");
+    // res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.mp3');
     res.setHeader("Access-Control-Allow-Origin", "*");
     if (type === 'video') {
       ytdl(url, {
         filter: 'audioonly',
-        format: 'mp3'
+        format: 'm4a'
       }).pipe(res)
     } else {
       const sound = await Sound.findAll({ 
