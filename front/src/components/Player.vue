@@ -257,14 +257,14 @@ export default {
       })
     },
     async loadFile (url) {
-      if (this.isIOS()) {
-        alert('Producto no compatible con iOS')
-      } else {
-        document.getElementById('audioBox').style.display = 'none'
-        if (!this.wavesurfer) this.createWaveSurfer()
-        this.wavesurfer.load(url)
-        this.activateLoading()
-      }
+      // if (this.isIOS()) {
+      //   alert('Producto no compatible con iOS')
+      // } else {
+      document.getElementById('audioBox').style.display = 'none'
+      if (!this.wavesurfer) this.createWaveSurfer()
+      this.wavesurfer.load(url)
+      this.activateLoading()
+      // }
     },
     isIOS () {
       if (typeof window === 'undefined' || typeof navigator === 'undefined') return false
