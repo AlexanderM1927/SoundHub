@@ -61,13 +61,26 @@ exports.download = async function(req, res) {
         format: 'm4a'
       });
 
-      audioStream.on('end', () => {
+      const passThroughStream = new PassThrough();
+      audioStream.pipe(passThroughStream);
+
+      const chunks = [];
+      passThroughStream.on('data', (chunk) => {
+        chunks.push(chunk);
+      });
+
+      passThroughStream.on('end', () => {
         // const audioData = Buffer.concat(chunks);
         // const blob = new Blob([audioData], { type: 'audio/m4a' });
 
-        res.setHeader("Content-Type", "application/octet-stream");
+        res.setHeader("Content-Type", "audio/m4a");
         res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
-        audioStream.pipe(res)
+        passThroughStream.pipe(res)
+      });
+
+      passThroughStream.on('error', (error) => {
+        console.error('Error occurred during audio streaming:', error);
+        res.status(500).send('Error occurred during audio streaming');
       })
     } else {
       res.setHeader("Content-Type", "audio/mpeg");
