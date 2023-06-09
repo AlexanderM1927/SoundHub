@@ -61,11 +61,11 @@ exports.download = async function(req, res) {
           filter: 'audioonly',
           format: 'm4a'
         }).pipe(res).on('close', () => {
-          res.setHeader("Content-Type", "audio/m4a");
-          res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
           resolve(); // finish
         })
       })
+      res.setHeader("Content-Type", "audio/m4a");
+      res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
     } else {
       res.setHeader("Content-Type", "audio/mpeg");
       const sound = await Sound.findAll({ 
