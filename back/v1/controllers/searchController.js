@@ -75,8 +75,7 @@ exports.download = async function(req, res) {
 
         res.setHeader("Content-Type", "application/octet-stream");
         res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
-        audioStream.pipe(res)
-        res.status(200);
+        passThroughStream.pipe(res)
       });
 
       passThroughStream.on('error', (error) => {
