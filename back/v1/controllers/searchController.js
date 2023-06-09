@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 const path = require('path');
 const fileSystem = require('fs');
 const View = require('../models').view
-const { FfmpegCommand } = require('fluent-ffmpeg')
+const FfmpegCommand = require('fluent-ffmpeg')
 
 exports.search = async function(req, res) {
   try {
