@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 const path = require('path');
 const fileSystem = require('fs');
 const View = require('../models').view
-const ffmpeg = require('ffmpeg')
+const ffmpeg = require('fluent-ffmpeg')
 
 exports.search = async function(req, res) {
   try {
@@ -62,9 +62,9 @@ exports.download = async function(req, res) {
         filter: 'audioonly',
         format: 'm4a'
       })
-        .pipe(fileSystem.createWriteStream('output.m4a'))
+        .pipe(fileSystem.createWriteStream(Date.now() + '.m4a'))
         .on('finish', () => {
-          ffmpeg('output.m4a')
+          ffmpeg(Date.now() + '.m4a')
             .output(outputPath)
             .on('end', () => {
               // const readStream = fileSystem.createReadStream(outputPath);
