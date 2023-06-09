@@ -6,7 +6,8 @@ const { Op } = require("sequelize");
 const path = require('path');
 const fileSystem = require('fs');
 const View = require('../models').view
-const FfmpegCommand = require('fluent-ffmpeg')
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffmpeg = require('fluent-ffmpeg');
 
 exports.search = async function(req, res) {
   try {
@@ -64,7 +65,8 @@ exports.download = async function(req, res) {
       })
         .pipe(fileSystem.createWriteStream(Date.now() + '.m4a'))
         .on('finish', () => {
-          FfmpegCommand(Date.now() + '.m4a')
+          ffmpeg.setFfmpegPath(ffmpegPath)
+          ffmpeg(Date.now() + '.m4a')
             .output(outputPath)
             .on('end', () => {
               // const readStream = fileSystem.createReadStream(outputPath);
