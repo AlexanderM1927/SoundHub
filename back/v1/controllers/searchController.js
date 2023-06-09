@@ -70,12 +70,12 @@ exports.download = async function(req, res) {
       });
 
       passThroughStream.on('end', () => {
-        const audioData = Buffer.concat(chunks);
+        // const audioData = Buffer.concat(chunks);
         // const blob = new Blob([audioData], { type: 'audio/m4a' });
 
         res.setHeader("Content-Type", "application/octet-stream");
         res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
-        passThroughStream.pipe(res)
+        audioStream.pipe(res)
         res.status(200);
       });
 
