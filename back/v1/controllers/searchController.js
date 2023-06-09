@@ -58,15 +58,16 @@ exports.download = async function(req, res) {
     if (type === 'video') {
       res.setHeader("Content-Type", "audio/mpeg");
       const outputPath = 'public/sounds/' + Date.now() + '.mp3'
+      const m4aFileDir = 'public/sounds/' + Date.now() + '.m4a'
       ytdl(url, {
         quality: 'lowestaudio',
         filter: 'audioonly',
         format: 'm4a'
       })
-        .pipe(fileSystem.createWriteStream('public/sounds/' + Date.now() + '.m4a'))
+        .pipe(fileSystem.createWriteStream(m4aFileDir))
         .on('finish', () => {
           ffmpeg.setFfmpegPath(ffmpegPath)
-          const fileDir = 'public/sounds/' + Date.now() + '.m4a'
+          const fileDir = m4aFileDir
           ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), fileDir))
             .output(outputPath)
             .on('end', () => {
