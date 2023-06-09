@@ -71,8 +71,8 @@ exports.download = async function(req, res) {
           ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), fileDir))
             .output(outputPath)
             .on('end', () => {
-              // const readStream = fileSystem.createReadStream(outputPath);
-              // readStream.pipe(res)
+              const readStream = fileSystem.createReadStream(outputPath);
+              readStream.pipe(res)
               console.log('Sound downloaded')
             })
             .run();
