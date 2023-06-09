@@ -60,11 +60,18 @@ exports.download = async function(req, res) {
     // res.setHeader('Accept-Ranges', 'bytes');
     // res.setHeader("Access-Control-Allow-Origin", "*");
     if (type === 'video') {
-      ytdl(url, {
+      const audioStream = ytdl(url, {
         quality: 'lowestaudio',
         filter: 'audioonly',
         format: 'm4a'
-      }).pipe(res)
+      })
+
+      audioStream.pipe(res)
+
+      audioStream.on('end', () => {
+        res.statusCode = 200
+        res.end()
+      })
     } else {
       const sound = await Sound.findAll({ 
         where: {
