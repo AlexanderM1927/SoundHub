@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 const path = require('path');
 const fileSystem = require('fs');
 const View = require('../models').view
-const { PassThrough } = require('stream');
+const ffmpeg = require('fluent-ffmpeg')
 
 exports.search = async function(req, res) {
   try {
@@ -55,17 +55,22 @@ exports.download = async function(req, res) {
     const url = req.params.url;
     const type = req.params.type;
     if (type === 'video') {
-      res.setHeader("Content-Type", "audio/m4a");
-      res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
-      await new Promise((resolve) => { // wait
-        ytdl(url, {
-          quality: 'lowestaudio',
-          filter: 'audioonly',
-          format: 'm4a'
-        }).pipe(res).on('close', () => {
-          resolve(); // finish
-        })
+      res.setHeader("Content-Type", "audio/mpeg");
+      const outputPath = 'public/sounds/' + Date.now() + '.mp3'
+      ytdl(url, {
+        quality: 'lowestaudio',
+        filter: 'audioonly',
+        format: 'm4a'
       })
+        .pipe(fs.createWriteStream('output.m4a'))
+        .on('finish', () => {
+          ffmpeg('output.m4a')
+            .output(outputPath)
+            .on('end', () => {
+              console.log('Archivo guardado como MP3.');
+            })
+            .run();
+        })
     } else {
       res.setHeader("Content-Type", "audio/mpeg");
       const sound = await Sound.findAll({ 
