@@ -10,6 +10,7 @@
   "author": "SoftCorp <@SoftCorp>",
   "license": "ISC",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@hapi/joi": "^17.1.1",
     "app-root-path": "^3.0.0",
     "axios": "^0.19.2",
