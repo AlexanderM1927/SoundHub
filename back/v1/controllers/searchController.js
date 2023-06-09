@@ -8,6 +8,7 @@ const fileSystem = require('fs');
 const View = require('../models').view
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
+const playedSongs = []
 
 exports.search = async function(req, res) {
   try {
@@ -57,26 +58,36 @@ exports.download = async function(req, res) {
     const type = req.params.type;
     if (type === 'video') {
       res.setHeader("Content-Type", "audio/mpeg");
-      const outputPath = 'public/sounds/' + Date.now() + '.mp3'
-      const m4aFileDir = 'public/sounds/' + Date.now() + '.m4a'
-      ytdl(url, {
-        quality: 'lowestaudio',
-        filter: 'audioonly',
-        format: 'm4a'
-      })
-        .pipe(fileSystem.createWriteStream(m4aFileDir))
-        .on('finish', () => {
-          ffmpeg.setFfmpegPath(ffmpegPath)
-          const fileDir = m4aFileDir
-          ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), fileDir))
-            .output(outputPath)
-            .on('end', () => {
-              const readStream = fileSystem.createReadStream(outputPath);
-              readStream.pipe(res)
-              console.log('Sound downloaded')
-            })
-            .run();
+      const previousSong = playedSongs.find(song => song.song === url)
+      if (previousSong) {
+        const readStream = fileSystem.createReadStream(previousSong.songUrl);
+        readStream.pipe(res)
+      } else {
+        const outputPath = 'public/sounds/' + Date.now() + '.mp3'
+        const m4aFileDir = 'public/sounds/' + Date.now() + '.m4a'
+        ytdl(url, {
+          quality: 'lowestaudio',
+          filter: 'audioonly',
+          format: 'm4a'
         })
+          .pipe(fileSystem.createWriteStream(m4aFileDir))
+          .on('finish', () => {
+            ffmpeg.setFfmpegPath(ffmpegPath)
+            const fileDir = m4aFileDir
+            ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), fileDir))
+              .output(outputPath)
+              .on('end', () => {
+                const readStream = fileSystem.createReadStream(outputPath);
+                readStream.pipe(res)
+                playedSongs.push({
+                  song: url,
+                  songUrl: outputPath
+                })
+                console.log('Sound downloaded')
+              })
+              .run();
+          })
+      }
     } else {
       res.setHeader("Content-Type", "audio/mpeg");
       const sound = await Sound.findAll({ 
