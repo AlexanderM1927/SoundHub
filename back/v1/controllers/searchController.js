@@ -55,15 +55,16 @@ exports.download = async function(req, res) {
     const url = req.params.url;
     const type = req.params.type;
     if (type === 'video') {
-      const audioStream = ytdl(url, {
-        quality: 'lowestaudio',
-        filter: 'audioonly',
-        format: 'm4a'
-      });
-      audioStream.on('end', () => {
-        res.setHeader("Content-Type", "audio/m4a");
-        res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
-        audioStream.pipe(res)
+      res.setHeader("Content-Type", "audio/m4a");
+      res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
+      await new Promise((resolve) => { // wait
+        ytdl(url, {
+          quality: 'lowestaudio',
+          filter: 'audioonly',
+          format: 'm4a'
+        }).pipe(res).on('close', () => {
+          resolve(); // finish
+        })
       })
     } else {
       res.setHeader("Content-Type", "audio/mpeg");
