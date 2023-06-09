@@ -62,12 +62,14 @@ exports.download = async function(req, res) {
         filter: 'audioonly',
         format: 'm4a'
       })
-        .pipe(fs.createWriteStream('output.m4a'))
+        .pipe(fileSystem.createWriteStream('output.m4a'))
         .on('finish', () => {
           ffmpeg('output.m4a')
             .output(outputPath)
             .on('end', () => {
-              console.log('Archivo guardado como MP3.');
+              // const readStream = fileSystem.createReadStream(outputPath);
+              // readStream.pipe(res)
+              console.log('Sound downloaded')
             })
             .run();
         })
