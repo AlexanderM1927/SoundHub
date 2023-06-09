@@ -33,6 +33,7 @@
         <!--SOUND WAVES-->
         <div :class="(playlist.length > 0 ? 'col-md-2 col-xs-4' : 'col-md-10 col-xs-7')">
           <div id='waveform' style="width: 100%;"></div>
+          <audio id="audioBox" :src="song.url" controls></audio>
         </div>
         <!--NEXT SONG-->
         <div v-if="playlist.length > 0" class="col-md-1 col-xs-2 q-mt-xs">
@@ -256,9 +257,20 @@ export default {
       })
     },
     async loadFile (url) {
-      if (!this.wavesurfer) this.createWaveSurfer()
-      this.wavesurfer.load(url)
-      this.activateLoading()
+      if (this.isIOS()) {
+        document.getElementById('audioBox').src = url
+        alert(document.getElementById('audioBox').src)
+      } else {
+        document.getElementById('audioBox').style.display = 'none'
+        if (!this.wavesurfer) this.createWaveSurfer()
+        this.wavesurfer.load(url)
+        this.activateLoading()
+      }
+    },
+    isIOS () {
+      if (typeof window === 'undefined' || typeof navigator === 'undefined') return false
+
+      return /iPhone|iPad|iPod/i.test(navigator.userAgent || navigator.vendor || (window.opera && window.opera.toString() === '[object Opera]'))
     },
     setNewSong (type) {
       if (this.playlist.length > 0) {

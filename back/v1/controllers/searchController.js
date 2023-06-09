@@ -55,6 +55,9 @@ exports.download = async function(req, res) {
     const type = req.params.type;
     res.setHeader("Content-Type", "audio/m4a");
     res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
+    res.setHeader('Connection', 'Keep-Alive');
+    res.setHeader('Transfer-Encoding', 'identity');
+    res.setHeader('Accept-Ranges', 'bytes');
     res.setHeader("Access-Control-Allow-Origin", "*");
     if (type === 'video') {
       ytdl(url, {
