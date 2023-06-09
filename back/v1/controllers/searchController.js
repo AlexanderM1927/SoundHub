@@ -66,7 +66,8 @@ exports.download = async function(req, res) {
         .pipe(fileSystem.createWriteStream('public/sounds/' + Date.now() + '.m4a'))
         .on('finish', () => {
           ffmpeg.setFfmpegPath(ffmpegPath)
-          ffmpeg('public/sounds/' + Date.now() + '.m4a')
+          console.log('__dirname', __dirname)
+          ffmpeg(__dirname + 'public/sounds/' + Date.now() + '.m4a')
             .output(outputPath)
             .on('end', () => {
               // const readStream = fileSystem.createReadStream(outputPath);
