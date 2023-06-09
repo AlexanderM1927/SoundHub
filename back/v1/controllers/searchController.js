@@ -6,6 +6,7 @@ const { Op } = require("sequelize");
 const path = require('path');
 const fileSystem = require('fs');
 const View = require('../models').view
+const { PassThrough } = require('stream');
 
 exports.search = async function(req, res) {
   try {
@@ -53,26 +54,36 @@ exports.download = async function(req, res) {
   try {
     const url = req.params.url;
     const type = req.params.type;
-    res.setHeader("Content-Type", "audio/m4a");
-    res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
-    // res.setHeader('Connection', 'Keep-Alive');
-    // res.setHeader('Transfer-Encoding', 'identity');
-    // res.setHeader('Accept-Ranges', 'bytes');
-    // res.setHeader("Access-Control-Allow-Origin", "*");
     if (type === 'video') {
       const audioStream = ytdl(url, {
         quality: 'lowestaudio',
         filter: 'audioonly',
         format: 'm4a'
-      })
+      });
 
-      audioStream.pipe(res)
+      const passThroughStream = new PassThrough();
+      audioStream.pipe(passThroughStream);
 
-      audioStream.on('end', () => {
-        res.statusCode = 200
-        res.end()
+      const chunks = [];
+      passThroughStream.on('data', (chunk) => {
+        chunks.push(chunk);
+      });
+
+      passThroughStream.on('end', () => {
+        const audioData = Buffer.concat(chunks);
+        const blob = new Blob([audioData], { type: 'audio/m4a' });
+
+        res.setHeader("Content-Type", "application/octet-stream");
+        res.setHeader('Content-disposition', 'attachment; filename=' + Date.now() + '.m4a');
+        res.status(200).send(blob);
+      });
+
+      passThroughStream.on('error', (error) => {
+        console.error('Error occurred during audio streaming:', error);
+        res.status(500).send('Error occurred during audio streaming');
       })
     } else {
+      res.setHeader("Content-Type", "audio/mpeg");
       const sound = await Sound.findAll({ 
         where: {
           sound_id: url 
