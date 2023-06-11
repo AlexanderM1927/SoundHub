@@ -56,6 +56,7 @@ exports.download = async function(req, res) {
   try {
     const url = req.params.url;
     const type = req.params.type;
+    const userAgent = req.headers['user-agent']
     if (type === 'video') {
       res.setHeader("Content-Type", "audio/mpeg");
       const previousSong = playedSongs.find(song => song.song === url)
@@ -63,30 +64,38 @@ exports.download = async function(req, res) {
         const readStream = fileSystem.createReadStream(previousSong.songUrl);
         readStream.pipe(res)
       } else {
-        const outputPath = 'public/sounds/' + Date.now() + '.mp3'
-        const m4aFileDir = 'public/sounds/' + Date.now() + '.m4a'
-        ytdl(url, {
-          quality: 'lowestaudio',
-          filter: 'audioonly',
-          format: 'm4a'
-        })
-          .pipe(fileSystem.createWriteStream(m4aFileDir))
-          .on('finish', () => {
-            ffmpeg.setFfmpegPath(ffmpegPath)
-            const fileDir = m4aFileDir
-            ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), fileDir))
-              .output(outputPath)
-              .on('end', () => {
-                const readStream = fileSystem.createReadStream(outputPath);
-                readStream.pipe(res)
-                playedSongs.push({
-                  song: url,
-                  songUrl: outputPath
-                })
-                console.log('Sound downloaded')
-              })
-              .run();
+        if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+          const outputPath = 'public/sounds/' + Date.now() + '.mp3'
+          const m4aFileDir = 'public/sounds/' + Date.now() + '.m4a'
+          ytdl(url, {
+            quality: 'lowestaudio',
+            filter: 'audioonly',
+            format: 'm4a'
           })
+            .pipe(fileSystem.createWriteStream(m4aFileDir))
+            .on('finish', () => {
+              ffmpeg.setFfmpegPath(ffmpegPath)
+              const fileDir = m4aFileDir
+              ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), fileDir))
+                .output(outputPath)
+                .on('end', () => {
+                  const readStream = fileSystem.createReadStream(outputPath);
+                  readStream.pipe(res)
+                  playedSongs.push({
+                    song: url,
+                    songUrl: outputPath
+                  })
+                  console.log('Sound downloaded')
+                })
+                .run();
+            })
+        } else {
+          ytdl(url, {
+            quality: 'lowestaudio',
+            filter: 'audioonly',
+            format: 'm4a'
+          }).pipe(res)
+        }
       }
     } else {
       res.setHeader("Content-Type", "audio/mpeg");
