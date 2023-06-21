@@ -39,7 +39,7 @@ exports.search = async function(req, res) {
       if (video.type === 'video' && video.length.accessibility && video.length.simpleText.match(/:/g).length === 1) {
         // console.log(Moment(video.length.accessibility.accessibilityData))
         // delete videos larger than 10 minutes
-        const minutes = video.length.simpleText.substring(0, str.indexOf(':'))
+        const minutes = video.length.simpleText.substring(0, video.length.simpleText.indexOf(':'))
         if (parseInt(minutes) < 11) results.items.push(video)
       }
     }
