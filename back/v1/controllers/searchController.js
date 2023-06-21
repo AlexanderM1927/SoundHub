@@ -38,7 +38,9 @@ exports.search = async function(req, res) {
       // console.log(video.length.accessibility.accessibilityData)
       if (video.type === 'video' && video.length.accessibility && video.length.simpleText.match(/:/g).length === 1) {
         // console.log(Moment(video.length.accessibility.accessibilityData))
-        results.items.push(video)
+        // delete videos larger than 10 minutes
+        const minutes = video.length.simpleText.substring(0, str.indexOf(':'))
+        if (parseInt(minutes) < 11) results.items.push(video)
       }
     }
     results.nextPage = youtube.nextPage
@@ -54,8 +56,8 @@ exports.search = async function(req, res) {
 
 exports.download = async function(req, res) {
   try {
-    const url = req.params.url;
-    const type = req.params.type;
+    const url = req.params.url
+    const type = req.params.type
     const userAgent = req.headers['user-agent']
     if (type === 'video') {
       res.setHeader("Content-Type", "audio/mpeg");
