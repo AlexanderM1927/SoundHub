@@ -75,7 +75,7 @@ exports.download = async function(req, res) {
             format: 'm4a'
           })
             .pipe(fileSystem.createWriteStream(m4aFileDir))
-            .on('finish', () => {
+            .on('close', () => {
               ffmpeg.setFfmpegPath(ffmpegPath)
               const fileDir = m4aFileDir
               ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), fileDir))
