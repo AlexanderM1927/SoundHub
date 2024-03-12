@@ -8,11 +8,15 @@ WORKDIR /usr/src/front-app
 # update and install dependency
 RUN apk update && apk upgrade
 RUN apk add git
+RUN npm install -g npm@10.5.0
+RUN npm install -g @quasar/cli@1.0
+
+# install node dependencies
+COPY package.json package-lock.json ./
+RUN npm install
 
 # copy the app, note .dockerignore
 COPY . /usr/src/front-app/
-RUN npm install -g @quasar/cli@1.0
-RUN npm install
 
 EXPOSE 9093
 

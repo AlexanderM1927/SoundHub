@@ -9,9 +9,12 @@ WORKDIR /usr/src/back-app
 RUN apk update && apk upgrade
 RUN apk add git
 
+# install node dependencies
+COPY package.json package-lock.json ./
+RUN npm install
+
 # copy the app, note .dockerignore
 COPY . /usr/src/back-app/
-RUN npm install
 
 EXPOSE 8003
 

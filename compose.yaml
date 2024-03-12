@@ -20,9 +20,9 @@ services:
       dockerfile: Dockerfile
       context: ./back
     volumes:
-      - ./front:/usr/src/front-app
-      - ./front/package.json:/usr/src/front-app/package.json
-      - /usr/src/front-app/node_modules
+      - ./back:/usr/src/back-app
+      - ./back/package.json:/usr/src/back-app/package.json
+      - /usr/src/back-app/node_modules
     ports:
       - "8003:8003"
     networks:
