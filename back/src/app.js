@@ -16,25 +16,37 @@ app.use(express.static(__dirname+'/public'));
 
 db.sequelize.sync();
 
-//db.sequelize.sync({force: true}).then(() => {
-//console.log('Drop and Resync Db')
-//initial()
-//});
+initial()
 
 function initial() {
-    Role.create({
-        role_id: 1,
-        role_name: "user"
+    Role.findOrCreate({
+        where: {
+            role_id: 1
+        },
+        defaults: {
+            role_id: 1,
+            role_name: "user"
+        }
     });
 
-    Role.create({
-        role_id: 2,
-        role_name: "moderator"
+    Role.findOrCreate({
+        where: {
+            role_id: 2
+        },
+        defaults: {
+            role_id: 2,
+            role_name: "moderator"
+        }
     });
 
-    Role.create({
-        role_id: 3,
-        role_name: "admin"
+    Role.findOrCreate({
+        where: {
+            role_id: 3
+        },
+        defaults: {
+            role_id: 3,
+            role_name: "admin"
+        }
     });
 }
 
