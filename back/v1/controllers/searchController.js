@@ -56,19 +56,29 @@ exports.search = async function(req, res) {
 
 exports.download = async function(req, res) {
   try {
-    const url = req.params.url
-    const type = req.params.type
-    const userAgent = req.headers['user-agent']
+    const url = req.params.url;
+    const type = req.params.type;
+    const userAgent = req.headers['user-agent'];
+  
+    res.setHeader("Content-Type", "audio/mpeg");
+  
     if (type === 'video') {
-      res.setHeader("Content-Type", "audio/mpeg");
-      const previousSong = playedSongs.find(song => song.song === url)
+      const previousSong = playedSongs.find(song => song.song === url);
       if (previousSong) {
         const readStream = fileSystem.createReadStream(previousSong.songUrl);
-        readStream.pipe(res)
+        readStream.pipe(res);
       } else {
+        const downloadAndStream = (format) => {
+          ytdl(url, {
+            quality: 'lowestaudio',
+            filter: 'audioonly',
+            format: format
+          }).pipe(res);
+        };
+  
         if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
-          const outputPath = 'public/sounds/' + Date.now() + '.mp3'
-          const m4aFileDir = 'public/sounds/' + Date.now() + '.m4a'
+          const outputPath = 'public/sounds/' + Date.now() + '.mp3';
+          const m4aFileDir = 'public/sounds/' + Date.now() + '.m4a';
           ytdl(url, {
             quality: 'lowestaudio',
             filter: 'audioonly',
@@ -76,47 +86,42 @@ exports.download = async function(req, res) {
           })
             .pipe(fileSystem.createWriteStream(m4aFileDir))
             .on('close', () => {
-              ffmpeg.setFfmpegPath(ffmpegPath)
-              const fileDir = m4aFileDir
-              ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), fileDir))
+              ffmpeg.setFfmpegPath(ffmpegPath);
+              ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), m4aFileDir))
                 .output(outputPath)
                 .on('end', () => {
                   const readStream = fileSystem.createReadStream(outputPath);
-                  readStream.pipe(res)
+                  readStream.pipe(res);
                   playedSongs.push({
                     song: url,
                     songUrl: outputPath
-                  })
-                  console.log('Sound downloaded')
+                  });
+                  console.log('Sound downloaded');
                 })
                 .run();
-            })
+            });
         } else {
-          ytdl(url, {
-            quality: 'lowestaudio',
-            filter: 'audioonly',
-            format: 'm4a'
-          }).pipe(res)
+          downloadAndStream('m4a');
         }
       }
     } else {
-      res.setHeader("Content-Type", "audio/mpeg");
-      const sound = await Sound.findAll({ 
+      const sound = await Sound.findOne({ 
         where: {
           sound_id: url 
         }
-      })
-      const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound[0].sound_file_url);
+      });
+      const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound.sound_file_url);
       const readStream = fileSystem.createReadStream(filePath);
-      readStream.pipe(res)
+      readStream.pipe(res);
     }
+  
     const data = {
       sound_id: url,
       view_type: type
-    }
-    const view = new View(data)
-    await view.save()
+    };
+    const view = new View(data);
+    await view.save();
   } catch (e) {
     console.log(e);
-  }
+  }  
 }
