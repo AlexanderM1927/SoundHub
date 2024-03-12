@@ -70,36 +70,13 @@ exports.download = async function(req, res) {
       } else {
         const downloadAndStream = (format) => {
           ytdl(url, {
-            quality: 'lowestaudio',
-            filter: 'audioonly',
+            quality: 'lowest',
             format: format
           }).pipe(res);
         };
   
         if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
-          const outputPath = 'public/sounds/' + Date.now() + '.mp3';
-          const m4aFileDir = 'public/sounds/' + Date.now() + '.m4a';
-          ytdl(url, {
-            quality: 'lowestaudio',
-            filter: 'audioonly',
-            format: 'm4a'
-          })
-            .pipe(fileSystem.createWriteStream(m4aFileDir))
-            .on('close', () => {
-              ffmpeg.setFfmpegPath(ffmpegPath);
-              ffmpeg(path.join(__dirname.replace('v1', '').replace('controllers', ''), m4aFileDir))
-                .output(outputPath)
-                .on('end', () => {
-                  const readStream = fileSystem.createReadStream(outputPath);
-                  readStream.pipe(res);
-                  playedSongs.push({
-                    song: url,
-                    songUrl: outputPath
-                  });
-                  console.log('Sound downloaded');
-                })
-                .run();
-            });
+          downloadAndStream('mp3');
         } else {
           downloadAndStream('m4a');
         }
