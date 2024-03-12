@@ -10,7 +10,7 @@ services:
       - ./front/package.json:/usr/src/front-app/package.json
       - /usr/src/front-app/node_modules
     ports:
-      - "9091:9091"
+      - "9093:9093"
     networks:
       - network_soundhub
 
