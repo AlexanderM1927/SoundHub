@@ -63,23 +63,19 @@ exports.download = async function(req, res) {
     res.setHeader("Content-Type", "audio/mpeg");
   
     if (type === 'video') {
-      const previousSong = playedSongs.find(song => song.song === url);
-      if (previousSong) {
-        const readStream = fileSystem.createReadStream(previousSong.songUrl);
-        readStream.pipe(res);
-      } else {
-        const downloadAndStream = (format) => {
-          ytdl(url, {
-            quality: 'lowest',
-            format: format
-          }).pipe(res);
-        };
-  
-        if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
-          downloadAndStream('mp3');
-        } else {
-          downloadAndStream('m4a');
+      const downloadAndStream = (format, hasFilter = false) => {
+        const options = {
+          quality: 'lowest',
+          format: format
         }
+        if (hasFilter) options.filter = 'audioonly'
+        ytdl(url, options).pipe(res);
+      };
+
+      if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+        downloadAndStream('mp3');
+      } else {
+        downloadAndStream('m4a', true);
       }
     } else {
       const sound = await Sound.findOne({ 
