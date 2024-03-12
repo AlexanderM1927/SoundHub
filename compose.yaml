@@ -1,0 +1,44 @@
+version: "3.5"
+services:
+  frontend:
+    container_name: frontend_soundhub
+    build: 
+      dockerfile: Dockerfile
+      context: ./front
+    volumes:
+      - ./front:/usr/src/front-app
+      - ./front/package.json:/usr/src/front-app/package.json
+      - /usr/src/front-app/node_modules
+    ports:
+      - "9091:9091"
+    networks:
+      - network_soundhub
+
+  backend:
+    container_name: backend_soundhub
+    build: 
+      dockerfile: Dockerfile
+      context: ./back
+    volumes:
+      - ./front:/usr/src/front-app
+      - ./front/package.json:/usr/src/front-app/package.json
+      - /usr/src/front-app/node_modules
+    ports:
+      - "8003:8003"
+    networks:
+      - network_soundhub
+    
+  db:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password # needed as of mysql 8
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USERNAME}
+    networks:
+      - network_soundhub
+
+networks:
+  network_soundhub: {}
