@@ -1,9 +1,9 @@
 import moment from 'moment'
-import youtubesearchapi from 'youtube-search-api'
 
 export class ViewModel {
-    constructor ({ connection }) {
+    constructor ({ connection, youtubeService }) {
         this.connection = connection
+        this.youtubeService = youtubeService
     }
 
     async getViews () {
@@ -26,7 +26,7 @@ export class ViewModel {
             const obj = viewsObj[i]
             let sound = null
             if (obj.view_type === 'video') {
-                const youtubeSearch = await youtubesearchapi.GetListByKeyword(obj.sound_id, false)
+                const youtubeSearch = await this.youtubeService.getSoundByYoutubeAPI({ name: obj.sound_id })
                 sound = youtubeSearch.items[0]
             } else {
                 //TODO: Refactor this

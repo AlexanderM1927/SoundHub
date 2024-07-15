@@ -18,10 +18,22 @@ export class AppProvider {
 
     init ({connection}) {
         const userController = new UserController(new UserModel({connection}))
-        const viewController = new ViewController(new ViewModel({connection}))
+        const viewController = new ViewController(
+            new ViewModel(
+                {
+                    connection,
+                    youtubeService: new YoutubeService(new SoundModel({connection}))
+                }
+            )
+        )
         const soundController = new SoundController(
             new SoundModel({connection}),
-            new ViewModel({connection}),
+            new ViewModel(
+                {
+                    connection,
+                    youtubeService: new YoutubeService(new SoundModel({connection}))
+                }
+            ),
             new YoutubeService(new SoundModel({connection}))
         )
         const playlistController = new PlaylistController(new PlaylistModel({connection}))
