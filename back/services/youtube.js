@@ -59,8 +59,8 @@ export class YoutubeService {
                 downloadAndStream('m4a', true);
             }
         } else {
-            const sound = await this.soundModel.getSoundByName({
-                sound_name: url
+            const sound = await this.soundModel.getSoundById({
+                sound_id: url
             })
             if (sound && sound[0]) {
                 const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound[0].sound_file_url);
