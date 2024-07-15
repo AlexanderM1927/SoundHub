@@ -28,7 +28,7 @@ export const createRouter = ({ verifyToken, connection }) => {
     // router.get('/sounds/:user_id', soundController.showByUser)
     // router.put('/sounds/:sound_id', verifyToken, soundController.update)
     // router.delete('/sounds/:sound_id', verifyToken, soundController.delete)
-    // router.get('/sounds_id/:type/:id', soundController.getSoundById)
+    router.get('/sounds_id/:type/:id', soundController.getSoundById)
 
     // // Playlist
 	// router.post('/playlists', verifyToken, playlistController.store)
@@ -37,8 +37,8 @@ export const createRouter = ({ verifyToken, connection }) => {
 	// router.put('/playlists/:playlist_id', verifyToken, playlistController.update)
 
 	// // Comments
-	// router.post('/comments', verifyToken, commentController.store)
-	// router.get('/comments/:sound_id', commentController.getCommentsBySoundId)
+	router.post('/comments', verifyToken, commentController.store)
+	router.get('/comments/:sound_id', commentController.getCommentsBySoundId)
 
 	// // Views
 	router.get('/views', viewController.getViews)

@@ -6,8 +6,14 @@ export class YoutubeService {
         this.soundModel = soundModel
     }
 
+    async getSoundByYoutubeAPI ({ name }) {
+        const result = await youtubesearchapi.GetListByKeyword(name, false)
+
+        return result
+    }
+
     async searchSound ({ name }) {
-        const youtube = await youtubesearchapi.GetListByKeyword(name, false)
+        const youtube = await this.getSoundByYoutubeAPI({ name })
         const sounds = await this.soundModel.getSoundByName({
             sound_name: name
         })
@@ -53,7 +59,7 @@ export class YoutubeService {
                 downloadAndStream('m4a', true);
             }
         } else {
-            const sound = await this.soundModel.getSoundById({
+            const sound = await this.soundModel.getSoundByName({
                 sound_name: url
             })
             if (sound && sound[0]) {

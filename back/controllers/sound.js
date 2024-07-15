@@ -43,4 +43,31 @@ export class SoundController {
             console.log(e);
         }  
     }
+
+    getSoundById = async (req, res) => {
+        try {
+            const type = req.params.type
+            const sound_id = req.params.id
+            let sound = null
+            if (type === 'sound') {
+                const soundFromDB = await this.soundModel.getSoundById({ sound_id })
+                sound = {
+                    type: 'sound'
+                }
+                Object.assign(sound, soundFromDB.dataValues)
+            } else {
+                const youtubeSearch = await this.youtubeService.getSoundByYoutubeAPI({
+                    name: sound_id
+                })
+                sound = youtubeSearch.items[0]
+            }
+            res.json({
+              error: null,
+              data: sound
+            })
+          } catch (error) {
+            console.log(error)
+            res.status(400).json({error})
+          }
+    }
 }
