@@ -1,11 +1,11 @@
 {
   "name": "soundhub",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "nodemon server.js --legacy-watch",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "keywords": [],
