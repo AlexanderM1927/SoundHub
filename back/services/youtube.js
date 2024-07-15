@@ -52,7 +52,7 @@ export class YoutubeService {
             response = ytdl(url, options)
         }
     
-        if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+        if (userAgent && (userAgent.includes('iPhone') || userAgent.includes('iPad'))) {
             downloadAndStream('mp3');
         } else {
             downloadAndStream('m4a', true);

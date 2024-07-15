@@ -1,17 +1,11 @@
-import mysql from 'mysql2/promise'
 import 'dotenv/config'
 import { Server } from 'socket.io'
 import { createApp } from './app.js'
+import { createConnection } from './connection.js'
 
-const DEFAULT_CONFIG = {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USERNAME,
-    port: process.env.DB_PORT,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
-  }
-  
-const connection = await mysql.createConnection(DEFAULT_CONFIG)
+const connection = await createConnection({
+    env: process.env
+})
 
 const app = createApp({
     acceptedOrigins: [process.env.FRONT_URL],
