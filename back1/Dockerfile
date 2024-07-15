@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:20.11.1-alpine
+FROM node:14.16.1-alpine
 
 # create destination directory
 RUN mkdir -p /usr/src/back-app

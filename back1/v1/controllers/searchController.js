@@ -6,9 +6,6 @@ const { Op } = require("sequelize");
 const path = require('path');
 const fileSystem = require('fs');
 const View = require('../models').view
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-const ffmpeg = require('fluent-ffmpeg');
-const playedSongs = []
 
 exports.search = async function(req, res) {
   try {
