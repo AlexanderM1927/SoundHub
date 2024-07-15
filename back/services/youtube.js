@@ -41,32 +41,21 @@ export class YoutubeService {
         return results
     }
 
-    async downloadSound ({ url, type, userAgent }) {
+    async downloadSound ({ url, userAgent }) {
         let response = null
-        if (type === 'video') {
-            const downloadAndStream = (format, hasFilter = false) => {
-                const options = {
-                    quality: 'lowest',
-                    format: format
-                }
-                if (hasFilter) options.filter = 'audioonly'
-                response = ytdl(url, options)
+        const downloadAndStream = (format, hasFilter = false) => {
+            const options = {
+                quality: 'lowest',
+                format: format
             }
-        
-            if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
-                downloadAndStream('mp3');
-            } else {
-                downloadAndStream('m4a', true);
-            }
+            if (hasFilter) options.filter = 'audioonly'
+            response = ytdl(url, options)
+        }
+    
+        if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+            downloadAndStream('mp3');
         } else {
-            const sound = await this.soundModel.getSoundById({
-                sound_id: url
-            })
-            if (sound && sound[0]) {
-                const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound[0].sound_file_url);
-                const readStream = fileSystem.createReadStream(filePath);
-                response = readStream
-            }
+            downloadAndStream('m4a', true);
         }
 
         return response

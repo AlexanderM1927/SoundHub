@@ -25,10 +25,22 @@ export class SoundController {
             const url = req.params.url;
             const type = req.params.type;
             const userAgent = req.headers['user-agent'];
+            let response = null
           
             res.setHeader("Content-Type", "audio/mpeg");
-          
-            const response = await this.youtubeService.downloadSound({ url, type, userAgent })
+            
+            if (type === 'video') {
+                response = await this.youtubeService.downloadSound({ url, type, userAgent })
+            } else {
+                const sound = await this.soundModel.getSoundById({
+                    sound_id: url
+                })
+                if (sound && sound[0]) {
+                    const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound[0].sound_file_url);
+                    const readStream = fileSystem.createReadStream(filePath);
+                    response = readStream
+                }
+            }
 
             if (response) {
                 response.pipe(res)
