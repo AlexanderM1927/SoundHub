@@ -92,7 +92,6 @@ export class UserModel {
                 user: user
             }
         } catch (e) {
-            console.log('e', e)
             throw new Error('Error getting user')
         }
     }
@@ -108,13 +107,10 @@ export class UserModel {
 
             const { user } = await this.getUserById({ user_id })
 
-            console.log('user', user)
-
             return {
                 user: user
             }
         } catch (e) {
-            console.log('err', e)
             throw new Error('Error updating user')
         }
     }

@@ -25,7 +25,6 @@ const io = new Server(server, {
 })
 io.on('connect', (socket) => {
   socket.on('message', (data) => {
-      console.log(data)
       io.sockets.emit('message', data)
   })
 })

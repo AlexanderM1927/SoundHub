@@ -52,7 +52,7 @@ export class SoundController {
                 await this.viewModel.createView(data)
             }
         } catch (e) {
-            console.log(e);
+            res.status(400).json({error})
         }  
     }
 
@@ -78,7 +78,6 @@ export class SoundController {
               data: sound
             })
           } catch (error) {
-            console.log(error)
             res.status(400).json({error})
           }
     }
