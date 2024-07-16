@@ -16,8 +16,8 @@ export const createRouter = ({ verifyToken, connection }) => {
 	router.post('/login', userController.login)
 	router.post('/register', userController.register)
 	router.post('/setrank', verifyToken, userController.setRank)
-	// router.get('/user/:id', userController.getUserById) 
-	// router.put('/user/:id', verifyToken, userController.update)
+	router.get('/user/:id', userController.getUserById) 
+	router.put('/user/:id', verifyToken, userController.update)
 
     // // Searches
 	router.get('/search/:name', soundController.search)

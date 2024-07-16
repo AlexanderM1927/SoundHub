@@ -7,12 +7,13 @@ export class UserModel {
     }
 
     async login (input) {
-        const user = await this.connection.query(
+        const query = await this.connection.query(
             `SELECT * FROM users WHERE user_email = ?;`,
             [input.user_email]
         )
+        const user = query[0][0]
 
-        const validPassword = await bcrypt.compare(input.user_password, user[0][0].user_password);
+        const validPassword = await bcrypt.compare(input.user_password, user.user_password);
         if (validPassword) {
             const token = jwt.sign({
                 name: user.name,
@@ -21,7 +22,7 @@ export class UserModel {
 
             return {
                 token,
-                user
+                user: user
             }
         } else {
             throw new Error('Bad credentials') 
@@ -70,6 +71,51 @@ export class UserModel {
             }
         } catch (e) {
             throw new Error('Error giving rank')
+        }
+    }
+
+    async getUserById ({ user_id }) {
+
+        try {
+            const query = await this.connection.query(
+              `SELECT * FROM users WHERE user_id = ?`,
+              [user_id]
+            )
+            const user = {
+                user_name: query[0][0].user_name,
+                user_id: query[0][0].user_id,
+                user_email: query[0][0].user_email,
+                user_country: query[0][0].user_country,
+            }
+
+            return {
+                user: user
+            }
+        } catch (e) {
+            console.log('e', e)
+            throw new Error('Error getting user')
+        }
+    }
+
+    async update ({ user_id, user_email, user_country, user_name }) {
+        try {
+            await this.connection.query(
+              `UPDATE users 
+              SET user_email = ?, user_country = ?, user_name = ? 
+              WHERE user_id = ?;`,
+              [user_email, user_country, user_name, user_id]
+            )
+
+            const { user } = await this.getUserById({ user_id })
+
+            console.log('user', user)
+
+            return {
+                user: user
+            }
+        } catch (e) {
+            console.log('err', e)
+            throw new Error('Error updating user')
         }
     }
 }

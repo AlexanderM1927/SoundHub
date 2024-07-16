@@ -3,10 +3,12 @@ export class CommentModel {
         this.connection = connection
     }
     async getCommentsBySoundId ({ sound_id }) {
-        return await this.connection.query(
+        const query = await this.connection.query(
             `SELECT * FROM comments WHERE sound_id = ?
             ORDER BY comment_id DESC;`,
             [sound_id]
         )
+
+        return query[0][0]
     }
 }

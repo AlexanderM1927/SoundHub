@@ -36,7 +36,7 @@ export class UserController {
         }
     
         try {
-            const savedUser = await this.userModel.register(req.body)
+            const savedUser = await this.userModel.register(result.data)
             res.json({
                 error: null,
                 data: savedUser
@@ -57,6 +57,50 @@ export class UserController {
             res.json({
                 error: null,
                 data: savedUser
+            })
+        } catch (error) {
+            res.status(400).json({error: error.message})
+        }
+    }
+
+    getUserById = async (req, res) => {
+        const {
+            id
+        } = req.params
+
+        try {
+            const { user } = await this.userModel.getUserById({ user_id: id })
+            res.json({
+                error: null,
+                data: user
+            })
+        } catch (error) {
+            res.status(400).json({error: error.message})
+        }
+    }
+
+    update = async (req, res) => {
+        const {
+            id
+        } = req.params
+
+        const result = validatePartialUser(req.body)
+
+        if (!result.success) {
+            return res.status(400).json({ error: JSON.parse(result.error.message) })
+        }
+
+
+        try {
+            const { user } = await this.userModel.update({ 
+                user_id: id, 
+                user_email: result.data.user_email,
+                user_name: result.data.user_name, 
+                user_country: result.data.user_country 
+            })
+            res.json({
+                error: null,
+                data: user
             })
         } catch (error) {
             res.status(400).json({error: error.message})
