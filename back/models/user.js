@@ -29,7 +29,7 @@ export class UserModel {
         }
     }
 
-    async register (input) {
+    async create (input) {
         // hash password
         const salt = await bcrypt.genSalt(10)
         const password = await bcrypt.hash(input.user_password, salt)

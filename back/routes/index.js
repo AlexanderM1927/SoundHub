@@ -24,7 +24,7 @@ export const createRouter = ({ verifyToken, connection }) => {
 	router.get('/download/:type/:url', soundController.download)
     
     // // Sounds
-    // router.post('/sounds', verifyToken, soundController.store)
+    router.post('/sounds', verifyToken, soundController.store)
     // router.get('/sounds/:user_id', soundController.showByUser)
     // router.put('/sounds/:sound_id', verifyToken, soundController.update)
     // router.delete('/sounds/:sound_id', verifyToken, soundController.delete)

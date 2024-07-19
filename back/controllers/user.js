@@ -36,7 +36,7 @@ export class UserController {
         }
     
         try {
-            const savedUser = await this.userModel.register(result.data)
+            const savedUser = await this.userModel.create(result.data)
             res.json({
                 error: null,
                 data: savedUser

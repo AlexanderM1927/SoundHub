@@ -1,3 +1,8 @@
+import { UploadService } from "../services/upload.js"
+import path from 'path'
+import { fileURLToPath } from 'url'
+import fileSystem from 'fs'
+
 export class SoundController {
     constructor (soundModel, viewModel, youtubeService) {
         this.soundModel = soundModel
@@ -35,8 +40,9 @@ export class SoundController {
                 const sound = await this.soundModel.getSoundById({
                     sound_id: url
                 })
-                if (sound && sound[0]) {
-                    const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound[0].sound_file_url);
+                if (sound) {
+                    const __dirname = path.dirname(fileURLToPath(import.meta.url))
+                    const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound.sound_file_url);
                     const readStream = fileSystem.createReadStream(filePath);
                     response = readStream
                 }
@@ -51,8 +57,8 @@ export class SoundController {
                 }
                 await this.viewModel.createView(data)
             }
-        } catch (e) {
-            res.status(400).json({error})
+        } catch (error) {
+            res.status(400).json({error: error.message})
         }  
     }
 
@@ -78,7 +84,16 @@ export class SoundController {
               data: sound
             })
           } catch (error) {
-            res.status(400).json({error})
+            res.status(400).json({error: error.message})
           }
+    }
+
+    store = async (req, res) => {
+        try {
+            const uploadService = new UploadService(this.soundModel)
+            uploadService.init(req, res)
+        } catch (error) {
+            res.status(400).json({error: error.message})
+        }
     }
 }
