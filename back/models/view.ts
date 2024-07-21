@@ -48,7 +48,7 @@ export class ViewModel {
                 // }
                 // Object.assign(sound, soundFromDB.dataValues)
             }
-            results.items.push(sound)
+            if (sound) results.items.push(sound)
         }
 
         return results
