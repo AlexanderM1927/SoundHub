@@ -1,13 +1,13 @@
 import { Router } from 'express'
-import { AppProvider } from '../providers/app.js'
+import { AppProvider } from '../providers/app'
 
-export const createRouter = ({ verifyToken, connection }) => {
+export const createRouter = ({ verifyToken, connection }: { verifyToken: any, connection: any}) => {
     const router = Router()
 	const {
 		userController,
 		viewController,
 		soundController,
-		playlistController,
+		// playlistController,
 		commentController
 	} = new AppProvider({connection})
     

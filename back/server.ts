@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { Server } from 'socket.io'
-import { createApp } from './app.js'
-import { createConnection } from './connection.js'
+import { createApp } from './app'
+import { createConnection } from './connection'
 
 const connection = await createConnection({
     env: process.env
@@ -20,7 +20,7 @@ const server = app.listen(PORT, () => {
 
 const io = new Server(server, {
     cors: {
-        origin: [process.env.FRONT_URL]
+        origin: [process.env.FRONT_URL as string]
     }
 })
 io.on('connect', (socket) => {

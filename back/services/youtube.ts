@@ -1,23 +1,28 @@
-import ytdl from '@distube/ytdl-core'
+import ytdl, { Filter } from '@distube/ytdl-core'
+// @ts-ignore
 import youtubesearchapi from 'youtube-search-api'
 
 export class YoutubeService {
-    constructor (soundModel) {
+    soundModel: any
+    constructor (soundModel: any) {
         this.soundModel = soundModel
     }
 
-    async getSoundByYoutubeAPI ({ name }) {
+    async getSoundByYoutubeAPI ({ name }: { name: any }) {
         const result = await youtubesearchapi.GetListByKeyword(name, false)
 
         return result
     }
 
-    async searchSound ({ name }) {
+    async searchSound ({ name }: { name: any }) {
         const youtube = await this.getSoundByYoutubeAPI({ name })
         const sounds = await this.soundModel.getSoundByName({
             sound_name: name
         })
-        const results = {
+        const results: {
+            items: any[],
+            nextPage: any
+        } = {
             items: [],
             nextPage: {}
         }
@@ -41,12 +46,15 @@ export class YoutubeService {
         return results
     }
 
-    async downloadSound ({ url, userAgent }) {
-        let response = null
-        const downloadAndStream = (format, hasFilter = false) => {
-            const options = {
+    async downloadSound ({ url, userAgent }: { url: any, userAgent: any }) {
+        let response: any = null
+        const downloadAndStream = (_format: any, hasFilter = false) => {
+            const options: {
+                quality: string,
+                filter: Filter
+            } = {
                 quality: 'lowest',
-                format: format
+                filter: 'audioonly'
             }
             if (hasFilter) options.filter = 'audioonly'
             response = ytdl(url, options)

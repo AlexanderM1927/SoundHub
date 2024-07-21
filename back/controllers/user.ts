@@ -1,11 +1,12 @@
-import { validateUser, validatePartialUser } from '../schemas/user.js'
+import { validateUser, validatePartialUser } from '../schemas/user'
 
 export class UserController {
-    constructor (userModel) {
+    userModel: any
+    constructor (userModel: any) {
         this.userModel = userModel
     }
 
-    login = async (req, res) => {
+    login = async (req: any, res: any) => {
         const result = validatePartialUser(req.body)
 
         if (!result.success) {
@@ -23,12 +24,12 @@ export class UserController {
                 }
             })
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }
     }
 
 
-    register = async (req, res) => {
+    register = async (req: any, res: any) => {
         const result = validateUser(req.body)
 
         if (!result.success) {
@@ -42,11 +43,11 @@ export class UserController {
                 data: savedUser
             })
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }
     }
 
-    setRank = async (req, res) => {
+    setRank = async (req: any, res: any) => {
         const {
             user_id,
             role_id
@@ -59,11 +60,11 @@ export class UserController {
                 data: savedUser
             })
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }
     }
 
-    getUserById = async (req, res) => {
+    getUserById = async (req: any, res: any) => {
         const {
             id
         } = req.params
@@ -75,11 +76,11 @@ export class UserController {
                 data: user
             })
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }
     }
 
-    update = async (req, res) => {
+    update = async (req: any, res: any) => {
         const {
             id
         } = req.params
@@ -103,7 +104,7 @@ export class UserController {
                 data: user
             })
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }
     }
 }

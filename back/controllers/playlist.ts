@@ -1,5 +1,6 @@
 export class PlaylistController {
-    constructor (playlistModel) {
+    playlistModel: any
+    constructor (playlistModel: any) {
         this.playlistModel = playlistModel
     }
 }

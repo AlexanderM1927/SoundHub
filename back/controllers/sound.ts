@@ -1,16 +1,20 @@
-import { UploadService } from "../services/upload.js"
+import { UploadService } from "../services/upload"
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fileSystem from 'fs'
 
 export class SoundController {
-    constructor (soundModel, viewModel, youtubeService) {
+    soundModel: any
+    viewModel: any
+    youtubeService: any
+
+    constructor (soundModel: any, viewModel: any, youtubeService: any) {
         this.soundModel = soundModel
         this.viewModel = viewModel
         this.youtubeService = youtubeService
     }
 
-    search = async (req, res) => {
+    search = async (req: any, res: any) => {
         try {
             const name = req.params.name
 
@@ -21,11 +25,11 @@ export class SoundController {
               data: results
             })
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }
     }
 
-    download = async (req, res) => {
+    download = async (req: any, res: any) => {
         try {
             const url = req.params.url;
             const type = req.params.type;
@@ -58,11 +62,11 @@ export class SoundController {
                 await this.viewModel.createView(data)
             }
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }  
     }
 
-    getSoundById = async (req, res) => {
+    getSoundById = async (req: any, res: any) => {
         try {
             const type = req.params.type
             const sound_id = req.params.id
@@ -84,16 +88,16 @@ export class SoundController {
               data: sound
             })
           } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
           }
     }
 
-    store = async (req, res) => {
+    store = async (req: any, res: any) => {
         try {
             const uploadService = new UploadService(this.soundModel)
             uploadService.init(req, res)
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }
     }
 }

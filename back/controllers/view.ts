@@ -1,9 +1,10 @@
 export class ViewController {
-    constructor (viewModel) {
+    viewModel
+    constructor (viewModel: any) {
         this.viewModel = viewModel
     }
 
-    getViews = async (req, res) => {
+    getViews = async (_req: any, res: any) => {
         try {
             const results = await this.viewModel.getViews()
             res.json({
@@ -11,7 +12,7 @@ export class ViewController {
                 data: results
             })
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }
         
     }

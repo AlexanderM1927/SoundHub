@@ -2,7 +2,7 @@ import mysql from 'mysql2/promise'
 
 export const createConnection = async ({
     env
-}) => {
+}: { env: any }) => {
     const DEFAULT_CONFIG = {
         host: env.DB_HOST,
         user: env.DB_USERNAME,

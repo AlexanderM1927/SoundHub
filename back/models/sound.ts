@@ -1,11 +1,12 @@
 import moment from 'moment'
 
 export class SoundModel {
-    constructor ({ connection }) {
+    connection: any
+    constructor ({ connection }: {connection: any}) {
         this.connection = connection
     }
 
-    async getSoundByName ({ sound_name }) {
+    async getSoundByName ({ sound_name }: {sound_name: any}) {
         const query = await this.connection.query(
             `SELECT * FROM sounds WHERE sound_name LIKE ?;`,
             [`%${sound_name}%`]
@@ -13,7 +14,7 @@ export class SoundModel {
         return query[0]
     } 
 
-    async getSoundById ({ sound_id }) {
+    async getSoundById ({ sound_id }: {sound_id: any}) {
         const query = await this.connection.query(
             `SELECT * FROM sounds WHERE sound_id = ?;`,
             [sound_id]
@@ -26,6 +27,11 @@ export class SoundModel {
         sound_file_url, 
         sound_thumbnail_url, 
         user_id
+    }: {
+        sound_name: any, 
+        sound_file_url: any, 
+        sound_thumbnail_url: any, 
+        user_id: any
     }) {
         try {
             await this.connection.query(

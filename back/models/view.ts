@@ -1,7 +1,9 @@
 import moment from 'moment'
 
 export class ViewModel {
-    constructor ({ connection, youtubeService }) {
+    connection
+    youtubeService
+    constructor ({ connection, youtubeService }: { connection: any, youtubeService: any }) {
         this.connection = connection
         this.youtubeService = youtubeService
     }
@@ -17,7 +19,10 @@ export class ViewModel {
             ORDER BY count DESC;`,
             [startDate, endDate]
         )
-        const results = {
+        const results: {
+            items: any[],
+            nextPage: any
+        } = {
             items: [],
             nextPage: {}
         }
@@ -49,7 +54,7 @@ export class ViewModel {
         return results
     }
 
-    async createView ({sound_id, view_type}) {
+    async createView ({sound_id, view_type}: {sound_id: any, view_type: any}) {
         await this.connection.query(
             `INSERT INTO views (sound_id, view_type, createdAt, updatedAt)
               VALUES (?, ?, ?, ?);`,

@@ -2,10 +2,13 @@
   "name": "soundhub",
   "version": "2.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server.js --legacy-watch",
+    "dev": "nodemon -I --exec node --experimental-specifier-resolution=node --legacy-watch --loader ts-node/esm ./server.ts",
+    "lint": "ts-standard",
+    "start": "node dist/index.js",
+    "build": "tsc",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "keywords": [],
@@ -23,13 +26,27 @@
     "moment-timezone": "^0.5.28",
     "multer": "1.4.5-lts.1",
     "mysql2": "^3.6.0",
-    "nodemon": "^2.0.2",
     "socket.io": "^4.2.0",
     "youtube-search-api": "^1.0.9",
     "zod": "3.21.4"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/multer": "^1.4.11",
     "jest": "^29.7.0",
-    "supertest": "^7.0.0"
+    "nodemon": "^3.1.4",
+    "supertest": "^7.0.0",
+    "ts-standard": "^12.0.2",
+    "typescript": "^5.5.3"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
+    "extends": [
+      "./node_modules/ts-standard/eslintrc.json"
+    ]
   }
 }

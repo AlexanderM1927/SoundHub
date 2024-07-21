@@ -1,22 +1,30 @@
-import { UserController } from '../controllers/user.js'
-import { SoundController } from '../controllers/sound.js'
-import { PlaylistController } from '../controllers/playlist.js'
-import { CommentController } from '../controllers/comment.js'
-import { ViewController } from '../controllers/view.js'
-import { UserModel } from '../models/user.js'
-import { ViewModel } from '../models/view.js'
-import { SoundModel } from '../models/sound.js'
-import { PlaylistModel } from '../models/playlist.js'
-import { CommentModel } from '../models/comment.js'
-import { YoutubeService } from '../services/youtube.js'
+import { UserController } from '../controllers/user'
+import { SoundController } from '../controllers/sound'
+import { PlaylistController } from '../controllers/playlist'
+import { CommentController } from '../controllers/comment'
+import { ViewController } from '../controllers/view'
+import { UserModel } from '../models/user'
+import { ViewModel } from '../models/view'
+import { SoundModel } from '../models/sound'
+import { PlaylistModel } from '../models/playlist'
+import { CommentModel } from '../models/comment'
+import { YoutubeService } from '../services/youtube'
+import { IAppProvider } from '../types/types'
 
-export class AppProvider {
-    constructor ({connection}) {
+export class AppProvider implements IAppProvider {
+    userController: any
+    viewController: any
+    soundController: any
+    playlistController: any
+    commentController: any
+
+
+    constructor ({connection}: {connection: any}) {
 
         return this.init({connection})
     }
 
-    init ({connection}) {
+    init ({connection}: {connection: any}): any {
         const viewModel = new ViewModel(
             {
                 connection,

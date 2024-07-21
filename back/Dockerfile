@@ -18,4 +18,4 @@ COPY . /usr/src/back-app/
 
 EXPOSE 8003
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]

@@ -8,10 +8,10 @@ const userSchema = z.object({
     user_passwordConfirm: z.string().min(6).max(255)
 })
 
-export function validateUser (input) {
+export function validateUser (input: any) {
     return userSchema.safeParse(input)
 }
 
-export function validatePartialUser (input) {
+export function validatePartialUser (input: any) {
     return userSchema.partial().safeParse(input)
 }

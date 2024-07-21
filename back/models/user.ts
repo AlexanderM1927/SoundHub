@@ -2,11 +2,12 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
 export class UserModel {
-    constructor ({ connection }) {
+    connection: any
+    constructor ({ connection }:{ connection: any }) {
         this.connection = connection
     }
 
-    async login (input) {
+    async login (input: any) {
         const query = await this.connection.query(
             `SELECT * FROM users WHERE user_email = ?;`,
             [input.user_email]
@@ -18,7 +19,7 @@ export class UserModel {
             const token = jwt.sign({
                 name: user.name,
                 id: user._id
-            }, process.env.TOKEN_SECRET)
+            }, (process.env as any).TOKEN_SECRET)
 
             return {
                 token,
@@ -29,7 +30,7 @@ export class UserModel {
         }
     }
 
-    async create (input) {
+    async create (input: any) {
         // hash password
         const salt = await bcrypt.genSalt(10)
         const password = await bcrypt.hash(input.user_password, salt)
@@ -57,7 +58,7 @@ export class UserModel {
         }
     }
 
-    async setRank ({ user_id, role_id }) {
+    async setRank ({ user_id, role_id }: { user_id: any, role_id: any }) {
 
         try {
             await this.connection.query(
@@ -67,14 +68,14 @@ export class UserModel {
 
             return {
                 user_id: user_id,
-                role_id, role_id
+                role_id: role_id
             }
         } catch (e) {
             throw new Error('Error giving rank')
         }
     }
 
-    async getUserById ({ user_id }) {
+    async getUserById ({ user_id }: { user_id: any }) {
 
         try {
             const query = await this.connection.query(
@@ -96,7 +97,9 @@ export class UserModel {
         }
     }
 
-    async update ({ user_id, user_email, user_country, user_name }) {
+    async update ({ user_id, user_email, user_country, user_name }:
+        { user_id:any, user_email:any, user_country:any, user_name:any }
+    ) {
         try {
             await this.connection.query(
               `UPDATE users 

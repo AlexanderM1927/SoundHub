@@ -1,13 +1,14 @@
 export class CommentController {
-    constructor (commentModel) {
+    commentModel: any
+    constructor (commentModel: any) {
         this.commentModel = commentModel
     }
 
-    store = async (req, res) => {
+    store = async (_req: any, _res: any) => {
 
     }
 
-    getCommentsBySoundId = async (req, res) => {
+    getCommentsBySoundId = async (req: any, res: any) => {
         try {
             const sound_id = req.params.sound_id
 
@@ -18,7 +19,7 @@ export class CommentController {
               data: comments
             })
         } catch (error) {
-            res.status(400).json({error: error.message})
+            res.status(400).json({error: (error as Error).message})
         }
     }
 }
