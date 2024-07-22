@@ -190,7 +190,7 @@ export default {
 
 .lg_tab {
   width: 100%;
-  margin-top: 20%;
+  margin-top: 3rem;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
   border-top-left-radius: 20px;

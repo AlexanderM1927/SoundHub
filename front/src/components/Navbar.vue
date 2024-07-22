@@ -202,6 +202,7 @@ export default {
   font-family: "Inter", sans-serif;
   font-weight: 500;
   color: #f5f5f5;
+  cursor: pointer;
 }
 
 /* DRAWER NAVBAR COMPONENTS */

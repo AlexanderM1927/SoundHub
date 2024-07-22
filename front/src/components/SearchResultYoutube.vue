@@ -33,7 +33,7 @@
         <q-btn
           class="col-5 q-ml-sm q-mb-xs"
           @click="agregarSound(result)"
-          color="positive"
+          color="pink"
           icon="add" />
         <!--DOWNLOAD-->
         <q-btn
@@ -46,7 +46,7 @@
               type: 'video',
               url: result.id,
             })"
-          color="positive"
+          color="pink"
           icon="download"
         />
       </div>

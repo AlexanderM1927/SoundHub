@@ -29,7 +29,7 @@
         <q-btn
           class="col-5 q-ml-sm q-mb-xs"
           @click="agregarSound(result)"
-          color="positive"
+          color="pink"
           icon="add"
         />
         <!--DOWNLOAD-->
@@ -44,7 +44,7 @@
               url: result.sound_id,
             })
           "
-          color="positive"
+          color="pink"
           icon="download"
         />
       </div>
