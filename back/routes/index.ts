@@ -9,8 +9,7 @@ export const createRouter = ({ verifyToken, connection }: { verifyToken: any, co
 		soundController,
 		// playlistController,
 		commentController
-	} = new AppProvider({connection})
-    
+	} = new AppProvider().init({connection})
 
     // Users
 	router.post('/login', userController.login)
@@ -25,7 +24,7 @@ export const createRouter = ({ verifyToken, connection }: { verifyToken: any, co
     
     // // Sounds
     router.post('/sounds', verifyToken, soundController.store)
-    // router.get('/sounds/:user_id', soundController.showByUser)
+    router.get('/sounds/:user_id', soundController.showByUser)
     // router.put('/sounds/:sound_id', verifyToken, soundController.update)
     // router.delete('/sounds/:sound_id', verifyToken, soundController.delete)
     router.get('/sounds_id/:type/:id', soundController.getSoundById)

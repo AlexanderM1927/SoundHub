@@ -100,4 +100,33 @@ export class SoundController {
             res.status(400).json({error: (error as Error).message})
         }
     }
+
+    showByUser = async (req: any, res: any) => {
+        try {
+            const user_id = req.params.user_id
+            const results: {
+                items: any[],
+                nextPage: any
+            } = {
+                items: [],
+                nextPage: {}
+            }
+
+            const sounds = await this.soundModel.getSoundByUserId({ user_id })
+            for (let i = 0; i < sounds.length; i++) {
+                const sound = {
+                    type: 'sound'
+                }
+                Object.assign(sound, sounds[i])
+                results.items.push(sound)
+            }
+            
+            res.json({
+              error: null,
+              data: results
+            })
+        } catch (error) {
+            res.status(400).json({error: (error as Error).message})
+        }
+    }
 }

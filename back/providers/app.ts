@@ -12,19 +12,9 @@ import { YoutubeService } from '../services/youtube'
 import { IAppProvider } from '../types/types'
 
 export class AppProvider implements IAppProvider {
-    userController: any
-    viewController: any
-    soundController: any
-    playlistController: any
-    commentController: any
+    constructor () {}
 
-
-    constructor ({connection}: {connection: any}) {
-
-        return this.init({connection})
-    }
-
-    init ({connection}: {connection: any}): any {
+    init ({connection}: {connection: any}) {
         const viewModel = new ViewModel(
             {
                 connection,
@@ -48,5 +38,5 @@ export class AppProvider implements IAppProvider {
             playlistController,
             commentController
         }
-    }
+    } 
 }

@@ -98,7 +98,7 @@ export class UserModel {
     }
 
     async update ({ user_id, user_email, user_country, user_name }:
-        { user_id:any, user_email:any, user_country:any, user_name:any }
+        { user_id: any, user_email: any, user_country: any, user_name: any }
     ) {
         try {
             await this.connection.query(

@@ -22,6 +22,14 @@ export class SoundModel {
         return query[0][0]
     }
 
+    async getSoundByUserId ({ user_id }: {user_id: any}) {
+        const query = await this.connection.query(
+            `SELECT * FROM sounds WHERE user_id = ?;`,
+            [user_id]
+        )
+        return query[0]
+    }
+
     async create ({
         sound_name, 
         sound_file_url, 
