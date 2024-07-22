@@ -7,8 +7,9 @@ export const createRouter = ({ verifyToken, connection }: { verifyToken: any, co
 		userController,
 		viewController,
 		soundController,
-		// playlistController,
-		commentController
+		playlistController,
+		commentController,
+		soundPlaylistController
 	} = new AppProvider().init({connection})
 
     // Users
@@ -30,9 +31,9 @@ export const createRouter = ({ verifyToken, connection }: { verifyToken: any, co
     router.get('/sounds_id/:type/:id', soundController.getSoundById)
 
     // // Playlist
-	// router.post('/playlists', verifyToken, playlistController.store)
-	// router.get('/playlists/:playlist_id', playlistController.get)
-	// router.get('/playlists-user/:user_id', playlistController.showByUser)
+	router.post('/playlists', verifyToken, playlistController.store)
+	router.get('/playlists/:playlist_id', soundPlaylistController.get)
+	router.get('/playlists-user/:user_id', playlistController.showByUser)
 	// router.put('/playlists/:playlist_id', verifyToken, playlistController.update)
 
 	// // Comments
@@ -43,8 +44,8 @@ export const createRouter = ({ verifyToken, connection }: { verifyToken: any, co
 	router.get('/views', viewController.getViews)
 
 	// SoundPlaylist
-	// router.post('/sound-playlist', verifyToken, SoundPlaylistController.store)
-	// router.delete('/sound-playlist/:sound_playlist_id', verifyToken, SoundPlaylistController.delete)
+	router.post('/sound-playlist', verifyToken, soundPlaylistController.store)
+	// router.delete('/sound-playlist/:sound_playlist_id', verifyToken, soundPlaylistController.delete)
     
     return router
 }

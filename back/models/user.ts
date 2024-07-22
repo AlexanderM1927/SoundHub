@@ -58,7 +58,7 @@ export class UserModel {
         }
     }
 
-    async setRank ({ user_id, role_id }: { user_id: any, role_id: any }) {
+    async setRank ({ user_id, role_id }: { user_id: Number, role_id: Number }) {
 
         try {
             await this.connection.query(
@@ -75,7 +75,7 @@ export class UserModel {
         }
     }
 
-    async getUserById ({ user_id }: { user_id: any }) {
+    async getUserById ({ user_id }: { user_id: Number }) {
 
         try {
             const query = await this.connection.query(
@@ -98,7 +98,7 @@ export class UserModel {
     }
 
     async update ({ user_id, user_email, user_country, user_name }:
-        { user_id: any, user_email: any, user_country: any, user_name: any }
+        { user_id: Number, user_email: String, user_country: String, user_name: String }
     ) {
         try {
             await this.connection.query(

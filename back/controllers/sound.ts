@@ -72,7 +72,7 @@ export class SoundController {
             const sound_id = req.params.id
             let sound = null
             if (type === 'sound') {
-                const soundFromDB = await this.soundModel.getSoundById({ sound_id })
+                const soundFromDB = await this.soundModel.getSoundById({ sound_id: parseInt(sound_id) })
                 sound = {
                     type: 'sound'
                 }
@@ -112,7 +112,7 @@ export class SoundController {
                 nextPage: {}
             }
 
-            const sounds = await this.soundModel.getSoundByUserId({ user_id })
+            const sounds = await this.soundModel.getSoundByUserId({ user_id: parseInt(user_id) })
             for (let i = 0; i < sounds.length; i++) {
                 const sound = {
                     type: 'sound'

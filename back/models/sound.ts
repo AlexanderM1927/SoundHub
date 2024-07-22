@@ -6,7 +6,7 @@ export class SoundModel {
         this.connection = connection
     }
 
-    async getSoundByName ({ sound_name }: {sound_name: any}) {
+    async getSoundByName ({ sound_name }: {sound_name: String}) {
         const query = await this.connection.query(
             `SELECT * FROM sounds WHERE sound_name LIKE ?;`,
             [`%${sound_name}%`]
@@ -14,7 +14,7 @@ export class SoundModel {
         return query[0]
     } 
 
-    async getSoundById ({ sound_id }: {sound_id: any}) {
+    async getSoundById ({ sound_id }: {sound_id: Number}) {
         const query = await this.connection.query(
             `SELECT * FROM sounds WHERE sound_id = ?;`,
             [sound_id]
@@ -22,7 +22,7 @@ export class SoundModel {
         return query[0][0]
     }
 
-    async getSoundByUserId ({ user_id }: {user_id: any}) {
+    async getSoundByUserId ({ user_id }: {user_id: Number}) {
         const query = await this.connection.query(
             `SELECT * FROM sounds WHERE user_id = ?;`,
             [user_id]
@@ -36,10 +36,10 @@ export class SoundModel {
         sound_thumbnail_url, 
         user_id
     }: {
-        sound_name: any, 
-        sound_file_url: any, 
-        sound_thumbnail_url: any, 
-        user_id: any
+        sound_name: String, 
+        sound_file_url: String, 
+        sound_thumbnail_url: String, 
+        user_id: Number
     }) {
         try {
             await this.connection.query(
