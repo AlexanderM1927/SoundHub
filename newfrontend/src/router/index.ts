@@ -7,6 +7,11 @@ export const router = createRouter({
             path: '/',
             name: 'Home',
             component: () => import ('../pages/index.vue')
-        }
+        },
+        {
+            path: '/search/:name',
+            name: 'Search',
+            component: () => import ('../pages/search.vue')
+        },
     ]
 })
