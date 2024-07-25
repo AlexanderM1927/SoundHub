@@ -3,6 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import fileSystem from 'fs'
 
+const TYPE_VIDEO = 'video'
 export class SoundController {
     soundModel: any
     viewModel: any
@@ -35,29 +36,38 @@ export class SoundController {
             const type = req.params.type;
             const userAgent = req.headers['user-agent'];
             let response = null
+            let soundUrl = ''
           
-            res.setHeader("Content-Type", "audio/mpeg");
-            
-            if (type === 'video') {
-                response = await this.youtubeService.downloadSound({ url, type, userAgent })
+            if (type === TYPE_VIDEO) {
+                const sound = await this.youtubeService.downloadSound({ url, type, userAgent })
+                soundUrl = await this.youtubeService.waitUntilDownloadSound({
+                    file: sound,
+                    url: url
+                })
+                response = fileSystem.createReadStream(soundUrl)
             } else {
                 const sound = await this.soundModel.getSoundById({
                     sound_id: url
                 })
                 if (sound) {
                     const __dirname = path.dirname(fileURLToPath(import.meta.url))
-                    const filePath = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound.sound_file_url);
-                    const readStream = fileSystem.createReadStream(filePath);
-                    response = readStream
+                    soundUrl = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound.sound_file_url);
+                    response = fileSystem.createReadStream(soundUrl);
                 }
             }
 
             if (response) {
+
+                res.setHeader("Content-Type", "audio/mpeg");
+                res.setHeader("Accept-Ranges", "bytes");
+                res.setHeader("Connection", "Keep-Alive");
+                res.setHeader("Transfer-encoding", "chunked");
+                res.setHeader("Content-Length", fileSystem.statSync(soundUrl).size);
                 response.pipe(res)
             
                 const data = {
-                sound_id: url,
-                view_type: type
+                    sound_id: url,
+                    view_type: type
                 }
                 await this.viewModel.createView(data)
             }

@@ -1,6 +1,7 @@
 import ytdl, { Filter } from '@distube/ytdl-core'
 // @ts-ignore
 import youtubesearchapi from 'youtube-search-api'
+import fileSystem from 'fs'
 
 export class YoutubeService {
     soundModel: any
@@ -48,24 +49,34 @@ export class YoutubeService {
 
     async downloadSound ({ url, userAgent }: { url: any, userAgent: any }) {
         let response: any = null
-        const downloadAndStream = (_format: any, hasFilter = false) => {
+        const downloadAndStream = async (format: any, hasFilter = false) => {
             const options: {
-                quality: string,
-                filter: Filter
+                quality?: string,
+                filter?: Filter,
+                format?: any
             } = {
                 quality: 'lowest',
-                filter: 'audioonly'
+                format: format
             }
             if (hasFilter) options.filter = 'audioonly'
-            response = ytdl(url, options)
+            response = await ytdl(url, options)
         }
     
         if (userAgent && (userAgent.includes('iPhone') || userAgent.includes('iPad'))) {
-            downloadAndStream('mp3');
+            await downloadAndStream('mp3');
         } else {
-            downloadAndStream('m4a', true);
+            await downloadAndStream('m4a', true);
         }
 
         return response
+    }
+
+    waitUntilDownloadSound ({file, url}: {file: any, url: any}) {
+        const fileFS = fileSystem.createWriteStream(`./public/sounds/${url}.mp3`)
+        return new Promise((resolve, reject) => {
+            file.pipe(fileFS)
+                .on('finish', () => resolve(`./public/sounds/${url}.mp3`))
+                .on('error', reject)
+        })
     }
 }

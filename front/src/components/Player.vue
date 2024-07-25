@@ -32,7 +32,7 @@
         </div>
         <!--SOUND WAVES-->
         <div :class="(playlist.length > 0 ? 'col-md-2 col-xs-4' : 'col-md-10 col-xs-7')">
-          <div id='waveform' style="width: 100%;"></div>
+          <div id='waveform'></div>
           <audio id="audioBox" controls></audio>
         </div>
         <!--NEXT SONG-->
