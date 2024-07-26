@@ -39,3 +39,19 @@ h3 {
   width: 4rem;
   height: 4rem;
 }
+
+body::-webkit-scrollbar {
+  width: 11px;
+}
+body {
+  scrollbar-width: thin;
+  scrollbar-color: black #CFD8DC;
+}
+body::-webkit-scrollbar-track {
+  background: #CFD8DC;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 6px;
+  border: 3px solid #CFD8DC;
+}

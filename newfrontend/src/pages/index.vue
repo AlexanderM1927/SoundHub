@@ -64,6 +64,7 @@
   width: 18.75rem;
   height: 18.75rem;
   overflow-x: scroll;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
 }
 
