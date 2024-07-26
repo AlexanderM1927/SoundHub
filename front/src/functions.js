@@ -89,21 +89,16 @@ export const functions = {
       })
       this.$store.dispatch('sounds/reloadPlaylist')
       this.activateLoading()
+      let url = ''
       if (result.type === 'video') {
-        this.$store.dispatch('sounds/getSongById', {
-          url: result.id,
-          type: result.type
-        })
+        url = result.id
       } else if (result.type === 'sound') {
-        this.$store.dispatch('sounds/getSongById', {
-          url: result.sound_id,
-          type: result.type
-        })
-      } else if (result.type === 'device') {
-        this.$store.dispatch('sounds/getSongByUrl', {
-          url: result.url
-        })
+        url = result.sound_id
       }
+      this.$store.dispatch('sounds/getSongById', {
+        url: url,
+        type: result.type
+      })
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
         document.getElementById('player').classList.toggle('inactive')
       }
@@ -138,29 +133,21 @@ export const functions = {
 
       this.$store.dispatch('sounds/reloadPlaylist')
       let isNotFirst = false
+      let url = ''
       for (let i = 0; i < playlist.length; i++) {
+        // these next methods are to load next sounds while reproduce the first one
         if (i > 0) isNotFirst = true
         if (playlist[i].type === 'video') {
-          this.$store.dispatch('sounds/getSongById', {
-            url: playlist[i].id,
-            type: playlist[i].type,
-            playlistMode: isNotFirst,
-            isFirstOnPlaylist: !isNotFirst
-          })
+          url = playlist[i].id
         } else if (playlist[i].type === 'sound') {
-          this.$store.dispatch('sounds/getSongById', {
-            url: playlist[i].sound_id,
-            type: playlist[i].type,
-            playlistMode: isNotFirst,
-            isFirstOnPlaylist: !isNotFirst
-          })
-        } else if (playlist[i].type === 'device') {
-          this.$store.dispatch('sounds/getSongByUrl', {
-            url: playlist[i].url,
-            playlistMode: isNotFirst,
-            isFirstOnPlaylist: !isNotFirst
-          })
+          url = playlist[i].sound_id
         }
+        this.$store.dispatch('sounds/getSongById', {
+          url: url,
+          type: playlist[i].type,
+          playlistMode: isNotFirst,
+          isFirstOnPlaylist: !isNotFirst
+        })
         if (!isNotFirst) {
           if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
             document.getElementById('player').classList.toggle('inactive')

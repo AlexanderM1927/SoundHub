@@ -23,12 +23,15 @@ export class SoundPlaylistController {
     get = async (req: any, res: any) => {
         try {
             const playlist: {
+                playlist_name: any,
                 sounds: any[]
             } = {
+                playlist_name: '',
                 sounds: []
             }
             playlist.sounds = await this.soundPlaylistModel.getSoundsByPlaylistId({playlist_id: req.params.playlist_id})
             for (let i = 0; i < playlist.sounds.length; i++) {
+                playlist.playlist_name = playlist.sounds[i].playlist_name
                 if (playlist.sounds[i].youtube_id) {
                     const searchYt = await this.youtubeService.getSoundByYoutubeAPI({
                         name: playlist.sounds[i].youtube_id

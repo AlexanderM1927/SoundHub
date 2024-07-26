@@ -2,7 +2,8 @@
   <div class="row justify-around">
     <div class="custom-dark-bg q-pt-sm col-md-8 col-xs-12 container">
       <div class="row custom-dark-div justify-around">
-        <p class="col-10 pl-name">{{playlist.playlist_name}}</p>
+        <p class="col-8 pl-name">{{playlist.playlist_name}}</p>
+        <q-btn class="col-2 play-btn" color="orange" icon="shuffle" @click="getPlaylistAndPlayShuffle()" />
         <q-btn class="col-2 play-btn" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
       </div>
       <div v-bind:key="result.id" v-for="result in playlist.sounds">
@@ -53,7 +54,20 @@ export default {
     },
     getPlaylistAndPlay () {
       this.playPlaylist(this.playlist.sounds)
+    },
+    getPlaylistAndPlayShuffle () {
+      this.playPlaylist(this.shuffleArray([...this.playlist.sounds]))
+    },
+    shuffleArray (array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        const temp = array[i]
+        array[i] = array[j]
+        array[j] = temp
+      }
+      return array
     }
+
   }
 }
 </script>
