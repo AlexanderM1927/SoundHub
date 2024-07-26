@@ -1,30 +1,16 @@
 <template>
   <q-page>
     <div class="row justify-around">
-      <!--INITIAL CARD-->
-      <div class="row col-11 justify-around">
-        <q-card class="col-12 q-mt-md card-body">
-          <img src="../assets/lofi-hiphop.jpg">
-
-          <q-card-section>
-            <div class="card-title">La mejor música a un par de clicks</div>
-          </q-card-section>
-          <q-card-section class="q-pt-none card-text">
-            Con SoundHub puedes escuchar y descargar tú música favorita, además puedes compartir tus gustos músicales con otros usuarios e intercambiar opiniones. <br> ¿Que estás esperando para compartir tu pasión por la música?
-          </q-card-section>
-        </q-card>
-      </div>
       <!--TOP 10 SONGS OF THE WEEK-->
       <BestSongs/>
-      <!--FOOTER-->
-      <SoundFooter/>
+      <RecentSongs/>
     </div>
   </q-page>
 </template>
 
 <script>
+import RecentSongs from '../components/RecentSongsSection'
 import BestSongs from '../components/BestSongsSection'
-import SoundFooter from '../components/Footer.vue'
 import { functions } from '../functions.js'
 
 export default {
@@ -32,7 +18,7 @@ export default {
   mixins: [functions],
   components: {
     BestSongs,
-    SoundFooter
+    RecentSongs
   },
   data () {
     return {

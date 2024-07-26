@@ -7,9 +7,6 @@
           <p class="snd-subtitle col-9">Reproducir en orden</p>
           <q-btn class="play-btn col-3" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
         </div>
-        <div v-bind:key="result.id" v-for="result in files">
-          <ResultSoundDevice :result="result" />
-        </div>
         <div v-bind:key="result.id" v-for="result in sounds">
           <SearchResultSound :result="result" :download="false" :tiny="true"/>
         </div>
@@ -23,13 +20,9 @@ import { functions } from '../functions.js'
 import SoundService from '../services/SoundService'
 import UploadSound from '../components/modals/UploadSound'
 import SearchResultSound from '../components/SearchResultSound.vue'
-import ResultSoundDevice from '../components/ResultSoundDevice.vue'
-import { Plugins, FilesystemDirectory, Capacitor } from '@capacitor/core'
-
-const { Filesystem } = Plugins
 export default {
   mixins: [functions],
-  components: { SearchResultSound, ResultSoundDevice },
+  components: { SearchResultSound },
   name: 'PageSounds',
   data () {
     return {
@@ -41,36 +34,9 @@ export default {
     }
   },
   mounted () {
-    this.getMySoundsFromDevice()
     this.getMySounds()
   },
   methods: {
-    async getMySoundsFromDevice () {
-      try {
-        this.activateLoading()
-        const ret = await Filesystem.readdir({
-          path: 'soundhub',
-          directory: FilesystemDirectory.Data
-        })
-        for (let i = 0; i < ret.files.length; i++) {
-          const getUri = await Filesystem.getUri({
-            path: 'soundhub/' + ret.files[i],
-            directory: FilesystemDirectory.Data
-          })
-          const path = getUri.uri
-          const url = await Capacitor.convertFileSrc(path)
-          const data = {
-            sound_name: ret.files[i],
-            type: 'device',
-            url: url
-          }
-          this.files.push(data)
-          // this.sounds.push(data)
-        }
-      } catch (e) {
-        console.error('Unable to read dir', e)
-      }
-    },
     async getMySounds () {
       try {
         if (localStorage.getItem('token')) {

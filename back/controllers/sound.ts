@@ -84,7 +84,13 @@ export class SoundController {
             if (type === 'sound') {
                 const soundFromDB = await this.soundModel.getSoundById({ sound_id: parseInt(sound_id) })
                 sound = {
-                    type: 'sound'
+                    sound_name: soundFromDB.sound_name,
+                    sound_id: soundFromDB.sound_id,
+                    user_id: soundFromDB.user_id,
+                    type: 'sound',
+                    user: {
+                        user_name: soundFromDB.user_name,
+                    }
                 }
                 Object.assign(sound, soundFromDB.dataValues)
             } else {

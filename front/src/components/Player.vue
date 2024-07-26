@@ -68,6 +68,14 @@
           </q-bar>
           <div class="content">
             <div class="text-h5" style="font-weight: bold;">{{ soundInfo.title }}</div>
+            <div :class="`row col-md-3 col-xs-12 rslt-div-btns justify-around`">
+              <!--ADD TO LIST-->
+              <q-btn
+                class="col-5 q-ml-sm q-mb-xs"
+                @click="agregarSound(soundInfo)"
+                color="pink"
+                icon="add" />
+            </div>
             <span v-if="soundInfo.type === 'sound'">
               Publicada por:
               <a
@@ -96,6 +104,15 @@
           </div>
         </q-card>
       </q-dialog>
+      <q-dialog
+        v-model="dialogPlaylist"
+        transition-show="slide-up"
+        transition-hide="slide-down"
+      >
+        <q-card class="pl-card-body">
+          <Playlist mode="adding" @addToPlaylist="addToPlaylist"></Playlist>
+        </q-card>
+      </q-dialog>
     </div>
 </template>
 
@@ -104,13 +121,16 @@ import WaveSurfer from 'wavesurfer.js'
 import SoundService from '../services/SoundService'
 import CommentService from '../services/CommentService'
 import { functions } from '../functions.js'
+import Playlist from '../pages/Playlist.vue'
 import Comment from './Comment.vue'
+import SoundPlaylistService from '../services/SoundPlaylistService'
 
 export default {
   name: 'Player',
   mixins: [functions],
   components: {
-    Comment
+    Comment,
+    Playlist
   },
   data () {
     return {
@@ -122,7 +142,9 @@ export default {
       token: localStorage.getItem('token'),
       user: JSON.parse(localStorage.getItem('user')),
       comments: [],
-      isPlaying: true
+      isPlaying: true,
+      dialogPlaylist: false,
+      sound: {}
     }
   },
   computed: {
@@ -148,6 +170,45 @@ export default {
     }
   },
   methods: {
+    async removeFromPlaylist () {
+      try {
+        const data = {
+          sound_playlist_id: this.result.sound_playlist_id,
+          token: this.token
+        }
+        const request = await SoundPlaylistService.remove(data)
+        if (request.status >= 200 && request.status < 300) {
+          this.alert('positive', 'Canción eliminada del playlist correctamente')
+          this.$destroy()
+          this.$el.parentNode.removeChild(this.$el)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async addToPlaylist (playlist) {
+      try {
+        const data = {}
+        if (this.sound.type === 'video') {
+          data.playlist_id = playlist.playlist_id
+          data.youtube_id = this.sound.id
+          data.token = this.token
+        } else {
+          data.playlist_id = playlist.playlist_id
+          data.sound_id = this.sound.sound_id
+          data.token = this.token
+        }
+        const request = await SoundPlaylistService.add(data)
+        if (request.status >= 200 && request.status < 300) this.alert('positive', 'Canción agregada correctamente')
+      } catch (error) {
+        console.log(error)
+      }
+      this.dialogPlaylist = false
+    },
+    agregarSound (sound) {
+      this.dialogPlaylist = true
+      this.sound = sound
+    },
     async makeComment () {
       if (this.comment.length > 0) {
         const request = await CommentService.store({

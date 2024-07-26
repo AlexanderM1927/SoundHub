@@ -41,8 +41,6 @@ export default {
 <style>
 .NI-container {
   margin: 12px;
-  /*background-color: rgb(233, 43, 72);*/
-  background-color: rgba(47, 47, 51, 0.95);
   font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 20px;

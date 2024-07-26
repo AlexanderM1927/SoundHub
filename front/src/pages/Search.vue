@@ -5,7 +5,6 @@
       <div v-bind:key="result.id" v-for="result in searchResults">
         <SearchResultYoutube v-if="result.type === 'video'" :result="result" :download="true" :tiny="false" />
         <SearchResultSound v-else-if="result.type === 'sound'" :result="result" :download="true" :tiny="false" />
-        <SearchResultUser v-else-if="result.type === 'user'" :result="result"/>
       </div>
     </div>
   </div>
@@ -15,11 +14,10 @@
 import { functions } from '../functions.js'
 import SearchResultYoutube from '../components/SearchResultYoutube.vue'
 import SearchResultSound from '../components/SearchResultSound.vue'
-import SearchResultUser from '../components/SearchResultUser.vue'
 
 export default {
   mixins: [functions],
-  components: { SearchResultYoutube, SearchResultSound, SearchResultUser },
+  components: { SearchResultYoutube, SearchResultSound },
   data () {
     return {
       token: localStorage.getItem('token'),

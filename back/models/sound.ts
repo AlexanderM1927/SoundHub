@@ -16,7 +16,9 @@ export class SoundModel {
 
     async getSoundById ({ sound_id }: {sound_id: Number}) {
         const query = await this.connection.query(
-            `SELECT * FROM sounds WHERE sound_id = ?;`,
+            `SELECT sounds.*, users.* FROM sounds 
+            LEFT JOIN users ON users.user_id = sounds.user_id 
+            WHERE sound_id = ?;`,
             [sound_id]
         )
         return query[0][0]
