@@ -1,7 +1,9 @@
 import { Router } from 'express'
 import { AppProvider } from '../providers/app'
+import { verifyToken } from '../middlewares/verifyToken'
+import { verifyUserUpdate } from '../middlewares/verifyUserUpdate'
 
-export const createRouter = ({ verifyToken, connection }: { verifyToken: any, connection: any}) => {
+export const createRouter = ({ connection }: { connection: any}) => {
     const router = Router()
 	const {
 		userController,
@@ -15,9 +17,9 @@ export const createRouter = ({ verifyToken, connection }: { verifyToken: any, co
     // Users
 	router.post('/login', userController.login)
 	router.post('/register', userController.register)
-	router.post('/setrank', verifyToken, userController.setRank)
+	// router.post('/setrank', verifyToken, userController.setRank)
 	router.get('/user/:id', userController.getUserById) 
-	router.put('/user/:id', verifyToken, userController.update)
+	router.put('/user/:id', verifyUserUpdate, userController.update)
 
     // // Searches
 	router.get('/search/:name', soundController.search)

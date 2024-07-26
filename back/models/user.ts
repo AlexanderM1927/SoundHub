@@ -17,8 +17,8 @@ export class UserModel {
         const validPassword = await bcrypt.compare(input.user_password, user.user_password);
         if (validPassword) {
             const token = jwt.sign({
-                name: user.name,
-                id: user._id
+                "user_name": user.user_name,
+                "user_id": user.user_id
             }, (process.env as any).TOKEN_SECRET)
 
             return {
