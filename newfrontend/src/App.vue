@@ -5,7 +5,7 @@ import ThePlayer from './components/ThePlayer.vue'
 
 <template>
   <TheNavbar/>
-  <div class="mt-12">
+  <div class="mt-12 mb-16 overflow-y-auto">
     <div class="p-4">
       <RouterView></RouterView>
     </div>

@@ -28,3 +28,14 @@ h3 {
 .custom-container {
   margin-bottom: 1rem;
 }
+
+.custom-circular-btn {
+  background: #CF2741;
+  color: white;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+}
