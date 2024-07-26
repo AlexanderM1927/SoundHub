@@ -2,7 +2,7 @@
     <div id='player' class='inactive'>
       <div class='row justify-center vertical-middle'>
         <div class='col-md-1 col-xs-2'>
-          <center class="row q-mt-xs">
+          <div class="row justify-center">
             <!--LOADING ICON-->
             <q-circular-progress v-if="isLoading" size="72px" indeterminate color="pink" />
             <!--PAUSE BUTTON-->
@@ -19,38 +19,44 @@
               class="plyr-btn plyr-pink"
               @click="wavesurfer.playPause()"
             />
-          </center>
+          </div>
         </div>
         <!--PREVIOUS SONG-->
         <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 0" class='col-md-1 col-xs-2'>
-          <q-icon
-            name="fas fa-step-backward"
-            color="pink"
-            class="plyr-btn"
-            @click="setNewSong('prev')"
-          />
+          <div class="row justify-center">
+            <q-icon
+              name="fas fa-step-backward"
+              color="pink"
+              class="plyr-btn"
+              @click="setNewSong('prev')"
+            />
+          </div>
         </div>
         <!--SOUND WAVES-->
-        <div :class="(playlist.length > 0 ? 'col-md-2 col-xs-4' : 'col-md-10 col-xs-7')">
+        <div :class="(playlist.length > 0 ? 'col-md-8 col-xs-4' : 'col-md-10 col-xs-7')">
           <div id='waveform'></div>
           <div id="audioBox"><audio controls></audio></div>
         </div>
         <!--NEXT SONG-->
         <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 0" class="col-md-1 col-xs-2">
-          <q-icon
-            name="fas fa-step-forward"
-            color="pink"
-            class="plyr-btn"
-            @click="setNewSong('next')"
-          />
+          <div class="row justify-center">
+            <q-icon
+              name="fas fa-step-forward"
+              color="pink"
+              class="plyr-btn"
+              @click="setNewSong('next')"
+            />
+          </div>
         </div>
         <div v-if="song && (song.payload.type === 'sound' || song.payload.type === 'video')" class="col-md-1 col-xs-2 q-mt-xs">
-          <q-icon
-            name="fas fa-info"
-            size="xs"
-            class="plyr-btn plyr-pink"
-            @click="openDialogInfo"
-          />
+          <div class="row justify-center">
+            <q-icon
+              name="fas fa-info"
+              size="xs"
+              class="plyr-btn plyr-pink"
+              @click="openDialogInfo"
+            />
+          </div>
         </div>
       </div>
       <q-dialog
