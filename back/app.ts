@@ -1,6 +1,5 @@
 import express, { json } from 'express' // require -> commonJS
 import { corsMiddleware } from './middlewares/cors'
-import { verifyToken } from './middlewares/verifyToken'
 import { createRouter } from './routes/index'
 
 
@@ -13,7 +12,7 @@ export const createApp = ({ acceptedOrigins, connection }: { acceptedOrigins: an
     app.disable('x-powered-by')
 
     app.get('/favicon.ico', (_req: any, res: any) => res.status(204)); // Ignore favicon
-    app.use('/v1', createRouter({ verifyToken, connection }))
+    app.use('/v1', createRouter({ connection }))
 
     return app
 }
