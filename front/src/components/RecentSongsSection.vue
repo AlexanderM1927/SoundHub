@@ -1,6 +1,6 @@
 <template>
   <div class="row text-white">
-    <div class="col-12">
+    <div class="col-12" v-if="songs.length > 0">
       <h5 style="padding-left: 1rem;">Escuchado recientemente</h5>
       <div class="row">
         <div class="col-6" v-for="result in songs" v-bind:key="result.id">
@@ -27,6 +27,20 @@ export default {
   data () {
     return {
       songs: []
+    }
+  },
+  computed: {
+    song: {
+      get () {
+        return this.$store.state.sounds.song
+      }
+    }
+  },
+  watch: {
+    song () {
+      setTimeout(() => {
+        this.getRecentSongs()
+      }, 1500)
     }
   },
   mounted () {
