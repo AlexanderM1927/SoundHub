@@ -5,3 +5,6 @@ Here you're going to be able to listen and download all the music you love!
 
 ### The newfrontend folder
 This folder is for a new version of the project but it's still incomplete.
+
+### How to run it?
+Install docker
