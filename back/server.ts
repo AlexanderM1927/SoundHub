@@ -8,7 +8,10 @@ const connection = await createConnection({
 })
 
 const app = createApp({
-    acceptedOrigins: [process.env.FRONT_URL],
+    acceptedOrigins: [
+        process.env.FRONT_URL,
+        'http://localhost:5173'
+    ],
     connection
 })
 

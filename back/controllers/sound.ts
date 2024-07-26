@@ -34,12 +34,12 @@ export class SoundController {
         try {
             const url = req.params.url;
             const type = req.params.type;
-            const userAgent = req.headers['user-agent'];
+            // const userAgent = req.headers['user-agent'];
             let response = null
             let soundUrl = ''
           
             if (type === TYPE_VIDEO) {
-                const sound = await this.youtubeService.downloadSound({ url, type, userAgent })
+                const sound = await this.youtubeService.downloadSound({ url, type })
                 soundUrl = await this.youtubeService.waitUntilDownloadSound({
                     file: sound,
                     url: url
@@ -84,7 +84,13 @@ export class SoundController {
             if (type === 'sound') {
                 const soundFromDB = await this.soundModel.getSoundById({ sound_id: parseInt(sound_id) })
                 sound = {
-                    type: 'sound'
+                    sound_name: soundFromDB.sound_name,
+                    sound_id: soundFromDB.sound_id,
+                    user_id: soundFromDB.user_id,
+                    type: 'sound',
+                    user: {
+                        user_name: soundFromDB.user_name,
+                    }
                 }
                 Object.assign(sound, soundFromDB.dataValues)
             } else {

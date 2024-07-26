@@ -1,4 +1,4 @@
-import ytdl, { Filter } from '@distube/ytdl-core'
+import ytdl from '@distube/ytdl-core'
 // @ts-ignore
 import youtubesearchapi from 'youtube-search-api'
 import fileSystem from 'fs'
@@ -47,26 +47,25 @@ export class YoutubeService {
         return results
     }
 
-    async downloadSound ({ url, userAgent }: { url: any, userAgent: any }) {
+    async downloadSound ({ url }: { url: any }) {
         let response: any = null
-        const downloadAndStream = async (format: any, hasFilter = false) => {
-            const options: {
-                quality?: string,
-                filter?: Filter,
-                format?: any
-            } = {
-                quality: 'lowest',
-                format: format
+        const info = await ytdl.getInfo(url)
+        const getBestFormat = info.formats.filter((format: any) => {
+            return format.hasAudio === true && format.container === 'mp4' && format.hasVideo === true
+        })
+        if (getBestFormat[0]) {
+            const downloadAndStream = () => {
+                const options: {
+                    quality?: any
+                } = {
+                    quality: getBestFormat[0].itag
+                }
+                response = ytdl(url, options)
             }
-            if (hasFilter) options.filter = 'audioonly'
-            response = await ytdl(url, options)
+        
+            downloadAndStream()
         }
-    
-        if (userAgent && (userAgent.includes('iPhone') || userAgent.includes('iPad'))) {
-            await downloadAndStream('mp3');
-        } else {
-            await downloadAndStream('m4a', true);
-        }
+        
 
         return response
     }

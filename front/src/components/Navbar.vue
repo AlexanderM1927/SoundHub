@@ -2,7 +2,7 @@
   <!-- NAVBAR COMPONENT -->
   <div>
     <!-- HEADER ICON/NAME-->
-    <q-header elevated class="bg-grey">
+    <q-header elevated class="bg-black">
       <q-toolbar class="row nav-height col-12 justify-between">
         <div class="row" @click="goTo('/')">
           <img src="/favicon.png" class="nav-icon" />
@@ -27,7 +27,7 @@
       :width="300"
       :breakpoint="2000"
       bordered
-      content-class="bg-grey"
+      content-class="bg-black"
     >
       <q-scroll-area class="fit">
         <q-list>

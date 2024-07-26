@@ -1,0 +1,57 @@
+/* ./src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.custom-container {
+  margin-bottom: 1rem;
+}
+
+.custom-circular-btn {
+  background: #CF2741;
+  color: white;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+}
+
+body::-webkit-scrollbar {
+  width: 11px;
+}
+body {
+  scrollbar-width: thin;
+  scrollbar-color: black #CFD8DC;
+}
+body::-webkit-scrollbar-track {
+  background: #CFD8DC;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 6px;
+  border: 3px solid #CFD8DC;
+}
