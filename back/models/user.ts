@@ -97,6 +97,27 @@ export class UserModel {
         }
     }
 
+    async getUserByUserName ({ user_name }: { user_name: string }) {
+
+        try {
+            const query = await this.connection.query(
+              `SELECT * FROM users WHERE user_name LIKE ?`,
+              [`%${user_name}%`]
+            )
+
+            return query[0].map((usr: any) => {
+                return {
+                    user_name: usr.user_name,
+                    user_id: usr.user_id,
+                    user_email: usr.user_email,
+                    user_country: usr.user_country,
+                }
+            })
+        } catch (e) {
+            throw new Error('Error getting user')
+        }
+    }
+
     async update ({ user_id, user_email, user_country, user_name }:
         { user_id: Number, user_email: String, user_country: String, user_name: String }
     ) {
