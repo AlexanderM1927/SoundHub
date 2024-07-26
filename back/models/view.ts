@@ -16,7 +16,8 @@ export class ViewModel {
             FROM views 
             WHERE createdAt BETWEEN ? AND ?
             GROUP BY sound_id, view_type
-            ORDER BY count DESC;`,
+            ORDER BY count DESC
+            LIMIT 10;`,
             [startDate, endDate]
         )
         const results: {

@@ -4,8 +4,18 @@ export class CommentController {
         this.commentModel = commentModel
     }
 
-    store = async (_req: any, _res: any) => {
-
+    store = async (req: any, res: any) => {
+        const result = req.body
+    
+        try {
+            const savedComment = await this.commentModel.create(result)
+            res.json({
+                error: null,
+                data: savedComment
+            })
+        } catch (error) {
+            res.status(400).json({error: (error as Error).message})
+        }
     }
 
     getCommentsBySoundId = async (req: any, res: any) => {
