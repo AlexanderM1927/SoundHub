@@ -29,7 +29,8 @@ export class AppProvider implements IAppProvider {
             new SoundModel({connection}),
             viewModel,
             new YoutubeService(new SoundModel({connection})),
-            new UserModel({connection})
+            new UserModel({connection}),
+            new PlaylistModel({connection})
         )
         const playlistController = new PlaylistController(new PlaylistModel({connection}))
         const commentController = new CommentController(new CommentModel({connection}))

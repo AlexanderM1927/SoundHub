@@ -9,12 +9,20 @@ export class SoundController {
     viewModel: any
     youtubeService: any
     userModel: any
+    playlistModel: any
 
-    constructor (soundModel: any, viewModel: any, youtubeService: any, userModel: any) {
+    constructor (
+            soundModel: any, 
+            viewModel: any, 
+            youtubeService: any, 
+            userModel: any, 
+            playlistModel: any
+    ) {
         this.soundModel = soundModel
         this.viewModel = viewModel
         this.youtubeService = youtubeService
         this.userModel = userModel
+        this.playlistModel = playlistModel
     }
 
     search = async (req: any, res: any) => {
@@ -23,6 +31,7 @@ export class SoundController {
 
             const sounds = await this.youtubeService.searchSound({ name })
             let users = await this.userModel.getUserByUserName({ user_name: name })
+            let playlists = await this.playlistModel.getPlaylistsByName({ playlist_name: name })
 
             if (users && users.length > 0) {
                 users = users.map((usr: any) => {
@@ -33,9 +42,19 @@ export class SoundController {
                 })
             }
 
+            if (playlists && playlists.length > 0) {
+                playlists = playlists.map((playlist: any) => {
+                    return {
+                        ...playlist,
+                        type: 'playlist'
+                    }
+                })
+            }
+
             const results = {
                 items: [
                     ...users,
+                    ...playlists,
                     ...sounds.items
                 ]
             }
