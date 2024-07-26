@@ -1,5 +1,21 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref, type Ref } from 'vue'
+import { goTo } from '../helpers/goTo'
+import { useRouter } from 'vue-router'
+
+
+const isSearching: Ref<Boolean> = ref(false)
+const searchText: Ref<string> = ref('')
+
+const search = () => {
+  const router = useRouter()
+  goTo(router, '/search/'+searchText.value)
+}
+
+const clearSearch = () => {
+  isSearching.value = false
+  searchText.value = ''
+}
 
 onMounted(() => {
   // open
@@ -44,14 +60,33 @@ onMounted(() => {
 
 <template>
   <nav class="fixed w-full top-0 px-4 py-2 flex justify-between items-center bg-gray-900">
-		<a class="text-3xl font-bold text-white leading-none flex items-center" href="/">
+		<a  v-if="!isSearching" class="text-3xl font-bold text-white leading-none flex items-center" href="/">
 			<img src="../assets/favicon.png" class="nav-icon" />
-			SoundHub
+			<div>SoundHub</div>
 		</a>
+    <div v-else class="text-3xl font-bold leading-none flex items-center text-white">
+			<img src="../assets/favicon.png" class="nav-icon" />
+			<div class="relative pl-1">
+        <input 
+          class="pl-10 pr-4 py-2 border rounded-lg w-full bg-gray-800" 
+          placeholder="Buscar..."
+          type="text" 
+          @keyup.enter="search()"
+          v-model="searchText"
+        />
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"> 
+          <svg @click="clearSearch()" xmlns="http://www.w3.org/2000/svg" class="block h-5 w-5 fill-current" viewBox="0 -960 960 960">
+            <title>Clear</title>
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+          </svg> 
+        </div> 
+      </div>
+		</div>
 		<div>
       <div class="flex">
-        <button class="flex items-center text-red-600 p-3">
+        <button v-if="!isSearching" class="flex items-center text-red-600 p-3" @click="isSearching = true">
           <svg xmlns="http://www.w3.org/2000/svg" class="block h-5 w-5 fill-current" viewBox="0 -960 960 960">
+            <title>Search</title>
             <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
           </svg>
         </button>
@@ -80,4 +115,4 @@ onMounted(() => {
   font-weight: 300;
   font-size: 24px;
 }
-</style>
+</style>../helpers/goTo
