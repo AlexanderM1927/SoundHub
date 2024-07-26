@@ -1,7 +1,7 @@
 <template>
   <div class="row text-white">
     <div class="col-12">
-      <h5>Escuchado recientemente</h5>
+      <!-- <h5>Escuchado recientemente</h5> -->
       <div class="row">
         <div class="col-md-6"></div>
         <div class="col-md-6"></div>
