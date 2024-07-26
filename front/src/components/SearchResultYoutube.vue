@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="search-result" @click="abrirReproductor(result)">
-      <img :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
-      <div v-if="result.length.accessibility">
-        <b>{{ result.title }}</b><br>
-        Duration: {{ result.length.simpleText }}
+      <img v-if="result.img" :src="result.img" class="search-result__image">
+      <img v-else :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
+      <div>
+        <div><b>{{ result.title }}</b></div>
       </div>
     </div>
   </div>

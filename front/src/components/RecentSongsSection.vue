@@ -1,10 +1,12 @@
 <template>
   <div class="row text-white">
     <div class="col-12">
-      <!-- <h5>Escuchado recientemente</h5> -->
+      <h5 style="padding-left: 1rem;">Escuchado recientemente</h5>
       <div class="row">
-        <div class="col-md-6"></div>
-        <div class="col-md-6"></div>
+        <div class="col-6" v-for="result in songs" v-bind:key="result.id">
+          <SearchResultYoutube v-if="result.type === 'video'" :result="result" :download="true" :tiny="false" />
+          <SearchResultSound v-else-if="result.type === 'sound'" :result="result" :download="true" :tiny="false" />
+        </div>
       </div>
     </div>
   </div>
@@ -12,10 +14,16 @@
 
 <script>
 import { functions } from '../functions.js'
+import SearchResultSound from './SearchResultSound.vue'
+import SearchResultYoutube from './SearchResultYoutube.vue'
 
 export default {
   name: 'RecentSongsSection',
   mixins: [functions],
+  components: {
+    SearchResultSound,
+    SearchResultYoutube
+  },
   data () {
     return {
       songs: []
@@ -26,7 +34,28 @@ export default {
   },
   methods: {
     async getRecentSongs () {
+      const recentPlayed = await this.getDataCollection('recent')
+      const soundsSorted = recentPlayed.sort((a, b) => {
+        if (a.time > b.time) {
+          return -1
+        }
+        if (a.time < b.time) {
+          return 1
+        }
 
+        return 0
+      })
+      this.songs = [
+        ...this.removeDuplicates(soundsSorted).slice(0, 6)
+      ]
+    },
+    removeDuplicates (arr) {
+      return arr.filter((item, index) => {
+        const elIndex = arr.findIndex(function (el) {
+          return el.id === item.id
+        })
+        return elIndex === index
+      })
     }
   }
 }
