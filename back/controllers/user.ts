@@ -1,4 +1,4 @@
-import { validateUser, validatePartialUser } from '../schemas/user'
+import { validatePartialUser } from '../schemas/user'
 
 export class UserController {
     userModel: any
@@ -30,7 +30,7 @@ export class UserController {
 
 
     register = async (req: any, res: any) => {
-        const result = validateUser(req.body)
+        const result = validatePartialUser(req.body)
 
         if (!result.success) {
             return res.status(400).json({ error: JSON.parse(result.error.message) })

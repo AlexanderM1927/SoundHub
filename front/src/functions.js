@@ -1,14 +1,43 @@
 import { QSpinnerGears, QSpinnerAudio } from 'quasar'
 import { Plugins, FilesystemDirectory } from '@capacitor/core'
 import SearchService from './services/SearchService'
+import Localbase from 'localbase'
 
 const { Filesystem } = Plugins
 export const functions = {
   data () {
+    return {
+      db: {}
+    }
+  },
+  created () {
+    this.db = new Localbase('db')
   },
   mounted () {
   },
   methods: {
+    addToCollection (collection, data) {
+      this.db.collection(collection).add(data)
+        .then(response => {
+          console.log('Agregado')
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    async getDataCollection (collection, by = '', order = '') {
+      let answer = []
+      if (by === '' && order === '') {
+        await this.db.collection(collection).get().then(data => {
+          answer = data
+        })
+      } else {
+        await this.db.collection(collection).orderBy(by, order).get().then(data => {
+          answer = data
+        })
+      }
+      return answer
+    },
     validateForm (array, fun) {
       let isComplete = true
       for (let i = 0; i < array.length; i++) {
@@ -54,6 +83,10 @@ export const functions = {
       this.$q.loading.hide()
     },
     async abrirReproductor (result) {
+      this.addToCollection('recent', {
+        ...result,
+        time: Date.now()
+      })
       this.$store.dispatch('sounds/reloadPlaylist')
       this.activateLoading()
       if (result.type === 'video') {

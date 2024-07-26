@@ -2,7 +2,7 @@
   <q-layout view='hHh Lpr lFf' class="ov-h">
     <Navbar />
 
-    <q-page-container>
+    <q-page-container style="margin-bottom: 5rem;">
       <router-view />
     </q-page-container>
     <Player />
