@@ -77,7 +77,7 @@ const menuList = [
     requireSession: true
   },
   {
-    title: 'Mis listas',
+    title: 'Mis playlists',
     icon: 'fas fa-play',
     to: '/playlist',
     separator: false,
@@ -138,7 +138,7 @@ export default {
   mounted () {
     this.getChats()
     this.menuList.push({
-      title: 'Chats',
+      title: 'Mis Chats',
       icon: 'fas fa-bells',
       to: '/chat',
       separator: false,

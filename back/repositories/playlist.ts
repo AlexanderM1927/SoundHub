@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-export class PlaylistModel {
+export class PlaylistRepository {
     connection: any
     constructor ({ connection }: {connection: any}) {
         this.connection = connection

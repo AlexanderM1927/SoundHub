@@ -1,5 +1,5 @@
 import moment from 'moment'
-export class CommentModel {
+export class CommentRepository {
     connection: any
     constructor ({ connection }: {connection: any}) {
         this.connection = connection

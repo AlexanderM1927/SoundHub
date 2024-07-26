@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
-export class UserModel {
+export class UserRepository {
     connection: any
     constructor ({ connection }:{ connection: any }) {
         this.connection = connection
@@ -17,8 +17,8 @@ export class UserModel {
         const validPassword = await bcrypt.compare(input.user_password, user.user_password);
         if (validPassword) {
             const token = jwt.sign({
-                "user_name": user.user_name,
-                "user_id": user.user_id
+                name: user.name,
+                id: user._id
             }, (process.env as any).TOKEN_SECRET)
 
             return {
