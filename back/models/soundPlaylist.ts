@@ -8,10 +8,11 @@ export class SoundPlaylistModel {
 
     async getSoundsByPlaylistId ({ playlist_id }: {playlist_id: Number}) {
         const query = await this.connection.query(
-            `SELECT sounds_playlists.*, sounds.* 
+            `SELECT sounds_playlists.*, sounds.*, playlists.*
             FROM sounds_playlists 
             LEFT JOIN sounds ON sounds.sound_id = sounds_playlists.sound_id
-            WHERE playlist_id = ?;`,
+            LEFT JOIN playlists ON playlists.playlist_id = sounds_playlists.playlist_id
+            WHERE sounds_playlists.playlist_id = ?;`,
             [playlist_id]
         )
         return query[0]
