@@ -102,13 +102,7 @@ export class SoundController {
                 res.setHeader("Connection", "Keep-Alive");
                 res.setHeader("Transfer-encoding", "chunked");
                 res.setHeader("Content-Length", fileSystem.statSync(soundUrl).size);
-                const stream = response.pipe(res)
-
-                stream.on('finish', () => {
-                    try {
-                        fileSystem.unlinkSync(soundUrl)
-                    } catch (_err) {}
-                })
+                response.pipe(res)
             
                 const data = {
                     sound_id: url,
