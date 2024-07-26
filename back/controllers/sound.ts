@@ -8,24 +8,44 @@ export class SoundController {
     soundModel: any
     viewModel: any
     youtubeService: any
+    userModel: any
 
-    constructor (soundModel: any, viewModel: any, youtubeService: any) {
+    constructor (soundModel: any, viewModel: any, youtubeService: any, userModel: any) {
         this.soundModel = soundModel
         this.viewModel = viewModel
         this.youtubeService = youtubeService
+        this.userModel = userModel
     }
 
     search = async (req: any, res: any) => {
         try {
             const name = req.params.name
 
-            const results = await this.youtubeService.searchSound({ name })
+            const sounds = await this.youtubeService.searchSound({ name })
+            let users = await this.userModel.getUserByUserName({ user_name: name })
+
+            if (users && users.length > 0) {
+                users = users.map((usr: any) => {
+                    return {
+                        ...usr,
+                        type: 'user'
+                    }
+                })
+            }
+
+            const results = {
+                items: [
+                    ...users,
+                    ...sounds.items
+                ]
+            }
             
             res.json({
               error: null,
               data: results
             })
         } catch (error) {
+            console.log('error', error)
             res.status(400).json({error: (error as Error).message})
         }
     }
