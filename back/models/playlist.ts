@@ -14,6 +14,14 @@ export class PlaylistModel {
         return query[0][0]
     }
 
+    async getPlaylistsByName ({ playlist_name }: {playlist_name: string}) {
+        const query = await this.connection.query(
+            `SELECT * FROM playlists WHERE playlist_name = ?;`,
+            [playlist_name]
+        )
+        return query[0]
+    }
+
     async getPlaylistByUserId ({ user_id }: {user_id: Number}) {
         const query = await this.connection.query(
             `SELECT * FROM playlists WHERE user_id = ?;`,
