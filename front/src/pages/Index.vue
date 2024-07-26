@@ -2,8 +2,8 @@
   <q-page>
     <div class="row justify-around">
       <!--TOP 10 SONGS OF THE WEEK-->
-      <BestSongs/>
       <RecentSongs/>
+      <BestSongs/>
     </div>
   </q-page>
 </template>

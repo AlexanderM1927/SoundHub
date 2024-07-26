@@ -22,7 +22,7 @@
           </center>
         </div>
         <!--PREVIOUS SONG-->
-        <div v-if="playlist.length > 0" class='col-md-1 col-xs-2 q-mt-xs'>
+        <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 0" class='col-md-1 col-xs-2'>
           <q-icon
             name="fas fa-step-backward"
             color="pink"
@@ -33,10 +33,10 @@
         <!--SOUND WAVES-->
         <div :class="(playlist.length > 0 ? 'col-md-2 col-xs-4' : 'col-md-10 col-xs-7')">
           <div id='waveform'></div>
-          <audio id="audioBox" controls></audio>
+          <div id="audioBox"><audio controls></audio></div>
         </div>
         <!--NEXT SONG-->
-        <div v-if="playlist.length > 0" class="col-md-1 col-xs-2 q-mt-xs">
+        <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 0" class="col-md-1 col-xs-2">
           <q-icon
             name="fas fa-step-forward"
             color="pink"
@@ -195,7 +195,7 @@ export default {
           data.token = this.token
         } else {
           data.playlist_id = playlist.playlist_id
-          data.sound_id = this.sound.sound_id
+          data.sound_id = this.soundInfo.id
           data.token = this.token
         }
         const request = await SoundPlaylistService.add(data)
@@ -255,30 +255,25 @@ export default {
     async getInformationSound () {
       let sound = this.song.payload
       if (this.playlist.length > 0) sound = this.playlist[this.position].payload
-      if (sound.type === 'device') {
-        console.log('sound device')
-        console.log(sound)
-      } else {
-        try {
-          const request = await SoundService.getSoundById(sound)
-          const res = request.data.data
-          if (sound.type === 'sound') {
-            this.soundInfo = {
-              title: res.sound_name,
-              id: res.sound_id,
-              user_id: res.user_id,
-              user: res.user.user_name
-            }
-          } else {
-            this.soundInfo = {
-              title: res.title,
-              id: res.id
-            }
+      try {
+        const request = await SoundService.getSoundById(sound)
+        const res = request.data.data
+        if (sound.type === 'sound') {
+          this.soundInfo = {
+            title: res.sound_name,
+            id: res.sound_id,
+            user_id: res.user_id,
+            user: res.user.user_name
           }
-          this.soundInfo.type = sound.type
-        } catch (error) {
-          console.error(error)
+        } else {
+          this.soundInfo = {
+            title: res.title,
+            id: res.id
+          }
         }
+        this.soundInfo.type = sound.type
+      } catch (error) {
+        console.error(error)
       }
     },
     createWaveSurfer () {
@@ -292,13 +287,16 @@ export default {
         backend: 'MediaElement'
       })
       this.wavesurfer.on('error', err => {
+        this.isLoading = false
         console.error(err)
       })
       this.wavesurfer.on('loading', (e) => {
         this.isLoading = true
-        if (e === 100) {
+        if (e > 70) {
           this.isLoading = false
+          this.disableLoading()
         }
+        // console.log('e', e)
       })
       this.wavesurfer.on('ready', () => {
         this.isLoading = false
@@ -314,15 +312,14 @@ export default {
         this.isPlaying = false
       })
       this.wavesurfer.on('finish', () => {
+        this.isLoading = false
         this.setNewSong('next')
       })
     },
     async loadFile (url) {
-      // if (this.isIOS()) {
-      //   alert('Producto no compatible con iOS')
-      // } else {
-      document.getElementById('audioBox').style.display = 'none'
-      if (!this.wavesurfer) this.createWaveSurfer()
+      if (!this.wavesurfer) {
+        this.createWaveSurfer()
+      }
       this.wavesurfer.load(url)
       this.activateLoading()
       // }
@@ -350,6 +347,10 @@ export default {
 </script>
 
 <style>
+#audioBox {
+  display: none;
+}
+
 .plyr-play {
   margin: auto;
 }
