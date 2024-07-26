@@ -34,12 +34,12 @@ export class SoundController {
         try {
             const url = req.params.url;
             const type = req.params.type;
-            const userAgent = req.headers['user-agent'];
+            // const userAgent = req.headers['user-agent'];
             let response = null
             let soundUrl = ''
           
             if (type === TYPE_VIDEO) {
-                const sound = await this.youtubeService.downloadSound({ url, type, userAgent })
+                const sound = await this.youtubeService.downloadSound({ url, type })
                 soundUrl = await this.youtubeService.waitUntilDownloadSound({
                     file: sound,
                     url: url
