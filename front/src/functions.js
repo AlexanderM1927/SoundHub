@@ -134,8 +134,9 @@ export const functions = {
       }
     },
     async playPlaylist (playlist) {
+      this.activateLoading()
+
       this.$store.dispatch('sounds/reloadPlaylist')
-      // this.activateLoading()
       let isNotFirst = false
       for (let i = 0; i < playlist.length; i++) {
         if (i > 0) isNotFirst = true
@@ -146,7 +147,6 @@ export const functions = {
             playlistMode: isNotFirst,
             isFirstOnPlaylist: !isNotFirst
           })
-          // this.disableLoading()
         } else if (playlist[i].type === 'sound') {
           this.$store.dispatch('sounds/getSongById', {
             url: playlist[i].sound_id,
@@ -154,20 +154,19 @@ export const functions = {
             playlistMode: isNotFirst,
             isFirstOnPlaylist: !isNotFirst
           })
-          // this.disableLoading()
         } else if (playlist[i].type === 'device') {
           this.$store.dispatch('sounds/getSongByUrl', {
             url: playlist[i].url,
             playlistMode: isNotFirst,
             isFirstOnPlaylist: !isNotFirst
           })
-          // this.disableLoading()
         }
         if (!isNotFirst) {
           if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
             document.getElementById('player').classList.toggle('inactive')
           }
         }
+        this.disableLoading()
       }
     },
     async downloadFile (payload) {
