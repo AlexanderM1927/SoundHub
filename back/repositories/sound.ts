@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-export class SoundModel {
+export class SoundRepository {
     connection: any
     constructor ({ connection }: {connection: any}) {
         this.connection = connection

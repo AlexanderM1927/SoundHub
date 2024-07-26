@@ -4,12 +4,12 @@ import { PlaylistController } from '../controllers/playlist'
 import { SoundPlaylistController } from '../controllers/soundPlaylist'
 import { CommentController } from '../controllers/comment'
 import { ViewController } from '../controllers/view'
-import { UserModel } from '../models/user'
-import { ViewModel } from '../models/view'
-import { SoundModel } from '../models/sound'
-import { PlaylistModel } from '../models/playlist'
-import { CommentModel } from '../models/comment'
-import { SoundPlaylistModel } from '../models/soundPlaylist'
+import { UserRepository } from '../repositories/user'
+import { ViewRepository } from '../repositories/view'
+import { SoundRepository } from '../repositories/sound'
+import { PlaylistRepository } from '../repositories/playlist'
+import { CommentRepository } from '../repositories/comment'
+import { SoundPlaylistRepository } from '../repositories/soundPlaylist'
 import { YoutubeService } from '../services/youtube'
 import { IAppProvider } from '../types/types'
 
@@ -17,26 +17,26 @@ export class AppProvider implements IAppProvider {
     constructor () {}
 
     init ({connection}: {connection: any}) {
-        const viewModel = new ViewModel(
+        const viewRepository = new ViewRepository(
             {
                 connection,
-                youtubeService: new YoutubeService(new SoundModel({connection}))
+                youtubeService: new YoutubeService(new SoundRepository({connection}))
             }
         )
-        const userController = new UserController(new UserModel({connection}))
-        const viewController = new ViewController(viewModel)
+        const userController = new UserController(new UserRepository({connection}))
+        const viewController = new ViewController(viewRepository)
         const soundController = new SoundController(
-            new SoundModel({connection}),
-            viewModel,
-            new YoutubeService(new SoundModel({connection})),
-            new UserModel({connection}),
-            new PlaylistModel({connection})
+            new SoundRepository({connection}),
+            viewRepository,
+            new YoutubeService(new SoundRepository({connection})),
+            new UserRepository({connection}),
+            new PlaylistRepository({connection})
         )
-        const playlistController = new PlaylistController(new PlaylistModel({connection}))
-        const commentController = new CommentController(new CommentModel({connection}))
+        const playlistController = new PlaylistController(new PlaylistRepository({connection}))
+        const commentController = new CommentController(new CommentRepository({connection}))
         const soundPlaylistController = new SoundPlaylistController(
-            new SoundPlaylistModel({connection}),
-            new YoutubeService(new SoundModel({connection}))
+            new SoundPlaylistRepository({connection}),
+            new YoutubeService(new SoundRepository({connection}))
         )
 
         return {

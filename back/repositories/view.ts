@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-export class ViewModel {
+export class ViewRepository {
     connection
     youtubeService
     constructor ({ connection, youtubeService }: { connection: any, youtubeService: any }) {
