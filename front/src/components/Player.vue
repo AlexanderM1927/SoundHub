@@ -332,6 +332,7 @@ export default {
     setNewSong (type) {
       if (this.playlist.length === (this.position - 1)) {
         this.alert('negative', 'No hay mas canciones en el playlist')
+        return 0
       }
       if (this.playlist.length > 0) {
         if (type === 'next' && this.playlist.length > this.position) {
