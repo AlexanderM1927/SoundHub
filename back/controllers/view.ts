@@ -1,12 +1,12 @@
 export class ViewController {
-    viewModel
-    constructor (viewModel: any) {
-        this.viewModel = viewModel
+    viewRepository
+    constructor (viewRepository: any) {
+        this.viewRepository = viewRepository
     }
 
     getViews = async (_req: any, res: any) => {
         try {
-            const results = await this.viewModel.getViews()
+            const results = await this.viewRepository.getViews()
             res.json({
                 error: null,
                 data: results

@@ -22,10 +22,10 @@ const upload = multer({ storage : storage }).fields([
 ])
 
 export class UploadService {
-    soundModel: any
+    soundRepository: any
 
-    constructor (soundModel: any) {
-        this.soundModel = soundModel
+    constructor (soundRepository: any) {
+        this.soundRepository = soundRepository
     }
 
     init (req: any, res: any) {
@@ -33,7 +33,7 @@ export class UploadService {
             if(err) {
                 return res.status(400).json({err})
             } else {
-                const sound = await this.soundModel.create({
+                const sound = await this.soundRepository.create({
                     user_id: req.body.user_id,
                     sound_name: req.body.sound_name,
                     sound_file_url: req.files.sound_file_url[0].path,

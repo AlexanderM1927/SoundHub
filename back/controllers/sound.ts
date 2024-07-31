@@ -5,24 +5,24 @@ import fileSystem from 'fs'
 
 const TYPE_VIDEO = 'video'
 export class SoundController {
-    soundModel: any
-    viewModel: any
+    soundRepository: any
+    viewRepository: any
     youtubeService: any
-    userModel: any
-    playlistModel: any
+    userRepository: any
+    playlistRepository: any
 
     constructor (
-            soundModel: any, 
-            viewModel: any, 
+            soundRepository: any, 
+            viewRepository: any, 
             youtubeService: any, 
-            userModel: any, 
-            playlistModel: any
+            userRepository: any, 
+            playlistRepository: any
     ) {
-        this.soundModel = soundModel
-        this.viewModel = viewModel
+        this.soundRepository = soundRepository
+        this.viewRepository = viewRepository
         this.youtubeService = youtubeService
-        this.userModel = userModel
-        this.playlistModel = playlistModel
+        this.userRepository = userRepository
+        this.playlistRepository = playlistRepository
     }
 
     search = async (req: any, res: any) => {
@@ -30,8 +30,8 @@ export class SoundController {
             const name = req.params.name
 
             const sounds = await this.youtubeService.searchSound({ name })
-            let users = await this.userModel.getUserByUserName({ user_name: name })
-            let playlists = await this.playlistModel.getPlaylistsByName({ playlist_name: name })
+            let users = await this.userRepository.getUserByUserName({ user_name: name })
+            let playlists = await this.playlistRepository.getPlaylistsByName({ playlist_name: name })
 
             if (users && users.length > 0) {
                 users = users.map((usr: any) => {
@@ -85,7 +85,7 @@ export class SoundController {
                 })
                 response = fileSystem.createReadStream(soundUrl)
             } else {
-                const sound = await this.soundModel.getSoundById({
+                const sound = await this.soundRepository.getSoundById({
                     sound_id: url
                 })
                 if (sound) {
@@ -108,7 +108,7 @@ export class SoundController {
                     sound_id: url,
                     view_type: type
                 }
-                await this.viewModel.createView(data)
+                await this.viewRepository.createView(data)
             }
         } catch (error) {
             res.status(400).json({error: (error as Error).message})
@@ -121,7 +121,7 @@ export class SoundController {
             const sound_id = req.params.id
             let sound = null
             if (type === 'sound') {
-                const soundFromDB = await this.soundModel.getSoundById({ sound_id: parseInt(sound_id) })
+                const soundFromDB = await this.soundRepository.getSoundById({ sound_id: parseInt(sound_id) })
                 sound = {
                     sound_name: soundFromDB.sound_name,
                     sound_id: soundFromDB.sound_id,
@@ -149,7 +149,7 @@ export class SoundController {
 
     store = async (req: any, res: any) => {
         try {
-            const uploadService = new UploadService(this.soundModel)
+            const uploadService = new UploadService(this.soundRepository)
             uploadService.init(req, res)
         } catch (error) {
             res.status(400).json({error: (error as Error).message})
@@ -167,7 +167,7 @@ export class SoundController {
                 nextPage: {}
             }
 
-            const sounds = await this.soundModel.getSoundByUserId({ user_id: parseInt(user_id) })
+            const sounds = await this.soundRepository.getSoundByUserId({ user_id: parseInt(user_id) })
             for (let i = 0; i < sounds.length; i++) {
                 const sound = {
                     type: 'sound'
