@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 // @ts-ignore
-import { sound as Sound } from '../models'
+import db from '../models'
 
 export class SoundRepository {
     
@@ -9,9 +9,9 @@ export class SoundRepository {
     }
 
     async getSoundByName ({ sound_name }: {sound_name: String}) {
-        const sounds = await Sound.findAll({ 
+        const sounds = await db.sound.findAll({ 
             where: {
-                user_name: {
+                sound_name: {
                     [Op.like]: '%' + sound_name + '%'
                 }
             }
@@ -21,7 +21,7 @@ export class SoundRepository {
     } 
 
     async getSoundById ({ sound_id }: {sound_id: Number}) {
-        const sound = await Sound.findOne({ 
+        const sound = await db.sound.findOne({ 
             where: {
               sound_id
             }
@@ -31,7 +31,7 @@ export class SoundRepository {
     }
 
     async getSoundByUserId ({ user_id }: {user_id: Number}) {
-        const sounds = await Sound.findAll({ 
+        const sounds = await db.sound.findAll({ 
             where: {
                 user_id
             }
@@ -52,7 +52,7 @@ export class SoundRepository {
         user_id: Number
     }) {
         try {
-            const sound = new Sound({
+            const sound = new db.sound({
                 user_id,
                 sound_name,
                 sound_file_url,

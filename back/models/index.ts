@@ -28,21 +28,21 @@ const sequelize = new Sequelize(
   }
 );
 
-const db = {
-  Sequelize,
-  sequelize,
-  user: userModel(sequelize, Sequelize),
-  role: roleModel(sequelize, Sequelize),
-  ban: banModel(sequelize, Sequelize),
-  sound: soundModel(sequelize, Sequelize),
-  playlist: playlistModel(sequelize, Sequelize),
-  comment: commentModel(sequelize, Sequelize),
-  like: likeModel(sequelize, Sequelize),
-  favorite: favoriteModel(sequelize, Sequelize),
-  view: viewModel(sequelize, Sequelize),
-  soundPlaylist: soundPlaylistModel(sequelize, Sequelize),
-  ROLES: ["user", "admin", "moderator"]
-};
+const db: any = {};
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+db.user = userModel(sequelize, Sequelize);
+db.role = roleModel(sequelize, Sequelize);
+db.ban = banModel(sequelize, Sequelize);
+db.sound = soundModel(sequelize, Sequelize);
+db.playlist = playlistModel(sequelize, Sequelize);
+db.comment = commentModel(sequelize, Sequelize);
+db.like = likeModel(sequelize, Sequelize);
+db.favorite = favoriteModel(sequelize, Sequelize);
+db.view = viewModel(sequelize, Sequelize);
+db.soundPlaylist = soundPlaylistModel(sequelize, Sequelize);
 
 db.user.belongsTo(db.role, {
   foreignKey: { 
@@ -79,15 +79,27 @@ db.playlist.belongsTo(db.user, {
   }
 });
 
+db.soundPlaylist.belongsTo(db.sound, {
+  foreignKey: { 
+    name: "sound_id",
+    allowNull: false
+  }
+})
+
+db.soundPlaylist.belongsTo(db.playlist, {
+  foreignKey: { 
+    name: "playlist_id",
+    allowNull: false
+  }
+})
+
 db.sound.belongsToMany(db.playlist, {
   through: db.soundPlaylist,
-  as: "playlists",
   foreignKey: "sound_id",
 });
 
 db.playlist.belongsToMany(db.sound, {
   through: db.soundPlaylist,
-  as: "sounds",
   foreignKey: "playlist_id",
 });
 
@@ -168,5 +180,6 @@ db.view.belongsTo(db.playlist, {
   }
 });
 
-export const { user, role, ban, sound, playlist, comment, like, favorite, view, soundPlaylist } = db;
+db.ROLES = ["user", "admin", "moderator"]
+
 export default db;

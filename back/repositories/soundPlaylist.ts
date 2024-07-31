@@ -1,5 +1,5 @@
 // @ts-ignore
-import { soundPlaylist as SoundPlaylist, sound as Sound, playlist as Playlist } from '../models'
+import db from '../models'
 
 export class SoundPlaylistRepository {
     
@@ -8,14 +8,14 @@ export class SoundPlaylistRepository {
     }
 
     async getSoundsByPlaylistId ({ playlist_id }: {playlist_id: Number}) {
-        const query = await SoundPlaylist.findAll({
+        const query = await db.soundPlaylist.findAll({
             where: {
               playlist_id: playlist_id
             },
             include: [{
-              model: Sound
+              model: db.sound
             }, {
-              model: Playlist
+              model: db.playlist
             }]
           })
         return query
@@ -40,7 +40,7 @@ export class SoundPlaylistRepository {
             }
             if (sound_id) data.sound_id = sound_id
             else if (youtube_id) data.youtube_id = youtube_id
-            const sound_paylist = new SoundPlaylist(data)
+            const sound_paylist = new db.soundPlaylist(data)
             const soundPlaylistSaved = await sound_paylist.save()
 
             return soundPlaylistSaved

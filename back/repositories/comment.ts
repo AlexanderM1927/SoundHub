@@ -1,5 +1,5 @@
 // @ts-ignore
-import { comment as Comment, user as User } from '../models'
+import db from '../models'
 
 export class CommentRepository {
     
@@ -7,7 +7,7 @@ export class CommentRepository {
         
     }
     async getCommentsBySoundId ({ sound_id }:{ sound_id: any }) {
-        const comments = await Comment.findAll({ 
+        const comments = await db.comment.findAll({ 
             where: {
               sound_id
             },
@@ -15,7 +15,7 @@ export class CommentRepository {
               ['comment_id', 'DESC']
             ],
             include: [{
-              model: User
+              model: db.user
             }]
           })
         
@@ -32,7 +32,7 @@ export class CommentRepository {
         comment: String
     }) {
         try {
-            const commentCreated = new Comment({
+            const commentCreated = new db.comment({
                 user_id,
                 comment_msg: comment,
                 sound_id

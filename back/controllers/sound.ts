@@ -36,7 +36,7 @@ export class SoundController {
             if (users && users.length > 0) {
                 users = users.map((usr: any) => {
                     return {
-                        ...usr,
+                        ...usr.dataValues,
                         type: 'user'
                     }
                 })
@@ -172,7 +172,7 @@ export class SoundController {
                 const sound = {
                     type: 'sound'
                 }
-                Object.assign(sound, sounds[i])
+                Object.assign(sound, sounds[i].dataValues)
                 results.items.push(sound)
             }
             

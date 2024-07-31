@@ -31,8 +31,8 @@ export class SoundPlaylistController {
             }
             playlist.sounds = await this.soundPlaylistRepository.getSoundsByPlaylistId({playlist_id: req.params.playlist_id})
             for (let i = 0; i < playlist.sounds.length; i++) {
-                playlist.playlist_name = playlist.sounds[i].playlist_name
-                if (playlist.sounds[i].youtube_id) {
+                playlist.playlist_name = playlist.sounds[i].dataValues.playlist.dataValues.playlist_name
+                if (playlist.sounds[i].dataValues.youtube_id) {
                     const searchYt = await this.youtubeService.getSoundByYoutubeAPI({
                         name: playlist.sounds[i].youtube_id
                     })
@@ -41,7 +41,7 @@ export class SoundPlaylistController {
                     element.sound_playlist_id = playlist.sounds[i].sound_playlist_id
                     playlist.sounds[i] = element
                 } else {
-                    playlist.sounds[i].sound.type = 'sound'
+                    playlist.sounds[i].dataValues.sound.dataValues.type = 'sound'
                 }
             }
             
@@ -50,6 +50,7 @@ export class SoundPlaylistController {
               data: playlist
             })
         } catch (error) {
+            console.log('error', error)
             res.status(400).json({error: (error as Error).message})
         }
     }
