@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Dialect, Sequelize } from 'sequelize'
 import userModel from "./user";
 import roleModel from "./role";
@@ -9,21 +10,22 @@ import likeModel from "./like";
 import favoriteModel from "./favorite";
 import viewModel from "./view";
 import soundPlaylistModel from "./soundplaylist";
-import { config } from '../config/config'
+// @ts-ignore
+import config from '../config/config.js'
 
 const sequelize = new Sequelize(
-  config.DB as string,
-  config.USER as string,
-  config.PASSWORD as string,
+  config[process.env.NODE_ENV].database as string,
+  config[process.env.NODE_ENV].username as string,
+  config[process.env.NODE_ENV].password as string,
   {
-    host: config.HOST,
-    port: parseInt(config.PORT as string),
-    dialect: config.dialect as Dialect,
+    host: config[process.env.NODE_ENV].host,
+    port: parseInt(config[process.env.NODE_ENV].port as string),
+    dialect: config[process.env.NODE_ENV].dialect as Dialect,
     pool: {
-      max: config.pool.max,
-      min: config.pool.min,
-      acquire: config.pool.acquire,
-      idle: config.pool.idle
+      max: config[process.env.NODE_ENV].pool.max,
+      min: config[process.env.NODE_ENV].pool.min,
+      acquire: config[process.env.NODE_ENV].pool.acquire,
+      idle: config[process.env.NODE_ENV].pool.idle
     }
   }
 );

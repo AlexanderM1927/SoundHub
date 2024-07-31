@@ -1,32 +1,6 @@
 import 'dotenv/config'
 import { Server } from 'socket.io'
 import { createApp } from './app'
-// @ts-ignore
-import db from './models'
-
-db.sequelize.sync();
-
-// db.sequelize.sync({force: true}).then(() => {
-//     console.log('Drop and Resync Db')
-//     initial()
-// });
-
-// function initial() {
-//     db.role.create({
-//         role_id: 1,
-//         role_name: "user"
-//     });
-
-//     db.role.create({
-//         role_id: 2,
-//         role_name: "moderator"
-//     });
-
-//     db.role.create({
-//         role_id: 3,
-//         role_name: "admin"
-//     });
-// }
 
 const app = createApp({
     acceptedOrigins: [

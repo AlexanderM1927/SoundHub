@@ -1,0 +1,12 @@
+{
+  "name": "migrations",
+  "version": "1.0.0",
+  "description": "SoundHub migrations",
+  "main": "20240731164237-create-user.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "AlexanderM1927",
+  "license": "ISC"
+}
