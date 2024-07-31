@@ -17,16 +17,18 @@ export class UserRepository {
             }
         })
 
-        const validPassword = await bcrypt.compare(input.user_password, user.user_password);
+        const validPassword = await bcrypt.compare(input.user_password, user.dataValues.user_password);
+
         if (validPassword) {
             const token = jwt.sign({
-                name: user.name,
-                id: user._id
+                name: user.dataValues.name,
+                user_id: user.dataValues.user_id
             }, (process.env as any).TOKEN_SECRET)
+
 
             return {
                 token,
-                user: user
+                user: user.dataValues
             }
         } else {
             throw new Error('Bad credentials') 
@@ -76,7 +78,9 @@ export class UserRepository {
                 }
             })
 
-            return user
+            return {
+                user: user.dataValues
+            }
         } catch (e) {
             throw new Error('Error getting user')
         }

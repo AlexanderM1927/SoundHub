@@ -19,8 +19,8 @@ export class UserController {
             return res.header('auth-token', token).json({
                 error: null,
                 data: {
-                    token: token,
-                    user: user
+                    token,
+                    user
                 }
             })
         } catch (error) {
