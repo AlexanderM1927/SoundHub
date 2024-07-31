@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Sound.init({
-    sound_name: DataTypes.STRING
+    user_id: DataTypes.INTEGER,
+    sound_name: DataTypes.STRING,
+    sound_file_url: DataTypes.STRING,
+    sound_thumbnail_url: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Sound',

@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Ban.init({
-    user_id: DataTypes.INTEGER
+    user_id: DataTypes.INTEGER,
+    responsable_user_id: DataTypes.INTEGER,
+    ban_reason: DataTypes.STRING,
+    ban_expires: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Ban',

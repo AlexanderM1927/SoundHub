@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   View.init({
+    playlist_id: DataTypes.INTEGER,
     sound_id: DataTypes.STRING,
     view_type: DataTypes.STRING
   }, {
