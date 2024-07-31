@@ -16,27 +16,26 @@ import { IAppProvider } from '../types/types'
 export class AppProvider implements IAppProvider {
     constructor () {}
 
-    init ({connection}: {connection: any}) {
+    init () {
         const viewRepository = new ViewRepository(
             {
-                connection,
-                youtubeService: new YoutubeService(new SoundRepository({connection}))
+                youtubeService: new YoutubeService(new SoundRepository())
             }
         )
-        const userController = new UserController(new UserRepository({connection}))
+        const userController = new UserController(new UserRepository())
         const viewController = new ViewController(viewRepository)
         const soundController = new SoundController(
-            new SoundRepository({connection}),
+            new SoundRepository(),
             viewRepository,
-            new YoutubeService(new SoundRepository({connection})),
-            new UserRepository({connection}),
-            new PlaylistRepository({connection})
+            new YoutubeService(new SoundRepository()),
+            new UserRepository(),
+            new PlaylistRepository()
         )
-        const playlistController = new PlaylistController(new PlaylistRepository({connection}))
-        const commentController = new CommentController(new CommentRepository({connection}))
+        const playlistController = new PlaylistController(new PlaylistRepository())
+        const commentController = new CommentController(new CommentRepository())
         const soundPlaylistController = new SoundPlaylistController(
-            new SoundPlaylistRepository({connection}),
-            new YoutubeService(new SoundRepository({connection}))
+            new SoundPlaylistRepository(),
+            new YoutubeService(new SoundRepository())
         )
 
         return {

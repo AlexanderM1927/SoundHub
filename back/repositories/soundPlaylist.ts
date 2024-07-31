@@ -1,21 +1,24 @@
-import moment from 'moment'
+// @ts-ignore
+import { soundPlaylist as SoundPlaylist, playlist as Playlist, sound as Sound } from '../models'
 
 export class SoundPlaylistRepository {
-    connection: any
-    constructor ({ connection }: {connection: any}) {
-        this.connection = connection
+    
+    constructor () {
+        
     }
 
     async getSoundsByPlaylistId ({ playlist_id }: {playlist_id: Number}) {
-        const query = await this.connection.query(
-            `SELECT sounds_playlists.*, sounds.*, playlists.*
-            FROM sounds_playlists 
-            LEFT JOIN sounds ON sounds.sound_id = sounds_playlists.sound_id
-            LEFT JOIN playlists ON playlists.playlist_id = sounds_playlists.playlist_id
-            WHERE sounds_playlists.playlist_id = ?;`,
-            [playlist_id]
-        )
-        return query[0]
+        const query = await SoundPlaylist.findAll({
+            where: {
+              playlist_id: playlist_id
+            },
+            include: [{
+              model: Sound
+            }, {
+              model: Playlist
+            }]
+          })
+        return query
     }
 
     async create ({
@@ -28,28 +31,19 @@ export class SoundPlaylistRepository {
         youtube_id: String
     }) {
         try {
-            await this.connection.query(
-              `INSERT INTO sounds_playlists (
-                playlist_id, 
-                sound_id, 
-                youtube_id,
-                createdAt, 
-                updatedAt)
-                VALUES (?, ?, ?, ?, ?);`,
-                [
-                    playlist_id, 
-                    sound_id,
-                    youtube_id,
-                    moment().format('YYYY-MM-DD HH:mm:ss'), 
-                    moment().format('YYYY-MM-DD HH:mm:ss')
-                ]
-            )
-
-            return {
-                playlist_id,
-                sound_id,
-                youtube_id
+            const data: {
+                playlist_id: Number,
+                sound_id?: Number
+                youtube_id?: String
+            } = {
+                playlist_id: playlist_id
             }
+            if (sound_id) data.sound_id = sound_id
+            else if (youtube_id) data.youtube_id = youtube_id
+            const sound_paylist = new SoundPlaylist(data)
+            const soundPlaylistSaved = await sound_paylist.save()
+
+            return soundPlaylistSaved
         } catch (e) {
             console.log(e)
             throw new Error('Error creating sound playlist item')

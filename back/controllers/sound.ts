@@ -36,7 +36,7 @@ export class SoundController {
             if (users && users.length > 0) {
                 users = users.map((usr: any) => {
                     return {
-                        ...usr,
+                        ...usr.dataValues,
                         type: 'user'
                     }
                 })
@@ -45,7 +45,7 @@ export class SoundController {
             if (playlists && playlists.length > 0) {
                 playlists = playlists.map((playlist: any) => {
                     return {
-                        ...playlist,
+                        ...playlist.dataValues,
                         type: 'playlist'
                     }
                 })
@@ -64,7 +64,6 @@ export class SoundController {
               data: results
             })
         } catch (error) {
-            console.log('error', error)
             res.status(400).json({error: (error as Error).message})
         }
     }
@@ -172,7 +171,7 @@ export class SoundController {
                 const sound = {
                     type: 'sound'
                 }
-                Object.assign(sound, sounds[i])
+                Object.assign(sound, sounds[i].dataValues)
                 results.items.push(sound)
             }
             

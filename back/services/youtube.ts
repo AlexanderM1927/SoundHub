@@ -31,7 +31,7 @@ export class YoutubeService {
             const sound = {
                 type: 'sound'
             }
-            Object.assign(sound, sounds[i])
+            Object.assign(sound, sounds[i].dataValues)
             results.items.push(sound)
         }
         for (let i = 0; i < youtube.items.length; i++) {

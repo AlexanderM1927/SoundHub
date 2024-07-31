@@ -3,7 +3,7 @@ import { AppProvider } from '../providers/app'
 import { verifyToken } from '../middlewares/verifyToken'
 import { verifyUserUpdate } from '../middlewares/verifyUserUpdate'
 
-export const createRouter = ({ connection }: { connection: any}) => {
+export const createRouter = () => {
     const router = Router()
 	const {
 		userController,
@@ -12,7 +12,7 @@ export const createRouter = ({ connection }: { connection: any}) => {
 		playlistController,
 		commentController,
 		soundPlaylistController
-	} = new AppProvider().init({connection})
+	} = new AppProvider().init()
 
     // Users
 	router.post('/login', userController.login)

@@ -1,46 +1,45 @@
-import moment from 'moment'
+// @ts-ignore
+import { comment as Comment, user as User } from '../models'
+
 export class CommentRepository {
-    connection: any
-    constructor ({ connection }: {connection: any}) {
-        this.connection = connection
+    
+    constructor () {
+        
     }
     async getCommentsBySoundId ({ sound_id }:{ sound_id: any }) {
-        const query = await this.connection.query(
-            `SELECT * FROM comments WHERE sound_id = ?
-            ORDER BY comment_id DESC;`,
-            [sound_id]
-        )
-
-        return query[0][0]
+        const comments = await Comment.findAll({ 
+            where: {
+              sound_id
+            },
+            order: [
+              ['comment_id', 'DESC']
+            ],
+            include: [{
+              model: User
+            }]
+          })
+        
+        return comments
     }
 
     async create ({
         user_id,
-        comment
+        comment,
+        sound_id
     }: {
+        sound_id: Number,
         user_id: Number,
         comment: String
     }) {
         try {
-            await this.connection.query(
-              `INSERT INTO comments (
-                user_id, 
-                comment_msg, 
-                createdAt, 
-                updatedAt)
-                VALUES (?, ?, ?, ?);`,
-                [
-                    user_id, 
-                    comment, 
-                    moment().format('YYYY-MM-DD HH:mm:ss'), 
-                    moment().format('YYYY-MM-DD HH:mm:ss')
-                ]
-            )
-
-            return {
+            const commentCreated = new Comment({
+                user_id,
                 comment_msg: comment,
-                user_id
-            }
+                sound_id
+            })
+            await commentCreated.save()
+
+            return commentCreated
         } catch (e) {
             console.log(e)
             throw new Error('Error creating comment')
