@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { Op, Sequelize } from 'sequelize'
 // @ts-ignore
-import db from '../models'
+import { view as View, sound as Sound, user as User } from '../models'
 
 export class ViewRepository {
     youtubeService
@@ -13,7 +13,7 @@ export class ViewRepository {
     async getViews () {
         const startDate = moment().startOf('week').format('YYYY-MM-DD')
         const endDate = moment().add(1, 'days').format('YYYY-MM-DD')
-        const views = await db.view.findAll({
+        const views = await View.findAll({
             attributes: [
                 'sound_id',
                 'view_type',
@@ -44,12 +44,12 @@ export class ViewRepository {
                 const youtubeSearch = await this.youtubeService.getSoundByYoutubeAPI({ name: obj.sound_id })
                 sound = youtubeSearch.items[0]
             } else {
-                const soundFromDB = await db.sound.findOne({ 
+                const soundFromDB = await Sound.findOne({ 
                     where: {
                         sound_id: obj.sound_id
                     },
                     include: [{
-                        model: db.user
+                        model: User
                     }]
                 })
                 sound = {
@@ -64,7 +64,7 @@ export class ViewRepository {
     }
 
     async createView ({sound_id, view_type}: {sound_id: any, view_type: any}) {
-        const view = new db.view({
+        const view = new View({
             sound_id,
             view_type
         })

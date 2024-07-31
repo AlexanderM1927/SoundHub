@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 // @ts-ignore
-import db from '../models'
+import { user as User } from '../models'
 import { Op } from 'sequelize';
 
 export class UserRepository {
@@ -11,7 +11,7 @@ export class UserRepository {
     }
 
     async login (input: any) {
-        const user = await db.user.findOne({ 
+        const user = await User.findOne({ 
             where: {
               user_email: input.user_email
             }
@@ -46,7 +46,7 @@ export class UserRepository {
         }
 
         try {
-            const userSaved = new db.user(user).save()
+            const userSaved = new User(user).save()
 
             return userSaved
         } catch (e) {
@@ -57,7 +57,7 @@ export class UserRepository {
     async setRank ({ user_id, role_id }: { user_id: Number, role_id: Number }) {
 
         try {
-            const user = await db.user.findOne({ user_id })
+            const user = await User.findOne({ user_id })
             user.role_id = role_id
             const userSaved = user.save()
 
@@ -70,7 +70,7 @@ export class UserRepository {
     async getUserById ({ user_id }: { user_id: Number }) {
 
         try {
-            const user = await db.user.findOne({ 
+            const user = await User.findOne({ 
                 where: {
                   user_id
                 }
@@ -85,7 +85,7 @@ export class UserRepository {
     async getUserByUserName ({ user_name }: { user_name: string }) {
 
         try {
-            const users = await db.user.findAll({ 
+            const users = await User.findAll({ 
                 where: {
                     user_name: {
                         [Op.like]: '%' + user_name + '%'
@@ -103,7 +103,7 @@ export class UserRepository {
         { user_id: Number, user_email: String, user_country: String, user_name: String }
     ) {
         try {
-            const user = await db.user.findOne({ user_id })
+            const user = await User.findOne({ user_id })
             user.user_email = user_email
             user.user_country = user_country
             user.user_name = user_name

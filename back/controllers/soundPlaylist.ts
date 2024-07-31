@@ -50,7 +50,6 @@ export class SoundPlaylistController {
               data: playlist
             })
         } catch (error) {
-            console.log('error', error)
             res.status(400).json({error: (error as Error).message})
         }
     }

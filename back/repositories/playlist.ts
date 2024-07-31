@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 // @ts-ignore
-import db from '../models'
+import { playlist as Playlist } from '../models'
 
 export class PlaylistRepository {
     
@@ -9,7 +9,7 @@ export class PlaylistRepository {
     }
 
     async getPlaylistById ({ playlist_id }: {playlist_id: Number}) {
-        const playlist = await db.playlist.findOne({ 
+        const playlist = await Playlist.findOne({ 
             where: {
               playlist_id
             }
@@ -19,7 +19,7 @@ export class PlaylistRepository {
     }
 
     async getPlaylistsByName ({ playlist_name }: {playlist_name: string}) {
-        const playlists = await db.playlist.findAll({ 
+        const playlists = await Playlist.findAll({ 
             where: {
                 playlist_name: {
                     [Op.like]: '%' + playlist_name + '%'
@@ -31,7 +31,7 @@ export class PlaylistRepository {
     }
 
     async getPlaylistByUserId ({ user_id }: {user_id: Number}) {
-        const playlist = await db.playlist.findAll({ 
+        const playlist = await Playlist.findAll({ 
             where: {
                 user_id
             }
@@ -48,7 +48,7 @@ export class PlaylistRepository {
         playlist_name: String
     }) {
         try {
-            const playlist = new db.playlist({
+            const playlist = new Playlist({
                 user_id,
                 playlist_name
             });

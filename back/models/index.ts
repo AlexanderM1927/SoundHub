@@ -82,7 +82,7 @@ db.playlist.belongsTo(db.user, {
 db.soundPlaylist.belongsTo(db.sound, {
   foreignKey: { 
     name: "sound_id",
-    allowNull: false
+    allowNull: true
   }
 })
 
@@ -106,7 +106,7 @@ db.playlist.belongsToMany(db.sound, {
 db.comment.belongsTo(db.user, {
   foreignKey: { 
     name: "user_id",
-    allowNull: false
+   allowNull: false 
   }
 });
 
@@ -182,4 +182,5 @@ db.view.belongsTo(db.playlist, {
 
 db.ROLES = ["user", "admin", "moderator"]
 
+export const { user, role, ban, sound, playlist, comment, like, favorite, view, soundPlaylist } = db;
 export default db;

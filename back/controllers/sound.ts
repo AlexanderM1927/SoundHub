@@ -45,7 +45,7 @@ export class SoundController {
             if (playlists && playlists.length > 0) {
                 playlists = playlists.map((playlist: any) => {
                     return {
-                        ...playlist,
+                        ...playlist.dataValues,
                         type: 'playlist'
                     }
                 })
@@ -64,7 +64,6 @@ export class SoundController {
               data: results
             })
         } catch (error) {
-            console.log('error', error)
             res.status(400).json({error: (error as Error).message})
         }
     }
