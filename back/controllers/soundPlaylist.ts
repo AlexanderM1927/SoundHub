@@ -41,14 +41,7 @@ export class SoundPlaylistController {
                     element.sound_playlist_id = playlist.sounds[i].sound_playlist_id
                     playlist.sounds[i] = element
                 } else {
-                    playlist.sounds[i].sound = {
-                        sound_id: playlist.sounds[i].sound_id,
-                        sound_name: playlist.sounds[i].sound_name,
-                        sound_file_url: playlist.sounds[i].sound_file_url,
-                        sound_thumbnail_url: playlist.sounds[i].sound_thumbnail_url,
-                        type: 'sound',
-                        sound_playlist_id: playlist.sounds[i].sound_playlist_id
-                    }
+                    playlist.sounds[i].sound.type = 'sound'
                 }
             }
             

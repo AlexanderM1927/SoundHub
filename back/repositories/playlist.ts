@@ -1,33 +1,43 @@
-import moment from 'moment'
+import { Op } from 'sequelize'
+// @ts-ignore
+import { playlist as Playlist } from '../models'
 
 export class PlaylistRepository {
-    connection: any
-    constructor ({ connection }: {connection: any}) {
-        this.connection = connection
+    
+    constructor () {
+        
     }
 
     async getPlaylistById ({ playlist_id }: {playlist_id: Number}) {
-        const query = await this.connection.query(
-            `SELECT * FROM playlists WHERE playlist_id = ?;`,
-            [playlist_id]
-        )
-        return query[0][0]
+        const playlist = await Playlist.findOne({ 
+            where: {
+              playlist_id
+            }
+        })
+
+        return playlist
     }
 
     async getPlaylistsByName ({ playlist_name }: {playlist_name: string}) {
-        const query = await this.connection.query(
-            `SELECT * FROM playlists WHERE playlist_name = ?;`,
-            [playlist_name]
-        )
-        return query[0]
+        const playlists = await Playlist.findAll({ 
+            where: {
+                user_name: {
+                    [Op.like]: '%' + playlist_name + '%'
+                }
+            }
+        })
+
+        return playlists
     }
 
     async getPlaylistByUserId ({ user_id }: {user_id: Number}) {
-        const query = await this.connection.query(
-            `SELECT * FROM playlists WHERE user_id = ?;`,
-            [user_id]
-        )
-        return query[0]
+        const playlist = await Playlist.findAll({ 
+            where: {
+                user_id
+            }
+        })
+
+        return playlist
     }
 
     async create ({
@@ -38,25 +48,13 @@ export class PlaylistRepository {
         playlist_name: String
     }) {
         try {
-            await this.connection.query(
-              `INSERT INTO playlists (
-                user_id, 
-                playlist_name, 
-                createdAt, 
-                updatedAt)
-                VALUES (?, ?, ?, ?);`,
-                [
-                    user_id, 
-                    playlist_name, 
-                    moment().format('YYYY-MM-DD HH:mm:ss'), 
-                    moment().format('YYYY-MM-DD HH:mm:ss')
-                ]
-            )
+            const playlist = new Playlist({
+                user_id,
+                playlist_name
+            });
+            await playlist.save()
 
-            return {
-                playlist_name,
-                user_id
-            }
+            return playlist
         } catch (e) {
             console.log(e)
             throw new Error('Error creating playlist')

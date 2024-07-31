@@ -1,18 +1,16 @@
 import 'dotenv/config'
 import { Server } from 'socket.io'
 import { createApp } from './app'
-import { createConnection } from './connection'
+// @ts-ignore
+import db from './models'
 
-const connection = await createConnection({
-    env: process.env
-})
+db.sequelize.sync();
 
 const app = createApp({
     acceptedOrigins: [
         process.env.FRONT_URL,
         'http://localhost:5173'
-    ],
-    connection
+    ]
 })
 
 const PORT = process.env.PORT ?? 1234

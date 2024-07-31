@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon -I --exec node --experimental-specifier-resolution=node --legacy-watch --loader ts-node/esm ./server.ts",
+    "dev": "nodemon -I --exec node --trace-warnings --experimental-specifier-resolution=node --legacy-watch --loader ts-node/esm ./server.ts",
     "lint": "ts-standard",
     "start": "node dist/index.js",
     "build": "tsc",

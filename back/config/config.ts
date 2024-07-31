@@ -1,4 +1,6 @@
-module.exports = {
+import 'dotenv/config'
+
+export const config = {
   HOST: process.env.DB_HOST,
   PORT: process.env.DB_PORT,
   USER: process.env.DB_USERNAME,

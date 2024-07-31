@@ -1,35 +1,43 @@
-import moment from 'moment'
+import { Op } from 'sequelize'
+// @ts-ignore
+import { sound as Sound } from '../models'
 
 export class SoundRepository {
-    connection: any
-    constructor ({ connection }: {connection: any}) {
-        this.connection = connection
+    
+    constructor () {
+        
     }
 
     async getSoundByName ({ sound_name }: {sound_name: String}) {
-        const query = await this.connection.query(
-            `SELECT * FROM sounds WHERE sound_name LIKE ?;`,
-            [`%${sound_name}%`]
-        )
-        return query[0]
+        const sounds = await Sound.findAll({ 
+            where: {
+                user_name: {
+                    [Op.like]: '%' + sound_name + '%'
+                }
+            }
+        })
+
+        return sounds
     } 
 
     async getSoundById ({ sound_id }: {sound_id: Number}) {
-        const query = await this.connection.query(
-            `SELECT sounds.*, users.* FROM sounds 
-            LEFT JOIN users ON users.user_id = sounds.user_id 
-            WHERE sound_id = ?;`,
-            [sound_id]
-        )
-        return query[0][0]
+        const sound = await Sound.findOne({ 
+            where: {
+              sound_id
+            }
+        })
+
+        return sound
     }
 
     async getSoundByUserId ({ user_id }: {user_id: Number}) {
-        const query = await this.connection.query(
-            `SELECT * FROM sounds WHERE user_id = ?;`,
-            [user_id]
-        )
-        return query[0]
+        const sounds = await Sound.findAll({ 
+            where: {
+                user_id
+            }
+        })
+
+        return sounds
     }
 
     async create ({
@@ -44,31 +52,15 @@ export class SoundRepository {
         user_id: Number
     }) {
         try {
-            await this.connection.query(
-              `INSERT INTO sounds (
-                sound_name, 
-                sound_file_url, 
-                sound_thumbnail_url, 
-                user_id, 
-                createdAt, 
-                updatedAt)
-                VALUES (?, ?, ?, ?, ?, ?);`,
-                [
-                    sound_name, 
-                    sound_file_url, 
-                    sound_thumbnail_url, 
-                    user_id, 
-                    moment().format('YYYY-MM-DD HH:mm:ss'), 
-                    moment().format('YYYY-MM-DD HH:mm:ss')
-                ]
-            )
-
-            return {
+            const sound = new Sound({
+                user_id,
                 sound_name,
                 sound_file_url,
-                sound_thumbnail_url,
-                user_id
-            }
+                sound_thumbnail_url
+            });
+            await sound.save()
+
+            return sound
         } catch (e) {
             console.log(e)
             throw new Error('Error creating sound')

@@ -1,18 +1,21 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+// @ts-ignore
+import { user as User } from '../models'
+import { Op } from 'sequelize';
 
 export class UserRepository {
-    connection: any
-    constructor ({ connection }:{ connection: any }) {
-        this.connection = connection
+    
+    constructor () {
+        
     }
 
     async login (input: any) {
-        const query = await this.connection.query(
-            `SELECT * FROM users WHERE user_email = ?;`,
-            [input.user_email]
-        )
-        const user = query[0][0]
+        const user = await User.findOne({ 
+            where: {
+              user_email: input.user_email
+            }
+        })
 
         const validPassword = await bcrypt.compare(input.user_password, user.user_password);
         if (validPassword) {
@@ -43,16 +46,9 @@ export class UserRepository {
         }
 
         try {
-            await this.connection.query(
-              `INSERT INTO users (user_name, user_email, user_password, role_id)
-                VALUES (?, ?, ?, ?);`,
-              [user.user_name, user.user_email, user.user_password, user.role_id]
-            )
+            const userSaved = new User(user).save()
 
-            return {
-                user_name: user.user_name,
-                user_email: user.user_email
-            }
+            return userSaved
         } catch (e) {
             throw new Error('Error creating user')
         }
@@ -61,15 +57,11 @@ export class UserRepository {
     async setRank ({ user_id, role_id }: { user_id: Number, role_id: Number }) {
 
         try {
-            await this.connection.query(
-              `UPDATE users SET role_id = ? WHERE user_id = ?`,
-              [user_id, role_id]
-            )
+            const user = await User.findOne({ user_id })
+            user.role_id = role_id
+            const userSaved = user.save()
 
-            return {
-                user_id: user_id,
-                role_id: role_id
-            }
+            return userSaved
         } catch (e) {
             throw new Error('Error giving rank')
         }
@@ -78,20 +70,13 @@ export class UserRepository {
     async getUserById ({ user_id }: { user_id: Number }) {
 
         try {
-            const query = await this.connection.query(
-              `SELECT * FROM users WHERE user_id = ?`,
-              [user_id]
-            )
-            const user = {
-                user_name: query[0][0].user_name,
-                user_id: query[0][0].user_id,
-                user_email: query[0][0].user_email,
-                user_country: query[0][0].user_country,
-            }
+            const user = await User.findOne({ 
+                where: {
+                  user_id
+                }
+            })
 
-            return {
-                user: user
-            }
+            return user
         } catch (e) {
             throw new Error('Error getting user')
         }
@@ -100,19 +85,15 @@ export class UserRepository {
     async getUserByUserName ({ user_name }: { user_name: string }) {
 
         try {
-            const query = await this.connection.query(
-              `SELECT * FROM users WHERE user_name LIKE ?`,
-              [`%${user_name}%`]
-            )
-
-            return query[0].map((usr: any) => {
-                return {
-                    user_name: usr.user_name,
-                    user_id: usr.user_id,
-                    user_email: usr.user_email,
-                    user_country: usr.user_country,
+            const users = await User.findAll({ 
+                where: {
+                    user_name: {
+                        [Op.like]: '%' + user_name + '%'
+                    }
                 }
             })
+
+            return users
         } catch (e) {
             throw new Error('Error getting user')
         }
@@ -122,18 +103,13 @@ export class UserRepository {
         { user_id: Number, user_email: String, user_country: String, user_name: String }
     ) {
         try {
-            await this.connection.query(
-              `UPDATE users 
-              SET user_email = ?, user_country = ?, user_name = ? 
-              WHERE user_id = ?;`,
-              [user_email, user_country, user_name, user_id]
-            )
+            const user = await User.findOne({ user_id })
+            user.user_email = user_email
+            user.user_country = user_country
+            user.user_name = user_name
+            const userSaved = user.save()
 
-            const { user } = await this.getUserById({ user_id })
-
-            return {
-                user: user
-            }
+            return userSaved
         } catch (e) {
             throw new Error('Error updating user')
         }
