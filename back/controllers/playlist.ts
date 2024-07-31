@@ -1,14 +1,14 @@
 export class PlaylistController {
-    playlistModel: any
-    constructor (playlistModel: any) {
-        this.playlistModel = playlistModel
+    playlistRepository: any
+    constructor (playlistRepository: any) {
+        this.playlistRepository = playlistRepository
     }
 
     store = async (req: any, res: any) => {
         const result = req.body
     
         try {
-            const savedPlaylist = await this.playlistModel.create(result)
+            const savedPlaylist = await this.playlistRepository.create(result)
             res.json({
                 error: null,
                 data: savedPlaylist
@@ -22,7 +22,7 @@ export class PlaylistController {
         try {
             const user_id = parseInt(req.params.user_id)
 
-            const results = await this.playlistModel.getPlaylistByUserId({ user_id })
+            const results = await this.playlistRepository.getPlaylistByUserId({ user_id })
             
             res.json({
               error: null,

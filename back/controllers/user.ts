@@ -1,9 +1,9 @@
 import { validatePartialUser } from '../schemas/user'
 
 export class UserController {
-    userModel: any
-    constructor (userModel: any) {
-        this.userModel = userModel
+    userRepository: any
+    constructor (userRepository: any) {
+        this.userRepository = userRepository
     }
 
     login = async (req: any, res: any) => {
@@ -14,7 +14,7 @@ export class UserController {
         }
 
         try {
-            const { token, user } = await this.userModel.login(req.body)
+            const { token, user } = await this.userRepository.login(req.body)
 
             return res.header('auth-token', token).json({
                 error: null,
@@ -37,7 +37,7 @@ export class UserController {
         }
     
         try {
-            const savedUser = await this.userModel.create(result.data)
+            const savedUser = await this.userRepository.create(result.data)
             res.json({
                 error: null,
                 data: savedUser
@@ -54,7 +54,7 @@ export class UserController {
         } = req.body
     
         try {
-            const savedUser = await this.userModel.setRank({user_id, role_id})
+            const savedUser = await this.userRepository.setRank({user_id, role_id})
             res.json({
                 error: null,
                 data: savedUser
@@ -70,7 +70,7 @@ export class UserController {
         } = req.params
 
         try {
-            const { user } = await this.userModel.getUserById({ user_id: id })
+            const { user } = await this.userRepository.getUserById({ user_id: id })
             res.json({
                 error: null,
                 data: user
@@ -93,7 +93,7 @@ export class UserController {
 
 
         try {
-            const { user } = await this.userModel.update({ 
+            const { user } = await this.userRepository.update({ 
                 user_id: id, 
                 user_email: result.data.user_email,
                 user_name: result.data.user_name, 

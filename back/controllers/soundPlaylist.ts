@@ -1,8 +1,8 @@
 export class SoundPlaylistController {
-    soundPlaylistModel: any
+    soundPlaylistRepository: any
     youtubeService: any
-    constructor (soundPlaylistModel: any, youtubeService: any) {
-        this.soundPlaylistModel = soundPlaylistModel
+    constructor (soundPlaylistRepository: any, youtubeService: any) {
+        this.soundPlaylistRepository = soundPlaylistRepository
         this.youtubeService = youtubeService
     }
 
@@ -10,7 +10,7 @@ export class SoundPlaylistController {
         const result = req.body
     
         try {
-            const savedSoundPlaylist = await this.soundPlaylistModel.create(result)
+            const savedSoundPlaylist = await this.soundPlaylistRepository.create(result)
             res.json({
                 error: null,
                 data: savedSoundPlaylist
@@ -29,7 +29,7 @@ export class SoundPlaylistController {
                 playlist_name: '',
                 sounds: []
             }
-            playlist.sounds = await this.soundPlaylistModel.getSoundsByPlaylistId({playlist_id: req.params.playlist_id})
+            playlist.sounds = await this.soundPlaylistRepository.getSoundsByPlaylistId({playlist_id: req.params.playlist_id})
             for (let i = 0; i < playlist.sounds.length; i++) {
                 playlist.playlist_name = playlist.sounds[i].playlist_name
                 if (playlist.sounds[i].youtube_id) {

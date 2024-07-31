@@ -1,14 +1,14 @@
 export class CommentController {
-    commentModel: any
-    constructor (commentModel: any) {
-        this.commentModel = commentModel
+    commentRepository: any
+    constructor (commentRepository: any) {
+        this.commentRepository = commentRepository
     }
 
     store = async (req: any, res: any) => {
         const result = req.body
     
         try {
-            const savedComment = await this.commentModel.create(result)
+            const savedComment = await this.commentRepository.create(result)
             res.json({
                 error: null,
                 data: savedComment
@@ -22,7 +22,7 @@ export class CommentController {
         try {
             const sound_id = req.params.sound_id
 
-            const comments = await this.commentModel.getCommentsBySoundId({ sound_id })
+            const comments = await this.commentRepository.getCommentsBySoundId({ sound_id })
             
             res.json({
               error: null,

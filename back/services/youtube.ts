@@ -4,9 +4,9 @@ import youtubesearchapi from 'youtube-search-api'
 import fileSystem from 'fs'
 
 export class YoutubeService {
-    soundModel: any
-    constructor (soundModel: any) {
-        this.soundModel = soundModel
+    soundRepository: any
+    constructor (soundRepository: any) {
+        this.soundRepository = soundRepository
     }
 
     async getSoundByYoutubeAPI ({ name }: { name: any }) {
@@ -17,7 +17,7 @@ export class YoutubeService {
 
     async searchSound ({ name }: { name: any }) {
         const youtube = await this.getSoundByYoutubeAPI({ name })
-        const sounds = await this.soundModel.getSoundByName({
+        const sounds = await this.soundRepository.getSoundByName({
             sound_name: name
         })
         const results: {
