@@ -1,5 +1,5 @@
 // @ts-ignore
-import { soundPlaylist as SoundPlaylist, playlist as Playlist, sound as Sound } from '../models'
+import { sounds_playlist as SoundPlaylist, playlist as Playlist, sound as Sound } from '../models'
 
 export class SoundPlaylistRepository {
     

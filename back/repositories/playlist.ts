@@ -31,12 +31,14 @@ export class PlaylistRepository {
     }
 
     async getPlaylistByUserId ({ user_id }: {user_id: Number}) {
+        console.log('ENTRO0')
         const playlist = await Playlist.findAll({ 
             where: {
                 user_id
             }
         })
 
+        console.log('ENTRO1')
         return playlist
     }
 
