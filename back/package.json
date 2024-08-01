@@ -2,12 +2,12 @@
   "name": "soundhub",
   "version": "2.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon -I --exec node --trace-warnings --experimental-specifier-resolution=node --legacy-watch --loader ts-node/esm ./server.ts",
     "lint": "ts-standard",
-    "start": "node server.js",
+    "start": "nodemon -I --exec node --trace-warnings --experimental-specifier-resolution=node dist/server.js",
     "build": "tsc",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
