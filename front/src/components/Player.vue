@@ -332,7 +332,7 @@ export default {
       return /iPhone|iPad|iPod/i.test(navigator.userAgent || navigator.vendor || (window.opera && window.opera.toString() === '[object Opera]'))
     },
     setNewSong (type) {
-      if (this.playlist.length === (this.position - 1)) {
+      if ((this.playlist.length - 1) === this.position) {
         this.alert('negative', 'No hay mas canciones en el playlist')
         return 0
       }
