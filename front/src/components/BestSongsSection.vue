@@ -50,7 +50,8 @@ export default {
             objRes = {
               sound_id: element.sound_id,
               title: element.sound_name,
-              img: this.getSrcFromBackend(element.sound_thumbnail_url)
+              img: element.sound_thumbnail_url,
+              type: 'sound'
             }
           } else {
             objRes = {

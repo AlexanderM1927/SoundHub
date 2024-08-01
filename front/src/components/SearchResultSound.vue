@@ -1,8 +1,12 @@
 <template>
   <div class="q-mb-sm">
     <div class="search-result" @click="abrirReproductor(result)">
-      <img :src="getSrcFromBackend(result.sound_thumbnail_url)" class="search-result__image">
-      <div>
+      <img v-if="result.sound_thumbnail_url" :src="getSrcFromBackend(result.sound_thumbnail_url)" class="search-result__image">
+      <img v-else :src="getSrcFromBackend(result.img)" class="search-result__image">
+      <div v-if="result.title">
+        <b>{{ result.title }}</b><br>
+      </div>
+      <div v-else>
         <b>{{ result.sound_name }}</b><br>
       </div>
     </div>
@@ -18,7 +22,6 @@ export default {
   props: ['result', 'download', 'tiny', 'playlist'],
   data () {
     return {
-      token: localStorage.getItem('token')
     }
   },
   methods: {
