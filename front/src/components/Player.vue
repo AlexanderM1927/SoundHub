@@ -175,21 +175,6 @@ export default {
     }
   },
   methods: {
-    async removeFromPlaylist () {
-      try {
-        const data = {
-          sound_playlist_id: this.result.sound_playlist_id
-        }
-        const request = await SoundPlaylistService.remove(data)
-        if (request.status >= 200 && request.status < 300) {
-          this.alert('positive', 'Canción eliminada del playlist correctamente')
-          this.$destroy()
-          this.$el.parentNode.removeChild(this.$el)
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
     async addToPlaylist (playlist) {
       try {
         const data = {}

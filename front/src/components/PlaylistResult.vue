@@ -11,10 +11,6 @@
         <p class="pl-title">{{ result.playlist_name }}</p>
       </div>
     </div>
-    <!--DELETE ICON-->
-    <template v-if="tiny===false && notmyprofile===false" class="row">
-      <a class="col-1 pl-delete text-red margin-auto"> <q-icon name="fas fa-trash-alt"/></a>
-    </template>
   </div>
 </template>
 

@@ -49,4 +49,13 @@ export class SoundPlaylistRepository {
             throw new Error('Error creating sound playlist item')
         }
     }
+
+    async delete ({ sound_playlist_id }: {sound_playlist_id: Number}) {
+        const deleted = await SoundPlaylist.destroy({
+            where: {
+              sound_playlist_id
+            }
+        })
+        return deleted
+    }
 }

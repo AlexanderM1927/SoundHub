@@ -42,12 +42,30 @@ export class SoundPlaylistController {
                     playlist.sounds[i] = element
                 } else {
                     playlist.sounds[i].dataValues.sound.dataValues.type = 'sound'
+                    playlist.sounds[i].dataValues.sound.dataValues.sound_playlist_id = playlist.sounds[i].sound_playlist_id
                 }
             }
             
             res.json({
               error: null,
               data: playlist
+            })
+        } catch (error) {
+            res.status(400).json({error: (error as Error).message})
+        }
+    }
+
+    delete = async (req: any, res: any) => {
+        try {
+            const { sound_playlist_id } = req.params
+            
+            const sound_playlist = await this.soundPlaylistRepository.delete({
+                sound_playlist_id
+            })
+            
+            res.json({
+              error: null,
+              data: sound_playlist
             })
         } catch (error) {
             res.status(400).json({error: (error as Error).message})

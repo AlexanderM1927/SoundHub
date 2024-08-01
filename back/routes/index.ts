@@ -49,7 +49,7 @@ export const createRouter = () => {
 
 	// SoundPlaylist
 	router.post('/sound-playlist', verifyToken, soundPlaylistController.store)
-	// router.delete('/sound-playlist/:sound_playlist_id', verifyToken, soundPlaylistController.delete)
+	router.delete('/sound-playlist/:sound_playlist_id', verifyToken, soundPlaylistController.delete)
     
     return router
 }
