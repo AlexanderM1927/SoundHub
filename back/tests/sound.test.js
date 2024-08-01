@@ -1,5 +1,5 @@
 import request from 'supertest'
-import 'dotenv/config'
+import 'dotenv/config.js'
 import { createApp } from '../app.js'
 
 describe('Reproduce a song -> GET /v1/download/:type/:url', () => {

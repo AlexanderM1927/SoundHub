@@ -8,7 +8,7 @@
     "dev": "nodemon -I --exec node --trace-warnings --experimental-specifier-resolution=node --legacy-watch --loader ts-node/esm ./server.ts",
     "lint": "ts-standard",
     "start": "nodemon -I --exec node --trace-warnings --experimental-specifier-resolution=node dist/server.js",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "keywords": [],
@@ -43,6 +43,7 @@
     "sequelize-cli": "^6.6.2",
     "supertest": "^7.0.0",
     "ts-standard": "^12.0.2",
+    "tsc-alias": "1.8.10",
     "typescript": "^5.5.3"
   },
   "eslintConfig": {

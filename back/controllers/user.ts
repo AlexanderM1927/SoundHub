@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import 'dotenv/config.js'
 import { validatePartialUser } from '../schemas/user'
 
 export class UserController {
