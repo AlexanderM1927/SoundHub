@@ -34,16 +34,26 @@ export const getSongById = async ({ commit }, payload) => {
         })
       } else {
         // Download sound in background
-        setTimeout(async () => {
-          const sound = await fetch(url)
-          const blob = await sound.blob()
-          const newBlob = new Blob([blob], { type: 'audio/mp3' })
-          const newUrl = URL.createObjectURL(newBlob)
-          commit('setSongOnPlaylist', {
-            url: newUrl,
-            payload: payload
-          })
-        }, 1000)
+        const downloadBackgroundSound = () => {
+          setTimeout(async () => {
+            const canDownloadNextSong = window.canDownloadNextSong
+            if (canDownloadNextSong) {
+              window.canDownloadNextSong = false
+              const sound = await fetch(url)
+              const blob = await sound.blob()
+              const newBlob = new Blob([blob], { type: 'audio/mp3' })
+              const newUrl = URL.createObjectURL(newBlob)
+              commit('setSongOnPlaylist', {
+                url: newUrl,
+                payload: payload
+              })
+              window.canDownloadNextSong = true
+            } else {
+              downloadBackgroundSound()
+            }
+          }, 1000)
+        }
+        downloadBackgroundSound()
       }
     }
   } catch (error) {

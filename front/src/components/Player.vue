@@ -301,6 +301,7 @@ export default {
         // console.log('e', e)
       })
       this.wavesurfer.on('ready', () => {
+        window.canDownloadNextSong = true
         this.isLoading = false
         this.disableLoading()
         this.wavesurfer.playPause()
@@ -319,6 +320,7 @@ export default {
       })
     },
     async loadFile (url) {
+      console.log('entro aca')
       if (!this.wavesurfer) {
         this.createWaveSurfer()
       }
@@ -333,7 +335,7 @@ export default {
     },
     setNewSong (type) {
       if (type === 'next' && (this.playlist.length - 1) === this.position) {
-        this.alert('negative', 'No hay mas canciones en el playlist')
+        this.alert('warning', 'No hay mas canciones en el playlist o están cargando')
         return 0
       }
       if (this.playlist.length > 0) {
