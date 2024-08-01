@@ -1,6 +1,6 @@
 <template>
   <q-card class="popular-card" @click="abrirReproductor(song)">
-    <q-img :src="song.img" class="p-card-img" basic>
+    <q-img :src="song.type === 'video' ? song.img : this.getSrcFromBackend(song.img)" class="p-card-img" basic>
       <div v-if="song.firstOne" style="background-color: transparent">
         <q-icon name="fas fa-crown" class="crown"></q-icon>
       </div>

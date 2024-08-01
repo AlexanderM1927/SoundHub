@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <q-page-sticky position="top-right" :offset="[18, 18]" v-if="token && user.user_id !== userLogin.user_id">
+    <q-page-sticky position="top-right" :offset="[18, 18]" v-if="userLogin && user.user_id !== userLogin.user_id">
       <q-btn @click="modalChat = !modalChat" fab icon="message" color="pink" />
     </q-page-sticky>
     <q-dialog
@@ -66,7 +66,6 @@ export default {
       img: '../assets/default-user-img.png',
       profile: null,
       userLogin: JSON.parse(localStorage.getItem('user')),
-      token: localStorage.getItem('token'),
       playlists: [],
       user: {},
       modalChat: false
@@ -110,7 +109,6 @@ export default {
       try {
         const params = {
           id: this.userLogin.user_id,
-          token: localStorage.getItem('token'),
           user_name: this.user.user_name,
           user_country: this.user.user_country,
           user_email: this.user.user_email

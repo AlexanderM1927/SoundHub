@@ -2,7 +2,7 @@
   <q-page>
     <div :class="`row justify-around`">
       <div :class="`custom-dark-bg col-md-8 col-xs-12 container`">
-        <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="token" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
+        <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="user" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
         <div class="row custom-dark-div">
           <p class="snd-subtitle col-9">Reproducir en orden</p>
           <q-btn class="play-btn col-3" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
@@ -27,9 +27,9 @@ export default {
   data () {
     return {
       sounds: [],
-      token: localStorage.getItem('token'),
       sound: {},
       files: [],
+      user: JSON.parse(localStorage.getItem('user')),
       allSounds: []
     }
   },
@@ -39,10 +39,9 @@ export default {
   methods: {
     async getMySounds () {
       try {
-        if (localStorage.getItem('token')) {
+        if (localStorage.getItem('user')) {
           const params = {
-            user_id: JSON.parse(localStorage.getItem('user')).user_id,
-            token: this.token
+            user_id: JSON.parse(localStorage.getItem('user')).user_id
           }
           const request = await SoundService.getMySounds(params)
           this.sounds = request.data.data.items
@@ -64,8 +63,7 @@ export default {
           formData.append('sound_file_url', data.sound_file_url)
           formData.append('sound_name', data.sound_name)
           formData.append('user_id', JSON.parse(localStorage.getItem('user')).user_id)
-          const token = localStorage.getItem('token')
-          const request = await SoundService.store(formData, token)
+          const request = await SoundService.store(formData)
           if (request.status >= 200 && request.status < 300) this.alert('positive', 'Se agrego la canción correctamente')
           this.getMySounds()
           this.disableLoading()

@@ -37,7 +37,6 @@ export default {
       socket: {},
       messages: [],
       user: JSON.parse(localStorage.getItem('user')),
-      token: localStorage.getItem('token'),
       message: ''
     }
   },

@@ -19,7 +19,6 @@ export default {
   props: ['result', 'download', 'tiny', 'playlist'],
   data () {
     return {
-      token: localStorage.getItem('token')
     }
   },
   methods: {

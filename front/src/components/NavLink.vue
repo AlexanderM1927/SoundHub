@@ -4,8 +4,8 @@
     @click="goTo(menuItem.to)"
     v-if="
       menuItem.requireSession === undefined ||
-      (menuItem.requireSession && token) ||
-      (!menuItem.requireSession && !token)
+      (menuItem.requireSession && user) ||
+      (!menuItem.requireSession && !user)
     "
     :class="'NI-container ' + (menuItem.active ? 'bg-pink' : '')"
     clickable
@@ -32,7 +32,7 @@ export default {
     }
   },
   name: 'NavLink',
-  props: ['menuItem', 'token'],
+  props: ['menuItem', 'user'],
   mounted () {
   }
 }

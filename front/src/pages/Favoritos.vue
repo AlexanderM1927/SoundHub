@@ -2,8 +2,8 @@
   <q-page>
     <div class="row justify-around">
       <div :class="`custom-dark-bg col-xs-12`">
-        <p class="title text-h6 q-ml-md q-mt-md">Mis Favoritos <a v-if="token" class="text-green" style="cursor: pointer;" @click="agregarPlaylist()"> </a></p>
-        <div class="q-mx-sm q-my-md" v-if="token">
+        <p class="title text-h6 q-ml-md q-mt-md">Mis Favoritos <a v-if="user" class="text-green" style="cursor: pointer;" @click="agregarPlaylist()"> </a></p>
+        <div class="q-mx-sm q-my-md" v-if="user">
           <FavoriteItem/>
           <FavoriteItem/>
           <FavoriteItem/>
@@ -27,7 +27,7 @@ export default {
   components: { FavoriteItem },
   data () {
     return {
-      token: localStorage.getItem('token')
+      user: localStorage.getItem('user')
     }
   }
 }

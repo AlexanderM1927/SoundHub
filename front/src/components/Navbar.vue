@@ -55,7 +55,7 @@
           </q-item>
           <!-- ITEMS -->
           <template v-for="(menuItem, index) in menuList">
-            <NavLink :menuItem="menuItem" :token="token" :key="index" />
+            <NavLink :menuItem="menuItem" :user="user" :key="index" />
           </template>
         </q-list>
       </q-scroll-area>
@@ -106,7 +106,6 @@ export default {
       search_content: '',
       side_options: false,
       menuList,
-      token: localStorage.getItem('token'),
       user: JSON.parse(localStorage.getItem('user'))
     }
   },
