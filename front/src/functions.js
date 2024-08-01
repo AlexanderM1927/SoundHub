@@ -129,7 +129,7 @@ export const functions = {
       }
     },
     async playPlaylist (playlist) {
-      this.activateLoading()
+      // this.activateLoading()
 
       this.$store.dispatch('sounds/reloadPlaylist')
       let isNotFirst = false
@@ -145,7 +145,7 @@ export const functions = {
         this.$store.dispatch('sounds/getSongById', {
           url: url,
           type: playlist[i].type,
-          playlistMode: isNotFirst,
+          playlistMode: true,
           isFirstOnPlaylist: !isNotFirst
         })
         if (!isNotFirst) {
@@ -153,7 +153,7 @@ export const functions = {
             document.getElementById('player').classList.toggle('inactive')
           }
         }
-        this.disableLoading()
+        // this.disableLoading()
       }
     },
     async downloadFile (payload) {
