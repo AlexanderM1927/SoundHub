@@ -54,11 +54,6 @@ export default {
 </script>
 
 <style scoped>
-.lg_body {
-  height: 100vh;
-  background-image: url("../assets/login-background.jpg");
-  background-position: center center;
-}
 
 .p_recovery {
   font-weight: 400;

@@ -164,12 +164,6 @@ export default {
 </script>
 
 <style scoped>
-.lg_body{
-  height: 100vh;
-  background-image: url('../assets/login-background.jpg');
-  background-position: center center;
-}
-
 .inter {
   font-family: 'Inter', sans-serif;
 }

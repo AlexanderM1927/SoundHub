@@ -3,8 +3,8 @@
     <div class="custom-dark-bg q-pt-sm col-md-8 col-xs-12 container">
       <div class="row custom-dark-div justify-around">
         <p class="col-8 pl-name">{{playlist.playlist_name}}</p>
-        <q-btn class="col-2 play-btn" color="orange" icon="shuffle" @click="getPlaylistAndPlayShuffle()" />
-        <q-btn class="col-2 play-btn" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
+        <q-btn class="col-2 play-btn" icon="shuffle" @click="getPlaylistAndPlayShuffle()" />
+        <q-btn class="col-2 play-btn" icon="play_arrow" @click="getPlaylistAndPlay()" />
       </div>
       <div v-bind:key="result.id" v-for="result in playlist.sounds">
         <SearchResultSound v-if="result.type === 'sound'" :result="result" :tiny="true" :playlist="true" />
@@ -86,6 +86,8 @@ export default {
   margin: auto;
   max-width: 80px;
   height: 35px;
+  background: #CF2741;
+  color: white;
 }
 
 </style>
