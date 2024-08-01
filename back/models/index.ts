@@ -12,6 +12,8 @@ import { Dialect, Sequelize } from 'sequelize'
 // @ts-ignore
 import config from '../config/config.js'
 
+const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts'
+
 const sequelize = new Sequelize(
   config[process.env.NODE_ENV].database as string,
   config[process.env.NODE_ENV].username as string,
@@ -35,8 +37,8 @@ const db: any = (async () => {
       return (
         file.indexOf('.') !== 0 &&
         file !== basename &&
-        file.slice(-3) === '.ts' &&
-        file.indexOf('.test.ts') === -1
+        file.slice(-3) === extension &&
+        file.indexOf('.test' + extension) === -1
       )
     })
 
