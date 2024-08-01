@@ -1,5 +1,5 @@
 import 'dotenv/config.js'
-import fs from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -12,7 +12,6 @@ import { Dialect, Sequelize } from 'sequelize'
 // @ts-ignore
 import config from '../config/config.js'
 
-const db: any = {}
 const sequelize = new Sequelize(
   config[process.env.NODE_ENV].database as string,
   config[process.env.NODE_ENV].username as string,
@@ -29,34 +28,35 @@ const sequelize = new Sequelize(
     }
   }
 );
-const dir = await fs.readdir(__dirname)
-const files = dir.filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.ts' &&
-      file.indexOf('.test.ts') === -1
-    );
-  })
+const db: any = (async () => {
+  const db: any = {}
+  const files = fs.readdirSync(__dirname)
+    .filter(file => {
+      return (
+        file.indexOf('.') !== 0 &&
+        file !== basename &&
+        file.slice(-3) === '.ts' &&
+        file.indexOf('.test.ts') === -1
+      )
+    })
 
-await new Promise((resolve, _reject) => {
-  files.forEach(async (file, index, array) => {
-    const modelModule = await import(path.join(__dirname, file));
-    const model = modelModule.default(sequelize, (Sequelize as any).DataTypes);
-    db[model.name] = model;
-    if (index === array.length -1) resolve(true);
-  });
-})
-
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+  for await (const file of files) {
+    const model = await import(path.join(__dirname, file))
+    const namedModel = model.default(sequelize, (Sequelize as any).DataTypes)
+    db[namedModel.name] = namedModel
   }
-});
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+  Object.keys(db).forEach((modelName) => {
+    if (db[modelName].associate) {
+      db[modelName].associate(db)
+    }
+  });
+
+  db.sequelize = sequelize
+  db.Sequelize = Sequelize
+    
+  return db;
+})()
 
 export const { 
   user, 
@@ -69,4 +69,4 @@ export const {
   favorite, 
   view, 
   sounds_playlist 
-} = db;
+} = await db;
