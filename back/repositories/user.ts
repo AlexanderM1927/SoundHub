@@ -17,6 +17,8 @@ export class UserRepository {
             }
         })
 
+        if (!user) throw new Error('Email doesnt exists')
+
         const validPassword = await bcrypt.compare(input.user_password, user.dataValues.user_password);
 
         if (validPassword) {

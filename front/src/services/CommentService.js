@@ -1,10 +1,10 @@
 import Api from '../boot/axios'
 
 export default {
-  store (params, token) {
-    return Api().post('comments', params, { headers: { Authorization: token } })
+  store (params) {
+    return Api().post('comments', params)
   },
-  getCommentsBySound (params, token) {
-    return Api().get('comments/' + params.id, { headers: { Authorization: token } })
+  getCommentsBySound (params) {
+    return Api().get('comments/' + params.id)
   }
 }

@@ -27,7 +27,6 @@ export default {
   props: ['result'],
   data () {
     return {
-      token: localStorage.getItem('token')
     }
   },
   methods: {

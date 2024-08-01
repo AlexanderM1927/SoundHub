@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { validatePartialUser } from '../schemas/user'
 
 export class UserController {
@@ -16,10 +17,21 @@ export class UserController {
         try {
             const { token, user } = await this.userRepository.login(req.body)
 
-            return res.header('auth-token', token).json({
+            const options = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                // sameSite: 'none',
+                // "expires" - The cookie expires in 24 hours
+                maxAge: 1000 * 60 * 60 * 24, // 24 hours,
+                origin: process.env.FRONT_URL
+            }
+
+            console.log('optiones', options)
+
+            res.cookie('access_token', token, options)
+            res.json({
                 error: null,
                 data: {
-                    token,
                     user
                 }
             })
@@ -103,6 +115,15 @@ export class UserController {
                 error: null,
                 data: user
             })
+        } catch (error) {
+            res.status(400).json({error: (error as Error).message})
+        }
+    }
+
+    logout = async (_req: any, res: any) => {
+        try {
+            res.clearCookie('access_token')
+            res.json({ message: "Logout success" })
         } catch (error) {
             res.status(400).json({error: (error as Error).message})
         }

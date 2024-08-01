@@ -96,7 +96,7 @@
                 {{ soundInfo.user }}
               </a>
             </span>
-            <div v-if="soundInfo.type === 'sound' && token">
+            <div v-if="soundInfo.type === 'sound'">
               <br>
               <q-separator />
               <div class="text-h6">Comentarios:</div>
@@ -145,7 +145,6 @@ export default {
       dialogInfo: false,
       soundInfo: {},
       comment: '',
-      token: localStorage.getItem('token'),
       user: JSON.parse(localStorage.getItem('user')),
       comments: [],
       isPlaying: true,
@@ -179,8 +178,7 @@ export default {
     async removeFromPlaylist () {
       try {
         const data = {
-          sound_playlist_id: this.result.sound_playlist_id,
-          token: this.token
+          sound_playlist_id: this.result.sound_playlist_id
         }
         const request = await SoundPlaylistService.remove(data)
         if (request.status >= 200 && request.status < 300) {
@@ -198,11 +196,9 @@ export default {
         if (this.sound.type === 'video') {
           data.playlist_id = playlist.playlist_id
           data.youtube_id = this.sound.id
-          data.token = this.token
         } else {
           data.playlist_id = playlist.playlist_id
           data.sound_id = this.soundInfo.id
-          data.token = this.token
         }
         const request = await SoundPlaylistService.add(data)
         if (request.status >= 200 && request.status < 300) this.alert('positive', 'Canción agregada correctamente')
@@ -221,7 +217,7 @@ export default {
           comment: this.comment,
           user_id: this.user.user_id,
           sound_id: this.soundInfo.id
-        }, this.token)
+        })
         this.comments.unshift(
           {
             user: {

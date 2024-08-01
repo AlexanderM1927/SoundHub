@@ -1,19 +1,19 @@
 import Api from '../boot/axios'
 
 export default {
-  store (params, token) {
-    return Api().post('sounds', params, { headers: { Authorization: token } })
+  store (params) {
+    return Api().post('sounds', params)
   },
-  update (params, token) {
-    return Api().post('sounds/' + params.sound_id, params, { headers: { Authorization: token } })
+  update (params) {
+    return Api().post('sounds/' + params.sound_id, params)
   },
   delete (params) {
-    return Api().delete('sounds/' + params.sound_id, { headers: { Authorization: params.token } })
+    return Api().delete('sounds/' + params.sound_id)
   },
   getMySounds (params) {
-    return Api().get('sounds/' + params.user_id, { headers: { Authorization: params.token } })
+    return Api().get('sounds/' + params.user_id)
   },
   getSoundById (params) {
-    return Api().get('sounds_id/' + params.type + '/' + params.url, { headers: { Authorization: params.token } })
+    return Api().get('sounds_id/' + params.type + '/' + params.url)
   }
 }

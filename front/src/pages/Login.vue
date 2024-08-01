@@ -134,7 +134,6 @@ export default {
         }
         const request = await UserService.login(data)
         if (request.status >= 200 & request.status < 300) {
-          localStorage.setItem('token', request.data.data.token)
           localStorage.setItem('user', JSON.stringify(request.data.data.user))
           location.href = '/'
         }
