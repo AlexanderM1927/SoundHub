@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken'
 // middleware to validate if is same user to update it
 export const verifyUserUpdate = (req: any, res: any, next: any) => {
-    const token = req.header('Authorization')
+    const token = req.cookies
     if (!token) return res.status(401).json({ error: 'Acceso denegado' })
     try {
-        const verified: any = jwt.verify(token, process.env.TOKEN_SECRET as string)
+        const verified: any = jwt.verify(token.access_token, process.env.TOKEN_SECRET as string)
         const { user_id } = verified
         if (parseInt(user_id) === parseInt(req.params.id)) {
             next() // can
