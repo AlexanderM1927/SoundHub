@@ -21,5 +21,8 @@ export default {
   },
   deleteUser (params) {
     return Api().delete('user/' + params.id)
+  },
+  logout () {
+    return Api().post('logout')
   }
 }

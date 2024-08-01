@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import routes from './routes'
+import UserService from 'src/services/UserService'
 
 Vue.use(VueRouter)
 
@@ -31,6 +32,7 @@ export default function (/* { store, ssrContext } */) {
     if (to.name === 'logout') {
       try {
         localStorage.removeItem('user')
+        await UserService.logout()
       } catch (error) {
         localStorage.removeItem('user')
       }

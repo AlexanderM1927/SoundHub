@@ -119,4 +119,13 @@ export class UserController {
             res.status(400).json({error: (error as Error).message})
         }
     }
+
+    logout = async (_req: any, res: any) => {
+        try {
+            res.clearCookie('access_token')
+            res.json({ message: "Logout success" })
+        } catch (error) {
+            res.status(400).json({error: (error as Error).message})
+        }
+    }
 }
