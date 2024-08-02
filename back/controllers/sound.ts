@@ -94,7 +94,7 @@ export class SoundController {
                 })
                 if (sound) {
                     const __dirname = path.dirname(fileURLToPath(import.meta.url))
-                    soundUrl = path.join(__dirname.replace('v1', '').replace('controllers', ''), sound.sound_file_url);
+                    soundUrl = path.join(__dirname.replace('v1', '').replace('dist', '').replace('controllers', ''), sound.sound_file_url);
                     response = fileSystem.createReadStream(soundUrl);
                 }
             }
