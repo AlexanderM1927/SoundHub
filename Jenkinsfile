@@ -33,7 +33,7 @@ pipeline {
             }
             steps {
                 dir('./back') {
-                    sh 'export JENKINS_NODE_COOKIE=dontKillMe; pm2 restart ./dist/server.js'
+                    sh 'export JENKINS_NODE_COOKIE=dontKillMe; pm2 start ./dist/server.js'
                 }
             }
         }
