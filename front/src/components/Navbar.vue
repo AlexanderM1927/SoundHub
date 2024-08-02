@@ -5,7 +5,7 @@
     <q-header elevated class="bg-black">
       <q-toolbar class="row nav-height col-12 justify-between">
         <div class="row" @click="goTo('/')">
-          <img src="/favicon.png" class="nav-icon" />
+          <img src="/logo.png" class="nav-icon" />
           <q-toolbar-title class="nav-title vertical-middle">
             SoundHub
           </q-toolbar-title>

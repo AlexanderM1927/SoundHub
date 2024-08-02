@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="search-result">
-      <img @click="abrirReproductor(result)" v-if="result.img" :src="result.img" class="search-result__image">
-      <img @click="abrirReproductor(result)" v-else :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
+      <img @click="openPlayer(result)" v-if="result.img" :src="result.img" class="search-result__image">
+      <img @click="openPlayer(result)" v-else :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
       <div class="d-flex space-between w-100">
-        <div @click="abrirReproductor(result)">{{ result.title }}</div>
+        <div @click="openPlayer(result)">{{ result.title }}</div>
         <div v-if="playlist === true">
           <a class="pli-delete text-white" @click="removeFromPlaylist"> <q-icon name="fas fa-times"/></a>
         </div>

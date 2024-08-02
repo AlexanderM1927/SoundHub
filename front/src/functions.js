@@ -82,7 +82,7 @@ export const functions = {
     disableLoading () {
       this.$q.loading.hide()
     },
-    async abrirReproductor (result) {
+    async openPlayer (result) {
       this.addToCollection('recent', {
         ...result,
         time: Date.now()
@@ -90,13 +90,18 @@ export const functions = {
       this.$store.dispatch('sounds/reloadPlaylist')
       this.activateLoading()
       let url = ''
+      let img = ''
+      if (result.img) img = result.img
       if (result.type === 'video') {
         url = result.id
+        img = img !== '' ? img : result.thumbnail.thumbnails[0].url
       } else if (result.type === 'sound') {
         url = result.sound_id
+        img = img !== '' ? img : this.getSrcFromBackend(result.sound_thumbnail_url)
       }
       this.$store.dispatch('sounds/getSongById', {
         url: url,
+        img: img,
         type: result.type
       })
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
