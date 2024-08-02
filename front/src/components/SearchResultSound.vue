@@ -1,11 +1,11 @@
 <template>
   <div class="q-mb-sm">
     <div class="search-result">
-      <img @click="abrirReproductor(result)" v-if="result.sound_thumbnail_url" :src="getSrcFromBackend(result.sound_thumbnail_url)" class="search-result__image">
-      <img @click="abrirReproductor(result)" v-else :src="getSrcFromBackend(result.img)" class="search-result__image">
+      <img @click="openPlayer(result)" v-if="result.sound_thumbnail_url" :src="getSrcFromBackend(result.sound_thumbnail_url)" class="search-result__image">
+      <img @click="openPlayer(result)" v-else :src="getSrcFromBackend(result.img)" class="search-result__image">
       <div class="d-flex space-between w-100">
-        <div @click="abrirReproductor(result)" v-if="result.title">{{ result.title }}</div>
-        <div @click="abrirReproductor(result)" v-else-if="result.sound_name">{{ result.sound_name }}</div>
+        <div @click="openPlayer(result)" v-if="result.title">{{ result.title }}</div>
+        <div @click="openPlayer(result)" v-else-if="result.sound_name">{{ result.sound_name }}</div>
         <div v-if="playlist === true">
           <a class="pli-delete text-white" @click="removeFromPlaylist"> <q-icon name="fas fa-times"/></a>
         </div>
