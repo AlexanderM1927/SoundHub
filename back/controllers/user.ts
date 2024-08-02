@@ -19,7 +19,7 @@ export class UserController {
 
             const options = {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: false, // https
                 // sameSite: 'none',
                 // "expires" - The cookie expires in 24 hours
                 maxAge: 1000 * 60 * 60 * 24, // 24 hours,
