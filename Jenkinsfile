@@ -27,7 +27,7 @@ pipeline {
                 }
             }
         }
-        stage('Backend') {
+        stage('Backend prepare and build') {
             tools {
                 nodejs 'node-21.11.1'
             }
@@ -43,7 +43,7 @@ pipeline {
         }
         stage('Deploy') {
             tools {
-                nodejs 'soundhub-back'
+                nodejs 'node-21.11.1'
             }
             steps {
                 dir('./back') {
