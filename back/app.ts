@@ -20,8 +20,8 @@ export const createApp = ({ acceptedOrigins }: { acceptedOrigins: any }) => {
     app.get('/favicon.ico', (_req: any, res: any) => res.status(204)); // Ignore favicon
     app.use('/v1', createRouter())
     app.get("/*", (_req: any, res: any) => {
-        res.sendFile(path.resolve(__dirname, "/public", "index.html"));
-      });
+      res.sendFile(path.join(__dirname, "/public/index.html"));
+    });
 
     return app
 }
