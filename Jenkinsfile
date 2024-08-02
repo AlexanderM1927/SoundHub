@@ -7,7 +7,9 @@ pipeline {
             }
             steps {
                 dir('./front') {
+                    sh 'pwd'
                     sh 'npm install'
+                    sh 'pwd'
                     sh 'quasar build -m pwa'
                     sh 'mv -n ./dist/pwa /var/lib/jenkins/workspace/soundhub/back/public'
                 }
@@ -19,7 +21,9 @@ pipeline {
             }
             steps {
                 dir('./back') {
+                    sh 'pwd'
                     sh 'npm install'
+                    sh 'pwd'
                     sh 'npx sequelize-cli db:migrate'
                     sh 'npx sequelize-cli db:seed:all'
                     sh 'npm run build'
