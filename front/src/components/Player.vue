@@ -35,7 +35,7 @@
         <!--SOUND WAVES-->
         <div :class="(playlist.length > 0 ? 'col-md-8 col-xs-4' : 'col-md-10 col-xs-7')">
           <div id='waveform'></div>
-          <div id="audioBox"><audio controls type="audio/mp3"></audio></div>
+          <div id="audioBox"><audio id="audioInput" controls type="audio/mp3" title="soundhub"></audio></div>
         </div>
         <!--NEXT SONG-->
         <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 0" class="col-md-1 col-xs-2">
@@ -290,6 +290,13 @@ export default {
       this.wavesurfer.on('ready', () => {
         window.canDownloadNextSong = true
         this.isLoading = false
+        const audioNode = document.getElementsByTagName('audio')
+        for (let i = 0; i < audioNode.length; i++) {
+          const audio = audioNode[i]
+          audio.setAttribute('type', 'audio/mp3')
+          audio.setAttribute('title', 'soundhub')
+          audio.load()
+        }
         this.disableLoading()
         this.wavesurfer.playPause()
         this.loadThumbnail()
