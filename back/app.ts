@@ -1,3 +1,4 @@
+import 'dotenv/config.js'
 import express, { json } from 'express' // require -> commonJS
 import { corsMiddleware } from './middlewares/cors'
 import { createRouter } from './routes/index'
@@ -20,7 +21,8 @@ export const createApp = ({ acceptedOrigins }: { acceptedOrigins: any }) => {
     app.get('/favicon.ico', (_req: any, res: any) => res.status(204)); // Ignore favicon
     app.use('/v1', createRouter())
     app.get("/*", (_req: any, res: any) => {
-      res.sendFile(path.resolve(__dirname, 'public/index.html'), function (err: any) {
+      const indexRoute = process.env.NODE_ENV === 'production' ? '../public/index.html' : 'public/index.html'
+      res.sendFile(path.resolve(__dirname, indexRoute), function (err: any) {
         if (err) {
           res.status(500).send(err)
         }
