@@ -24,7 +24,8 @@ pipeline {
                     sh 'npx sequelize-cli db:seed:all'
                     sh 'cp -r ./config /var/lib/jenkins/workspace/soundhub/back/dist/config'
                     sh 'npm run build'
-                    sh 'npm run start'
+                    sh 'pm2 start ./dist/server.js'
+                    sh ''
                 }
             }
         }
