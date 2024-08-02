@@ -86,7 +86,7 @@ export class SoundController {
                     file: sound,
                     url: url
                 })
-                nextVideos = [...relatedVideos]
+                nextVideos = [...relatedVideos].slice(0, 10)
                 response = fileSystem.createReadStream(soundUrl)
             } else {
                 const sound = await this.soundRepository.getSoundById({
