@@ -33,7 +33,7 @@ pipeline {
             }
             steps {
                 dir('./back') {
-                    sh 'pm2 start ./dist/server.js'
+                    sh 'BUILD_ID=dontKillMe pm2 start ./dist/server.js'
                 }
             }
         }
