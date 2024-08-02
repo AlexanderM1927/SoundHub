@@ -21,15 +21,19 @@ export const getItemsByName = async ({ commit }, payload) => {
 export const getSongById = async ({ commit }, payload) => {
   try {
     const url = SearchService.getSongById(payload)
+    const sound = await fetch(url)
+    const blob = await sound.blob()
+    const newBlob = new Blob([blob], { type: 'audio/mp3' })
+    const newUrl = URL.createObjectURL(newBlob)
     if (!payload.playlistMode) {
       commit('setSong', {
-        url: url,
+        url: newUrl,
         payload: payload
       })
     } else {
       if (payload.isFirstOnPlaylist) {
         commit('setSong', {
-          url: url,
+          url: newUrl,
           payload: payload
         })
       } else {

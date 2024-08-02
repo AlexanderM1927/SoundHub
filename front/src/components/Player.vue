@@ -35,7 +35,7 @@
         <!--SOUND WAVES-->
         <div :class="(playlist.length > 0 ? 'col-md-8 col-xs-4' : 'col-md-10 col-xs-7')">
           <div id='waveform'></div>
-          <div id="audioBox"><audio controls type="audio/mp3"></audio></div>
+          <div id="audioBox"><audio id="audioInput" controls type="audio/mp3" title="soundhub"></audio></div>
         </div>
         <!--NEXT SONG-->
         <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 0" class="col-md-1 col-xs-2">
@@ -79,8 +79,9 @@
               <q-btn
                 class="col-5 q-ml-sm q-mb-xs"
                 @click="agregarSound(soundInfo)"
-                color="pink"
-                icon="add" />
+                color="pink">
+                Agregar a playlist
+              </q-btn>
             </div>
             <span v-if="soundInfo.type === 'sound'">
               Publicada por:
@@ -149,7 +150,8 @@ export default {
       comments: [],
       isPlaying: true,
       dialogPlaylist: false,
-      sound: {}
+      sound: {},
+      soundPlaying: null
     }
   },
   computed: {
@@ -171,7 +173,7 @@ export default {
   },
   watch: {
     song () {
-      if (this.song) this.loadFile(this.song.url)
+      if (this.song) this.loadFile(this.song)
     }
   },
   methods: {
@@ -188,7 +190,7 @@ export default {
         const request = await SoundPlaylistService.add(data)
         if (request.status >= 200 && request.status < 300) this.alert('positive', 'Canción agregada correctamente')
       } catch (error) {
-        console.log(error)
+        this.manageErrors(error)
       }
       this.dialogPlaylist = false
     },
@@ -288,8 +290,16 @@ export default {
       this.wavesurfer.on('ready', () => {
         window.canDownloadNextSong = true
         this.isLoading = false
+        const audioNode = document.getElementsByTagName('audio')
+        for (let i = 0; i < audioNode.length; i++) {
+          const audio = audioNode[i]
+          audio.setAttribute('type', 'audio/mp3')
+          audio.setAttribute('title', 'soundhub')
+          audio.load()
+        }
         this.disableLoading()
         this.wavesurfer.playPause()
+        this.loadThumbnail()
       })
       this.wavesurfer.on('play', () => {
         this.isLoading = false
@@ -306,33 +316,25 @@ export default {
     },
     loadThumbnail () {
       if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new window.MediaMetadata({
-          title: 'Never Gonna Give You Up',
-          artist: 'Rick Astley',
-          album: 'Whenever You Need Somebody',
+        const content = {
+          title: this.soundPlaying.payload.title,
+          artist: 'SoundHub',
           artwork: [
-            { src: this.song.payload.img + '?size=96x96', sizes: '96x96', type: 'image/png' },
-            { src: this.song.payload.img + '?size=128x128', sizes: '128x128', type: 'image/png' },
-            { src: this.song.payload.img + '?size=192x192', sizes: '192x192', type: 'image/png' },
-            { src: this.song.payload.img + '?size=256x256', sizes: '256x256', type: 'image/png' },
-            { src: this.song.payload.img + '?size=384x384', sizes: '384x384', type: 'image/png' },
-            { src: this.song.payload.img + '?size=512x512', sizes: '512x512', type: 'image/png' }
+            { src: this.soundPlaying.payload.img, sizes: '96x96', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '128x128', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '192x192', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '256x256', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '384x384', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '512x512', type: 'image/png' }
           ]
-        })
+        }
+        navigator.mediaSession.metadata = new window.MediaMetadata(content)
 
         navigator.mediaSession.setActionHandler('play', () => {
           this.wavesurfer.playPause()
         })
         navigator.mediaSession.setActionHandler('pause', () => {
           this.wavesurfer.playPause()
-        })
-        navigator.mediaSession.setActionHandler('seekbackward', function (e) {
-          // alert(e)
-          console.log('e')
-        })
-        navigator.mediaSession.setActionHandler('seekforward', function (e) {
-          // alert(e)
-          console.log('e')
         })
         navigator.mediaSession.setActionHandler('previoustrack', () => {
           this.setNewSong('prev')
@@ -342,14 +344,13 @@ export default {
         })
       }
     },
-    async loadFile (url) {
-      this.loadThumbnail()
+    async loadFile (sound) {
       if (!this.wavesurfer) {
         this.createWaveSurfer()
       }
-      this.wavesurfer.load(url)
+      this.soundPlaying = sound
+      this.wavesurfer.load(sound.url)
       this.activateLoading()
-      // }
     },
     isIOS () {
       if (typeof window === 'undefined' || typeof navigator === 'undefined') return false
@@ -363,11 +364,11 @@ export default {
       }
       if (this.playlist.length > 0) {
         if (type === 'next' && this.playlist.length > (this.position + 1)) {
-          this.loadFile(this.playlist[this.position + 1].url)
+          this.loadFile(this.playlist[this.position + 1])
           this.$store.dispatch('sounds/setPosition', (this.position + 1))
         } else {
           if (this.position > 0) {
-            this.loadFile(this.playlist[this.position - 1].url)
+            this.loadFile(this.playlist[this.position - 1])
             this.$store.dispatch('sounds/setPosition', (this.position - 1))
           }
         }

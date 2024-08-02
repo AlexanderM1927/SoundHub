@@ -26,8 +26,6 @@ export class UserController {
                 origin: process.env.FRONT_URL
             }
 
-            console.log('optiones', options)
-
             res.cookie('access_token', token, options)
             res.json({
                 error: null,

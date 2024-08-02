@@ -76,7 +76,7 @@ export default {
         const request = await UserService.modifyUser(params)
         if (request.status === 200) this.alert('positive', 'Perfil actualizado')
       } catch (error) {
-        console.log(error)
+        this.manageErrors(error)
       }
       this.disableLoading()
     }

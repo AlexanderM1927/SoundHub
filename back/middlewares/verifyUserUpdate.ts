@@ -12,6 +12,6 @@ export const verifyUserUpdate = (req: any, res: any, next: any) => {
             throw new Error("No puedes actualizar un perfil que no sea el tuyo");
         }
     } catch (error) {
-        res.status(400).json({error: 'token no es válido'})
+        res.status(401).json({error: 'token no es válido'})
     }
 }

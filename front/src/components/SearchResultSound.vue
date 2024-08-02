@@ -39,7 +39,7 @@ export default {
           this.$el.parentNode.removeChild(this.$el)
         }
       } catch (error) {
-        console.log(error)
+        this.manageErrors(error)
       }
     }
   }
