@@ -2,6 +2,7 @@ import { QSpinnerGears, QSpinnerAudio } from 'quasar'
 import { Plugins, FilesystemDirectory } from '@capacitor/core'
 import SearchService from './services/SearchService'
 import Localbase from 'localbase'
+import ViewService from './services/ViewService'
 
 const { Filesystem } = Plugins
 export const functions = {
@@ -109,6 +110,10 @@ export const functions = {
         document.getElementById('player').classList.toggle('inactive')
       }
       this.disableLoading()
+      await ViewService.store({
+        sound_id: url,
+        view_type: result.type
+      })
     },
     async playPlaylist (playlist) {
       this.activateLoading()

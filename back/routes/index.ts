@@ -46,6 +46,7 @@ export const createRouter = () => {
 
 	// // Views
 	router.get('/views', viewController.getViews)
+	router.post('/views', viewController.store)
 
 	// SoundPlaylist
 	router.post('/sound-playlist', verifyToken, soundPlaylistController.store)

@@ -37,7 +37,6 @@ export class ViewRepository {
             items: [],
             nextPage: {}
         }
-        console.log('views.length', views.length)
         for (let i = 0; i < views.length; i++) {
             const obj = views[i]
             let sound = null
@@ -68,7 +67,7 @@ export class ViewRepository {
         return results
     }
 
-    async createView ({sound_id, view_type}: {sound_id: any, view_type: any}) {
+    async create ({sound_id, view_type}: {sound_id: any, view_type: any}) {
         const view = new View({
             sound_id,
             view_type

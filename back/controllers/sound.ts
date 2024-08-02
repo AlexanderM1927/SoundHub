@@ -109,12 +109,7 @@ export class SoundController {
                 res.setHeader("Content-Length", fileSystem.statSync(soundUrl).size);
                 res.setHeader("Related-Videos", JSON.stringify(nextVideos))
                 response.pipe(res)
-            
-                const data = {
-                    sound_id: url,
-                    view_type: type
-                }
-                await this.viewRepository.createView(data)
+
             }
         } catch (error) {
             res.status(400).json({error: (error as Error).message})

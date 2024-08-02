@@ -41,7 +41,7 @@ export default {
     async getPopularSounds () {
       try {
         this.activateLoading()
-        const request = await ViewService.getCommentsBySound()
+        const request = await ViewService.getViews()
         this.disableLoading()
         const items = request.data.data.items
         this.songs = items.map(element => {
