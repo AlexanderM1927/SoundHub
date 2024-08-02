@@ -15,7 +15,7 @@ const config = {
       idle: 10000,
     },
     // Use a different storage. Default: none
-    "seederStorage": "json",
+    "seederStorage": "sequelize",
   },
   test: {
     username: process.env.DB_USERNAME,
@@ -31,7 +31,7 @@ const config = {
       idle: 10000,
     },
     // Use a different storage. Default: none
-    "seederStorage": "json",
+    "seederStorage": "sequelize",
   },
   production: {
     username: process.env.DB_USERNAME,
@@ -47,7 +47,7 @@ const config = {
       idle: 10000,
     },
     // Use a different storage. Default: none
-    "seederStorage": "json",
+    "seederStorage": "sequelize",
   },
 };
 
