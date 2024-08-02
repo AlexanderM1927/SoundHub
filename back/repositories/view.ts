@@ -37,12 +37,17 @@ export class ViewRepository {
             items: [],
             nextPage: {}
         }
+        console.log('views.length', views.length)
         for (let i = 0; i < views.length; i++) {
             const obj = views[i]
             let sound = null
             if (obj.view_type === 'video') {
                 const youtubeSearch = await this.youtubeService.getSoundByYoutubeAPI({ name: obj.sound_id })
-                sound = youtubeSearch.items[0]
+                if (youtubeSearch.items.length > 0) {
+                    sound = youtubeSearch.items[0]
+                } else {
+                    continue;
+                }
             } else {
                 const soundFromDB = await Sound.findOne({ 
                     where: {
