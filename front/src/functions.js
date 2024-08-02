@@ -99,15 +99,50 @@ export const functions = {
         url = result.sound_id
         img = img !== '' ? img : this.getSrcFromBackend(result.sound_thumbnail_url)
       }
-      this.$store.dispatch('sounds/getSongById', {
+      await this.$store.dispatch('sounds/getSongById', {
         url: url,
         img: img,
-        type: result.type
+        type: result.type,
+        title: result.sound_name ? result.sound_name : result.title
       })
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
         document.getElementById('player').classList.toggle('inactive')
       }
       this.disableLoading()
+    },
+    async playPlaylist (playlist) {
+      this.activateLoading()
+
+      this.$store.dispatch('sounds/reloadPlaylist')
+      let isNotFirst = false
+      let url = ''
+      let img = ''
+      for (let i = 0; i < playlist.length; i++) {
+        // these next methods are to load next sounds while reproduce the first one
+        if (i > 0) isNotFirst = true
+        if (playlist[i].img) img = playlist[i].img
+        if (playlist[i].type === 'video') {
+          url = playlist[i].id
+          img = img !== '' ? img : playlist[i].thumbnail.thumbnails[0].url
+        } else if (playlist[i].type === 'sound') {
+          url = playlist[i].sound_id
+          img = img !== '' ? img : this.getSrcFromBackend(playlist[i].sound_thumbnail_url)
+        }
+        await this.$store.dispatch('sounds/getSongById', {
+          url: url,
+          type: playlist[i].type,
+          playlistMode: true,
+          isFirstOnPlaylist: !isNotFirst,
+          img: img,
+          title: playlist[i].sound_name ? playlist[i].sound_name : playlist[i].title
+        })
+        if (!isNotFirst) {
+          if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
+            document.getElementById('player').classList.toggle('inactive')
+          }
+        }
+        this.disableLoading()
+      }
     },
     getSrcFromBackend (url) {
       return process.env.API_URL.replace('v1/', '') + url.replace('public', '')
@@ -131,34 +166,6 @@ export const functions = {
         })
       } catch (error) {
         console.log(error)
-      }
-    },
-    async playPlaylist (playlist) {
-      // this.activateLoading()
-
-      this.$store.dispatch('sounds/reloadPlaylist')
-      let isNotFirst = false
-      let url = ''
-      for (let i = 0; i < playlist.length; i++) {
-        // these next methods are to load next sounds while reproduce the first one
-        if (i > 0) isNotFirst = true
-        if (playlist[i].type === 'video') {
-          url = playlist[i].id
-        } else if (playlist[i].type === 'sound') {
-          url = playlist[i].sound_id
-        }
-        this.$store.dispatch('sounds/getSongById', {
-          url: url,
-          type: playlist[i].type,
-          playlistMode: true,
-          isFirstOnPlaylist: !isNotFirst
-        })
-        if (!isNotFirst) {
-          if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
-            document.getElementById('player').classList.toggle('inactive')
-          }
-        }
-        // this.disableLoading()
       }
     },
     async downloadFile (payload) {
