@@ -150,7 +150,8 @@ export default {
       comments: [],
       isPlaying: true,
       dialogPlaylist: false,
-      sound: {}
+      sound: {},
+      soundPlaying: null
     }
   },
   computed: {
@@ -172,7 +173,7 @@ export default {
   },
   watch: {
     song () {
-      if (this.song) this.loadFile(this.song.url)
+      if (this.song) this.loadFile(this.song)
     }
   },
   methods: {
@@ -309,22 +310,18 @@ export default {
     loadThumbnail () {
       if ('mediaSession' in navigator) {
         const content = {
-          title: this.song.payload.title,
+          title: this.soundPlaying.payload.title,
           artist: 'SoundHub',
           artwork: [
-            { src: this.song.payload.img, sizes: '96x96', type: 'image/png' },
-            { src: this.song.payload.img, sizes: '128x128', type: 'image/png' },
-            { src: this.song.payload.img, sizes: '192x192', type: 'image/png' },
-            { src: this.song.payload.img, sizes: '256x256', type: 'image/png' },
-            { src: this.song.payload.img, sizes: '384x384', type: 'image/png' },
-            { src: this.song.payload.img, sizes: '512x512', type: 'image/png' }
+            { src: this.soundPlaying.payload.img, sizes: '96x96', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '128x128', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '192x192', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '256x256', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '384x384', type: 'image/png' },
+            { src: this.soundPlaying.payload.img, sizes: '512x512', type: 'image/png' }
           ]
         }
-        if (!navigator.mediaSession.metadata) {
-          navigator.mediaSession.metadata = new window.MediaMetadata(content)
-        } else {
-          navigator.mediaSession.metadata = content
-        }
+        navigator.mediaSession.metadata = new window.MediaMetadata(content)
 
         navigator.mediaSession.setActionHandler('play', () => {
           this.wavesurfer.playPause()
@@ -340,11 +337,12 @@ export default {
         })
       }
     },
-    async loadFile (url) {
+    async loadFile (sound) {
       if (!this.wavesurfer) {
         this.createWaveSurfer()
       }
-      this.wavesurfer.load(url)
+      this.soundPlaying = sound
+      this.wavesurfer.load(sound.url)
       this.activateLoading()
     },
     isIOS () {
@@ -359,11 +357,11 @@ export default {
       }
       if (this.playlist.length > 0) {
         if (type === 'next' && this.playlist.length > (this.position + 1)) {
-          this.loadFile(this.playlist[this.position + 1].url)
+          this.loadFile(this.playlist[this.position + 1])
           this.$store.dispatch('sounds/setPosition', (this.position + 1))
         } else {
           if (this.position > 0) {
-            this.loadFile(this.playlist[this.position - 1].url)
+            this.loadFile(this.playlist[this.position - 1])
             this.$store.dispatch('sounds/setPosition', (this.position - 1))
           }
         }

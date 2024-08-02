@@ -116,8 +116,8 @@ export const functions = {
       this.$store.dispatch('sounds/reloadPlaylist')
       let isNotFirst = false
       let url = ''
-      let img = ''
       for (let i = 0; i < playlist.length; i++) {
+        let img = ''
         // these next methods are to load next sounds while reproduce the first one
         if (i > 0) isNotFirst = true
         if (playlist[i].img) img = playlist[i].img
