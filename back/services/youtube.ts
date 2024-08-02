@@ -1,4 +1,4 @@
-import ytdl from '@distube/ytdl-core'
+import ytdl, { videoInfo } from '@distube/ytdl-core'
 // @ts-ignore
 import youtubesearchapi from 'youtube-search-api'
 import fileSystem from 'fs'
@@ -10,9 +10,15 @@ export class YoutubeService {
     }
 
     async getSoundByYoutubeAPI ({ name }: { name: any }) {
-        const result = await youtubesearchapi.GetListByKeyword(name, false)
+        try {
+            const result = await youtubesearchapi.GetListByKeyword(name, false)
 
-        return result
+            return result
+        } catch (error) {
+            return {
+                items: []
+            }
+        }
     }
 
     async searchSound ({ name }: { name: any }) {
@@ -48,8 +54,15 @@ export class YoutubeService {
     }
 
     async downloadSound ({ url }: { url: any }) {
-        let response: any = null
-        const info = await ytdl.getInfo(url)
+        let sound: any = null
+        const info: videoInfo = await ytdl.getInfo(url)
+        const relatedVideos = info.related_videos.map((video) => {
+            return {
+                id: video.id,
+                title: video.title?.replace(/[^a-zA-Z ]/g, ""),
+                thumbnail: video.thumbnails
+            }
+        })
         const getBestFormat = info.formats.filter((format: any) => {
             return format.hasAudio === true && format.container === 'mp4' && format.hasVideo === true
         })
@@ -60,14 +73,17 @@ export class YoutubeService {
                 } = {
                     quality: getBestFormat[0].itag
                 }
-                response = ytdl(url, options)
+                sound = ytdl(url, options)
             }
         
             downloadAndStream()
         }
         
 
-        return response
+        return {
+            sound,
+            relatedVideos
+        }
     }
 
     waitUntilDownloadSound ({file, url}: {file: any, url: any}) {

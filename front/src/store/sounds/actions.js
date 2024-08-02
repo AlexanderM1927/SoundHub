@@ -1,3 +1,4 @@
+// import Api from '../../boot/axios'
 /*
 export function someAction (context) {
 }
@@ -18,20 +19,46 @@ export const getItemsByName = async ({ commit }, payload) => {
   }
 }
 
-export const getSongById = async ({ commit }, payload) => {
+const setPlaylistDefault = (relatedVideos, dispatch) => {
+  // const videos = relatedVideos.slice(0, 5)
+  for (let i = 0; i < relatedVideos.length; i++) {
+    dispatch('getSongById', {
+      url: relatedVideos[i].id,
+      type: 'video',
+      playlistMode: true,
+      isFirstOnPlaylist: false,
+      img: relatedVideos[i].thumbnail[0].url,
+      title: relatedVideos[i].title
+    })
+  }
+}
+
+const getUrl = async (url) => {
+  const sound = await fetch(url)
+  const relatedVideos = JSON.parse(sound.headers.get('related-videos'))
+  const blob = await sound.blob()
+  const newBlob = new Blob([blob], { type: 'audio/mp3' })
+  const newUrl = URL.createObjectURL(newBlob)
+
+  return {
+    newUrl,
+    relatedVideos
+  }
+}
+
+export const getSongById = async ({ commit, dispatch }, payload) => {
   try {
     const url = SearchService.getSongById(payload)
-    const sound = await fetch(url)
-    const blob = await sound.blob()
-    const newBlob = new Blob([blob], { type: 'audio/mp3' })
-    const newUrl = URL.createObjectURL(newBlob)
     if (!payload.playlistMode) {
+      const { newUrl, relatedVideos } = await getUrl(url)
       commit('setSong', {
         url: newUrl,
         payload: payload
       })
+      setPlaylistDefault(relatedVideos, dispatch)
     } else {
       if (payload.isFirstOnPlaylist) {
+        const { newUrl } = await getUrl(url)
         commit('setSong', {
           url: newUrl,
           payload: payload
@@ -41,6 +68,8 @@ export const getSongById = async ({ commit }, payload) => {
         const downloadBackgroundSound = () => {
           setTimeout(async () => {
             const canDownloadNextSong = window.canDownloadNextSong
+            console.log('url', url)
+            console.log('canDownloadNextSong', canDownloadNextSong)
             if (canDownloadNextSong) {
               window.canDownloadNextSong = false
               const sound = await fetch(url)
@@ -55,7 +84,7 @@ export const getSongById = async ({ commit }, payload) => {
             } else {
               downloadBackgroundSound()
             }
-          }, 1000)
+          }, 2000)
         }
         downloadBackgroundSound()
       }

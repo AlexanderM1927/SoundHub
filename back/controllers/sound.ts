@@ -75,13 +75,18 @@ export class SoundController {
             // const userAgent = req.headers['user-agent'];
             let response = null
             let soundUrl = ''
+            let nextVideos: any = []
           
             if (type === TYPE_VIDEO) {
-                const sound = await this.youtubeService.downloadSound({ url, type })
+                const {
+                    sound,
+                    relatedVideos
+                } = await this.youtubeService.downloadSound({ url, type })
                 soundUrl = await this.youtubeService.waitUntilDownloadSound({
                     file: sound,
                     url: url
                 })
+                nextVideos = [...relatedVideos]
                 response = fileSystem.createReadStream(soundUrl)
             } else {
                 const sound = await this.soundRepository.getSoundById({
@@ -96,11 +101,13 @@ export class SoundController {
 
             if (response) {
 
+                res.setHeader('Access-Control-Expose-Headers', 'Related-Videos')
                 res.setHeader("Content-Type", "audio/mpeg");
                 res.setHeader("Accept-Ranges", "bytes");
                 res.setHeader("Connection", "Keep-Alive");
                 res.setHeader("Transfer-encoding", "chunked");
                 res.setHeader("Content-Length", fileSystem.statSync(soundUrl).size);
+                res.setHeader("Related-Videos", JSON.stringify(nextVideos))
                 response.pipe(res)
             
                 const data = {
