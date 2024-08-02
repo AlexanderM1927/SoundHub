@@ -2,6 +2,10 @@ import express, { json } from 'express' // require -> commonJS
 import { corsMiddleware } from './middlewares/cors'
 import { createRouter } from './routes/index'
 import cookieParser from 'cookie-parser'
+import path from 'path'
+import { fileURLToPath } from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 
 export const createApp = ({ acceptedOrigins }: { acceptedOrigins: any }) => {
@@ -15,6 +19,9 @@ export const createApp = ({ acceptedOrigins }: { acceptedOrigins: any }) => {
 
     app.get('/favicon.ico', (_req: any, res: any) => res.status(204)); // Ignore favicon
     app.use('/v1', createRouter())
+    app.get("/*", (_req: any, res: any) => {
+        res.sendFile(path.resolve(__dirname, "/public", "index.html"));
+      });
 
     return app
 }
