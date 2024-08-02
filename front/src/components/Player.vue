@@ -79,8 +79,9 @@
               <q-btn
                 class="col-5 q-ml-sm q-mb-xs"
                 @click="agregarSound(soundInfo)"
-                color="pink"
-                icon="add" />
+                color="pink">
+                Agregar a playlist
+              </q-btn>
             </div>
             <span v-if="soundInfo.type === 'sound'">
               Publicada por:
@@ -188,7 +189,7 @@ export default {
         const request = await SoundPlaylistService.add(data)
         if (request.status >= 200 && request.status < 300) this.alert('positive', 'Canción agregada correctamente')
       } catch (error) {
-        console.log(error)
+        this.manageErrors(error)
       }
       this.dialogPlaylist = false
     },
@@ -305,42 +306,42 @@ export default {
       })
     },
     loadThumbnail () {
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new window.MediaMetadata({
-          title: 'Never Gonna Give You Up',
-          artist: 'Rick Astley',
-          album: 'Whenever You Need Somebody',
-          artwork: [
-            { src: this.song.payload.img + '?size=96x96', sizes: '96x96', type: 'image/png' },
-            { src: this.song.payload.img + '?size=128x128', sizes: '128x128', type: 'image/png' },
-            { src: this.song.payload.img + '?size=192x192', sizes: '192x192', type: 'image/png' },
-            { src: this.song.payload.img + '?size=256x256', sizes: '256x256', type: 'image/png' },
-            { src: this.song.payload.img + '?size=384x384', sizes: '384x384', type: 'image/png' },
-            { src: this.song.payload.img + '?size=512x512', sizes: '512x512', type: 'image/png' }
-          ]
-        })
+      // if ('mediaSession' in navigator) {
+      //   navigator.mediaSession.metadata = new window.MediaMetadata({
+      //     title: 'Never Gonna Give You Up',
+      //     artist: 'Rick Astley',
+      //     album: 'Whenever You Need Somebody',
+      //     artwork: [
+      //       { src: this.song.payload.img + '?size=96x96', sizes: '96x96', type: 'image/png' },
+      //       { src: this.song.payload.img + '?size=128x128', sizes: '128x128', type: 'image/png' },
+      //       { src: this.song.payload.img + '?size=192x192', sizes: '192x192', type: 'image/png' },
+      //       { src: this.song.payload.img + '?size=256x256', sizes: '256x256', type: 'image/png' },
+      //       { src: this.song.payload.img + '?size=384x384', sizes: '384x384', type: 'image/png' },
+      //       { src: this.song.payload.img + '?size=512x512', sizes: '512x512', type: 'image/png' }
+      //     ]
+      //   })
 
-        navigator.mediaSession.setActionHandler('play', () => {
-          this.wavesurfer.playPause()
-        })
-        navigator.mediaSession.setActionHandler('pause', () => {
-          this.wavesurfer.playPause()
-        })
-        navigator.mediaSession.setActionHandler('seekbackward', function (e) {
-          // alert(e)
-          console.log('e')
-        })
-        navigator.mediaSession.setActionHandler('seekforward', function (e) {
-          // alert(e)
-          console.log('e')
-        })
-        navigator.mediaSession.setActionHandler('previoustrack', () => {
-          this.setNewSong('prev')
-        })
-        navigator.mediaSession.setActionHandler('nexttrack', () => {
-          this.setNewSong('next')
-        })
-      }
+      //   navigator.mediaSession.setActionHandler('play', () => {
+      //     this.wavesurfer.playPause()
+      //   })
+      //   navigator.mediaSession.setActionHandler('pause', () => {
+      //     this.wavesurfer.playPause()
+      //   })
+      //   navigator.mediaSession.setActionHandler('seekbackward', function (e) {
+      //     // alert(e)
+      //     console.log('e')
+      //   })
+      //   navigator.mediaSession.setActionHandler('seekforward', function (e) {
+      //     // alert(e)
+      //     console.log('e')
+      //   })
+      //   navigator.mediaSession.setActionHandler('previoustrack', () => {
+      //     this.setNewSong('prev')
+      //   })
+      //   navigator.mediaSession.setActionHandler('nexttrack', () => {
+      //     this.setNewSong('next')
+      //   })
+      // }
     },
     async loadFile (url) {
       this.loadThumbnail()

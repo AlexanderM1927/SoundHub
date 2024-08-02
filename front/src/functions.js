@@ -180,6 +180,16 @@ export const functions = {
         console.error('Unable to write file', e)
         this.alert('warning', 'Hubo un error en la descarga')
       }
+    },
+    manageErrors (error) {
+      if (error.response.status === 400) {
+        if (error.response.data && error.response.data.error[0] && error.response.data.error[0].code) {
+          this.alert('negative', error.response.data.error[0].message)
+          return 1
+        }
+      }
+      if (error.response.status === 401) { this.goTo('logout') }
+      this.alert('negative', error.response.data.error)
     }
   }
 }

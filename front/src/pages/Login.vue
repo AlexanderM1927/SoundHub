@@ -138,7 +138,7 @@ export default {
           location.href = '/'
         }
       } catch (error) {
-        this.alert('negative', error.response.data.error)
+        this.manageErrors(error)
       }
     },
     async register () {
@@ -155,7 +155,7 @@ export default {
           this.alert('negative', 'Las claves no coinciden')
         }
       } catch (error) {
-        this.alert('negative', error.response.data.error)
+        this.manageErrors(error)
       }
       this.disableLoading()
     }

@@ -47,7 +47,7 @@ export default {
           this.sounds = request.data.data.items
         }
       } catch (error) {
-        console.log(error)
+        this.manageErrors(error)
       }
       this.disableLoading()
     },
@@ -68,9 +68,7 @@ export default {
           this.getMySounds()
           this.disableLoading()
         } catch (error) {
-          for (let i = 0; i < error.response.data.error.errors.length; i++) {
-            this.alert('negative', error.response.data.error.errors[i].message)
-          }
+          this.manageErrors(error)
           this.disableLoading()
         }
       }).onCancel(() => {

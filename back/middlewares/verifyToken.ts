@@ -8,6 +8,6 @@ export const verifyToken = (req: any, res: any, next: any) => {
         req.user = verified
         next() // can
     } catch (error) {
-        res.status(400).json({error: 'token no es válido'})
+        res.status(401).json({error: 'token no es válido'})
     }
 }
