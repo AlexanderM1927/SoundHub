@@ -9,8 +9,9 @@ pipeline {
                 dir('./front') {
                     sh 'pwd'
                     sh 'npm install'
-                    sh 'pwd'
-                    sh 'quasar build -m pwa'
+                }
+                sh 'cd ./front && quasar build -m pwa'
+                dir('./front') {
                     sh 'mv -n ./dist/pwa /var/lib/jenkins/workspace/soundhub/back/public'
                 }
             }
