@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    options {
+        disableConcurrentBuilds()
+    }
     stages {
         stage('Frotend') {
             tools {
