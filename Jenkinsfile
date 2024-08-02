@@ -22,7 +22,7 @@ pipeline {
                     sh 'npm install'
                     sh 'npx sequelize-cli db:migrate'
                     sh 'npx sequelize-cli db:seed:all'
-                    sh 'cp -r ./config /var/lib/jenkins/workspace/soundhub/back/dist/config'
+                    sh 'cp -r ./config /var/lib/jenkins/workspace/soundhub/back/dist'
                     sh 'npm run build'
                     sh 'pm2 start ./dist/server.js'
                     sh ''
