@@ -9,7 +9,8 @@ pipeline {
                 dir('./front') {
                     sh 'npm install'
                     sh 'quasar build -m pwa'
-                    sh 'cp -r ./dist/pwa/ /var/lib/jenkins/workspace/soundhub/back/public'
+                    sh 'chown -R jenkins:jenkins ./dist/pwa'
+                    sh 'rsync -a ./dist/pwa/. /var/lib/jenkins/workspace/soundhub/back/public'
                 }
             }
         }
