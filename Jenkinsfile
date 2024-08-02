@@ -24,8 +24,16 @@ pipeline {
                     sh 'npx sequelize-cli db:seed:all'
                     sh 'cp -r ./config /var/lib/jenkins/workspace/soundhub/back/dist'
                     sh 'npm run build'
-                    sh 'pm2 delete ./dist/server.js 2> /dev/null &&  pm2 start ./dist/server.js'
-                    sh ''
+                }
+            }
+        }
+        stage('Deploy') {
+            tools {
+                nodejs 'soundhub-back'
+            }
+            steps {
+                dir('./back') {
+                    sh 'pm2 start ./dist/server.js'
                 }
             }
         }
