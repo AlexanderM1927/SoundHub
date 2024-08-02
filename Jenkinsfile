@@ -4,13 +4,23 @@ pipeline {
         disableConcurrentBuilds()
     }
     stages {
-        stage('Frotend') {
+        stage('Frontend prepare') {
             tools {
-                nodejs 'soundhub-front'
+                nodejs 'node-21.11.1'
             }
             steps {
                 dir('./front') {
                     sh 'npm install'
+                    sh 'icongenie generate -m pwa -i ./public/logo.png'
+                }
+            }
+        }
+        stage('Frontend build') {
+            tools {
+                nodejs 'soundhub-14.16.1'
+            }
+            steps {
+                dir('./front') {
                     sh 'quasar build -m pwa'
                     sh 'chown -R jenkins:jenkins ./dist/pwa'
                     sh 'rsync -a ./dist/pwa/. /var/lib/jenkins/workspace/soundhub/back/public'
@@ -19,7 +29,7 @@ pipeline {
         }
         stage('Backend') {
             tools {
-                nodejs 'soundhub-back'
+                nodejs 'node-21.11.1'
             }
             steps {
                 dir('./back') {
