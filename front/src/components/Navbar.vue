@@ -95,6 +95,14 @@ const menuList = [
     to: '/login',
     separator: true,
     requireSession: false
+  },
+  {
+    title: 'Actualizar app',
+    icon: 'update',
+    to: '/update',
+    separator: false,
+    hasAction: true,
+    action: 'updateApp'
   }
 ]
 export default {

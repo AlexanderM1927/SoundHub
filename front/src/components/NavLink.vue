@@ -1,7 +1,7 @@
 <template>
   <!-- NAVBAR ITEM -->
   <q-item
-    @click="goTo(menuItem.to)"
+    @click="execute(menuItem)"
     v-if="
       menuItem.requireSession === undefined ||
       (menuItem.requireSession && user) ||
@@ -22,7 +22,7 @@
     </q-item-section>
   </q-item>
 </template>
-
+<!-- goTo(menuItem.to) -->
 <script>
 import { functions } from '../functions.js'
 export default {
@@ -34,6 +34,21 @@ export default {
   name: 'NavLink',
   props: ['menuItem', 'user'],
   mounted () {
+  },
+  methods: {
+    execute (menuItem) {
+      if (menuItem.hasAction) {
+        this[menuItem.action]()
+      } else {
+        this.goTo(menuItem.to)
+      }
+    },
+    updateApp () {
+      if (window.caches) {
+        window.caches.keys().then((keyList) => Promise.all(keyList.map((key) => caches.delete(key))))
+        window.location.reload()
+      }
+    }
   }
 }
 </script>

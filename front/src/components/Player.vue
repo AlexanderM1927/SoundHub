@@ -82,6 +82,13 @@
                 color="pink">
                 Agregar a playlist
               </q-btn>
+              <q-btn
+                class="col-5 q-ml-sm q-mb-xs"
+                @click="downloadFile(soundInfo)"
+                color="pink"
+                icon="download">
+                Download
+              </q-btn>
             </div>
             <span v-if="soundInfo.type === 'sound'">
               Publicada por:
@@ -243,6 +250,7 @@ export default {
     },
     async getInformationSound () {
       let sound = this.song.payload
+      console.log('this.playlist', this.playlist)
       if (this.playlist.length > 0) sound = this.playlist[this.position].payload
       try {
         const request = await SoundService.getSoundById(sound)
