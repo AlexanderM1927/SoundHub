@@ -74,7 +74,6 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
   try {
     const url = SearchService.getSongById(payload)
     if (payload.localDownloadId && !localDownloadId) {
-      console.log('cambio la id')
       localDownloadId = payload.localDownloadId
     }
     if (!payload.playlistMode || payload.isFirstOnPlaylist) {
@@ -88,6 +87,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         payload: payload
       })
       if (!payload.playlistMode && payload.type === 'video') {
+        localDownloadId = payload.localDownloadId
         setPlaylistDefault(relatedVideos, dispatch)
       }
     } else if (payload.playlistMode) {
