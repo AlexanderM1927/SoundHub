@@ -54,7 +54,13 @@ const downloadBackgroundSound = ({ commit, url, payload }) => {
     if (canDownloadNextSong === true) {
       if (localDownloadId && (localDownloadId === window.downloadBgId)) {
         window.canDownloadNextSong = false
-        const { newUrl } = await getUrl(url)
+        let newUrl
+        if (payload.type === 'device') {
+          newUrl = payload.url
+        } else {
+          const processUrl = await getUrl(url)
+          newUrl = processUrl.newUrl
+        }
         commit('setSongOnPlaylist', {
           url: newUrl,
           payload: payload

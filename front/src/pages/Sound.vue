@@ -4,8 +4,8 @@
       <div :class="`custom-dark-bg col-md-8 col-xs-12 container`">
         <p class="title text-h6 q-ml-md q-mt-md">Mis canciones <a v-if="user" class="text-green" style="cursor: pointer;" @click="uploadSoundModal()"> <q-icon name="unarchive"/> <q-tooltip>Subir</q-tooltip> </a></p>
         <div class="row custom-dark-div">
-          <p class="snd-subtitle col-9">Reproducir en orden</p>
-          <q-btn class="play-btn col-3" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
+          <q-btn class="col-2 play-btn" icon="shuffle" @click="getPlaylistAndPlayShuffle()" />
+        <q-btn class="col-2 play-btn" icon="play_arrow" @click="getPlaylistAndPlay()" />
         </div>
         <div v-bind:key="file.id" v-for="file in files">
           <SearchResultFile :result="file" :download="false" :tiny="true"/>
@@ -117,7 +117,24 @@ export default {
       for (let i = 0; i < this.sounds.length; i++) {
         this.allSounds.push(this.sounds[i])
       }
+      console.log('this.allSounds', this.allSounds)
       this.playPlaylist(this.allSounds)
+    },
+    getPlaylistAndPlayShuffle () {
+      this.allSounds = [...this.files]
+      for (let i = 0; i < this.sounds.length; i++) {
+        this.allSounds.push(this.sounds[i])
+      }
+      this.playPlaylist(this.shuffleArray([...this.allSounds]))
+    },
+    shuffleArray (array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        const temp = array[i]
+        array[i] = array[j]
+        array[j] = temp
+      }
+      return array
     }
   }
 }

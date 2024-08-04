@@ -139,6 +139,8 @@ export const functions = {
         } else if (playlist[i].type === 'sound') {
           url = playlist[i].sound_id
           img = img !== '' ? img : this.getSrcFromBackend(playlist[i].sound_thumbnail_url)
+        } else if (playlist[i].type === 'device') {
+          url = playlist[i].url
         }
         if (!isNotFirst) {
           window.downloadBgId = url

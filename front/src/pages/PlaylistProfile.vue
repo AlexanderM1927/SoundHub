@@ -82,12 +82,4 @@ export default {
   text-transform: initial;
 }
 
-.play-btn {
-  margin: auto;
-  max-width: 80px;
-  height: 35px;
-  background: #CF2741;
-  color: white;
-}
-
 </style>
