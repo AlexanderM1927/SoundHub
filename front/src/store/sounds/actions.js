@@ -49,13 +49,21 @@ const getUrl = async (url) => {
 export const getSongById = async ({ commit, dispatch }, payload) => {
   try {
     const url = SearchService.getSongById(payload)
-    if (!payload.playlistMode) {
+    if (!payload.playlistMode || payload.isFirstOnPlaylist) {
       const { newUrl, relatedVideos } = await getUrl(url)
       commit('setSong', {
         url: newUrl,
         payload: payload
       })
-      setPlaylistDefault(relatedVideos, dispatch)
+      commit('setSongOnPlaylist', {
+        url: newUrl,
+        payload: payload
+      })
+      if (!payload.playlistMode && payload.type === 'video') {
+        setPlaylistDefault(relatedVideos, dispatch)
+      } else if (!payload.playlistMode && payload.type === 'sound') {
+        window.canDownloadNextSong = false
+      }
     } else {
       // Download sound in background
       const downloadBackgroundSound = () => {
@@ -63,10 +71,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
           const canDownloadNextSong = window.canDownloadNextSong
           if (canDownloadNextSong === true) {
             window.canDownloadNextSong = false
-            const sound = await fetch(url)
-            const blob = await sound.blob()
-            const newBlob = new Blob([blob], { type: 'audio/mp3' })
-            const newUrl = URL.createObjectURL(newBlob)
+            const { newUrl } = await getUrl(url)
             commit('setSongOnPlaylist', {
               url: newUrl,
               payload: payload

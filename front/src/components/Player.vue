@@ -22,7 +22,7 @@
           </div>
         </div>
         <!--PREVIOUS SONG-->
-        <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 0" class='col-md-1 col-xs-2'>
+        <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 1" class='col-md-1 col-xs-2'>
           <div class="row justify-center">
             <q-icon
               name="fas fa-step-backward"
@@ -33,12 +33,12 @@
           </div>
         </div>
         <!--SOUND WAVES-->
-        <div :class="(playlist.length > 0 ? 'col-md-8 col-xs-4' : 'col-md-10 col-xs-7')">
+        <div :class="(playlist.length > 1 ? 'col-md-8 col-xs-4' : 'col-md-10 col-xs-7')">
           <div id='waveform'></div>
           <div id="audioBox"><audio id="audioInput" controls type="audio/mp3" title="soundhub"></audio></div>
         </div>
         <!--NEXT SONG-->
-        <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 0" class="col-md-1 col-xs-2">
+        <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 1" class="col-md-1 col-xs-2">
           <div class="row justify-center">
             <q-icon
               name="fas fa-step-forward"
@@ -249,9 +249,7 @@ export default {
       }
     },
     async getInformationSound () {
-      let sound = this.song.payload
-      console.log('this.playlist', this.playlist)
-      if (this.playlist.length > 0) sound = this.playlist[this.position].payload
+      const sound = this.soundPlaying.payload
       try {
         const request = await SoundService.getSoundById(sound)
         const res = request.data.data
@@ -366,15 +364,14 @@ export default {
         return 0
       }
       if (this.playlist.length > 0) {
-        if (type === 'next' && this.playlist.length > (this.position + 1)) {
-          this.loadFile(this.playlist[this.position + 1])
+        if (type === 'next' && this.playlist.length > this.position) {
           this.$store.dispatch('sounds/setPosition', (this.position + 1))
-        } else {
+        } else if (type === 'prev') {
           if (this.position > 0) {
-            this.loadFile(this.playlist[this.position - 1])
             this.$store.dispatch('sounds/setPosition', (this.position - 1))
           }
         }
+        this.loadFile(this.playlist[this.position])
       }
     }
   }

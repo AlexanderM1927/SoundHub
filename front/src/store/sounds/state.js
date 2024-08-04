@@ -5,7 +5,7 @@ export default function () {
     searchText: '',
     song: null,
     playlist: [],
-    position: 1
+    position: 0
     //
   }
 }

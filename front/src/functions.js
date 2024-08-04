@@ -135,6 +135,7 @@ export const functions = {
         }
         await this.$store.dispatch('sounds/getSongById', {
           url: url,
+          isFirstOnPlaylist: !isNotFirst,
           type: playlist[i].type,
           playlistMode: true,
           img: img,
