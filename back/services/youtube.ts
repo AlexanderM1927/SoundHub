@@ -1,7 +1,6 @@
 import ytdl, { videoInfo } from '@distube/ytdl-core'
 // @ts-ignore
 import youtubesearchapi from 'youtube-search-api'
-import fileSystem from 'fs'
 
 export class YoutubeService {
     soundRepository: any
