@@ -137,7 +137,6 @@ export const functions = {
           url: url,
           type: playlist[i].type,
           playlistMode: true,
-          isFirstOnPlaylist: !isNotFirst,
           img: img,
           title: playlist[i].sound_name ? playlist[i].sound_name : playlist[i].title
         })

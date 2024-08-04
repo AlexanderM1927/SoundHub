@@ -291,7 +291,9 @@ export default {
         window.canDownloadNextSong = true
         this.isLoading = false
         this.disableLoading()
-        this.wavesurfer.playPause()
+        setTimeout(() => {
+          this.wavesurfer.playPause()
+        }, 500)
         this.loadThumbnail()
       })
       this.wavesurfer.on('play', () => {

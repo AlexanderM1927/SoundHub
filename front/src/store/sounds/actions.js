@@ -57,35 +57,27 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
       })
       setPlaylistDefault(relatedVideos, dispatch)
     } else {
-      if (payload.isFirstOnPlaylist) {
-        const { newUrl } = await getUrl(url)
-        commit('setSong', {
-          url: newUrl,
-          payload: payload
-        })
-      } else {
-        // Download sound in background
-        const downloadBackgroundSound = () => {
-          setTimeout(async () => {
-            const canDownloadNextSong = window.canDownloadNextSong
-            if (canDownloadNextSong) {
-              window.canDownloadNextSong = false
-              const sound = await fetch(url)
-              const blob = await sound.blob()
-              const newBlob = new Blob([blob], { type: 'audio/mp3' })
-              const newUrl = URL.createObjectURL(newBlob)
-              commit('setSongOnPlaylist', {
-                url: newUrl,
-                payload: payload
-              })
-              window.canDownloadNextSong = true
-            } else {
-              downloadBackgroundSound()
-            }
-          }, 2000)
-        }
-        downloadBackgroundSound()
+      // Download sound in background
+      const downloadBackgroundSound = () => {
+        setTimeout(async () => {
+          const canDownloadNextSong = window.canDownloadNextSong
+          if (canDownloadNextSong === true) {
+            window.canDownloadNextSong = false
+            const sound = await fetch(url)
+            const blob = await sound.blob()
+            const newBlob = new Blob([blob], { type: 'audio/mp3' })
+            const newUrl = URL.createObjectURL(newBlob)
+            commit('setSongOnPlaylist', {
+              url: newUrl,
+              payload: payload
+            })
+            window.canDownloadNextSong = true
+          } else {
+            downloadBackgroundSound()
+          }
+        }, 2000)
       }
+      downloadBackgroundSound()
     }
   } catch (error) {
     console.log(error)
