@@ -90,6 +90,9 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         localDownloadId = payload.localDownloadId
         setPlaylistDefault(relatedVideos, dispatch)
       }
+      if (payload.isFirstOnPlaylist) {
+        localDownloadId = payload.localDownloadId
+      }
     } else if (payload.playlistMode) {
       // Download sound in background
       // isplaylist

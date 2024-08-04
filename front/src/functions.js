@@ -134,7 +134,9 @@ export const functions = {
           url = playlist[i].sound_id
           img = img !== '' ? img : this.getSrcFromBackend(playlist[i].sound_thumbnail_url)
         }
-        window.downloadBgId = url
+        if (!isNotFirst) {
+          window.downloadBgId = url
+        }
         await this.$store.dispatch('sounds/getSongById', {
           url: url,
           isFirstOnPlaylist: !isNotFirst,
