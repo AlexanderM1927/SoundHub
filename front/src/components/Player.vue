@@ -48,7 +48,7 @@
             />
           </div>
         </div>
-        <div v-if="song && (song.payload.type === 'sound' || song.payload.type === 'video')" class="col-md-1 col-xs-2 q-mt-xs">
+        <div v-if="soundPlaying && (soundPlaying.payload.type === 'sound' || soundPlaying.payload.type === 'video')" class="col-md-1 col-xs-2 q-mt-xs">
           <div class="row justify-center">
             <q-icon
               name="fas fa-info"

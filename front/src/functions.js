@@ -100,11 +100,13 @@ export const functions = {
         url = result.sound_id
         img = img !== '' ? img : this.getSrcFromBackend(result.sound_thumbnail_url)
       }
+      window.downloadBgId = url
       await this.$store.dispatch('sounds/getSongById', {
         url: url,
         img: img,
         type: result.type,
-        title: result.sound_name ? result.sound_name : result.title
+        title: result.sound_name ? result.sound_name : result.title,
+        localDownloadId: url
       })
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
         document.getElementById('player').classList.toggle('inactive')
@@ -117,7 +119,6 @@ export const functions = {
     },
     async playPlaylist (playlist) {
       this.activateLoading()
-
       this.$store.dispatch('sounds/reloadPlaylist')
       let isNotFirst = false
       let url = ''
@@ -133,13 +134,15 @@ export const functions = {
           url = playlist[i].sound_id
           img = img !== '' ? img : this.getSrcFromBackend(playlist[i].sound_thumbnail_url)
         }
+        window.downloadBgId = url
         await this.$store.dispatch('sounds/getSongById', {
           url: url,
           isFirstOnPlaylist: !isNotFirst,
           type: playlist[i].type,
           playlistMode: true,
           img: img,
-          title: playlist[i].sound_name ? playlist[i].sound_name : playlist[i].title
+          title: playlist[i].sound_name ? playlist[i].sound_name : playlist[i].title,
+          localDownloadId: url
         })
         if (!isNotFirst) {
           if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {

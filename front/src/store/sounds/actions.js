@@ -5,6 +5,8 @@ export function someAction (context) {
 */
 import SearchService from '../../services/SearchService'
 
+let localDownloadId = null
+
 export const getItemsByName = async ({ commit }, payload) => {
   try {
     commit('setLoading', true)
@@ -46,9 +48,35 @@ const getUrl = async (url) => {
   }
 }
 
+const downloadBackgroundSound = ({ commit, url, payload }) => {
+  window.downloadBackgroundSoundId = setTimeout(async () => {
+    const canDownloadNextSong = window.canDownloadNextSong
+    if (canDownloadNextSong === true) {
+      if (localDownloadId && (localDownloadId === window.downloadBgId)) {
+        window.canDownloadNextSong = false
+        const { newUrl } = await getUrl(url)
+        commit('setSongOnPlaylist', {
+          url: newUrl,
+          payload: payload
+        })
+        window.canDownloadNextSong = true
+      } else {
+        reloadPlaylist({ commit })
+        clearTimeout(window.downloadBackgroundSoundId)
+      }
+    } else {
+      downloadBackgroundSound({ commit, url, payload })
+    }
+  }, 2000)
+}
+
 export const getSongById = async ({ commit, dispatch }, payload) => {
   try {
     const url = SearchService.getSongById(payload)
+    if (payload.localDownloadId && !localDownloadId) {
+      console.log('cambio la id')
+      localDownloadId = payload.localDownloadId
+    }
     if (!payload.playlistMode || payload.isFirstOnPlaylist) {
       const { newUrl, relatedVideos } = await getUrl(url)
       commit('setSong', {
@@ -61,28 +89,11 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
       })
       if (!payload.playlistMode && payload.type === 'video') {
         setPlaylistDefault(relatedVideos, dispatch)
-      } else if (!payload.playlistMode && payload.type === 'sound') {
-        window.canDownloadNextSong = false
       }
-    } else {
+    } else if (payload.playlistMode) {
       // Download sound in background
-      const downloadBackgroundSound = () => {
-        setTimeout(async () => {
-          const canDownloadNextSong = window.canDownloadNextSong
-          if (canDownloadNextSong === true) {
-            window.canDownloadNextSong = false
-            const { newUrl } = await getUrl(url)
-            commit('setSongOnPlaylist', {
-              url: newUrl,
-              payload: payload
-            })
-            window.canDownloadNextSong = true
-          } else {
-            downloadBackgroundSound()
-          }
-        }, 2000)
-      }
-      downloadBackgroundSound()
+      // isplaylist
+      downloadBackgroundSound({ commit, url, payload })
     }
   } catch (error) {
     console.log(error)
