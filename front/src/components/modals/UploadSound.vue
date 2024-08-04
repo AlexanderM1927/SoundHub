@@ -13,6 +13,7 @@
               outlined
               lazy-rules
               use-chips
+              accept=".jpg, image/*"
               :rules="[
                 val => (val !== null && val !== undefined) || 'Seleccionar imagen'
               ]"
@@ -34,6 +35,7 @@
               outlined
               lazy-rules
               use-chips
+              accept=".mp3, audio/*"
               :rules="[
                 val => (val !== null && val !== undefined) || 'Seleccionar canción'
               ]"
