@@ -82,12 +82,8 @@ export class SoundController {
                     sound,
                     relatedVideos
                 } = await this.youtubeService.downloadSound({ url, type })
-                soundUrl = await this.youtubeService.waitUntilDownloadSound({
-                    file: sound,
-                    url: url
-                })
                 nextVideos = [...relatedVideos].slice(0, 10)
-                response = fileSystem.createReadStream(soundUrl)
+                response = sound
             } else {
                 const sound = await this.soundRepository.getSoundById({
                     sound_id: url
@@ -106,7 +102,6 @@ export class SoundController {
                 res.setHeader("Accept-Ranges", "bytes");
                 res.setHeader("Connection", "Keep-Alive");
                 res.setHeader("Transfer-encoding", "chunked");
-                res.setHeader("Content-Length", fileSystem.statSync(soundUrl).size);
                 res.setHeader("Related-Videos", JSON.stringify(nextVideos))
                 response.pipe(res)
 

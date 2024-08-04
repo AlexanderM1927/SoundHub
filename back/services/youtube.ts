@@ -85,13 +85,4 @@ export class YoutubeService {
             relatedVideos
         }
     }
-
-    waitUntilDownloadSound ({file, url}: {file: any, url: any}) {
-        const fileFS = fileSystem.createWriteStream(`./public/sounds/${url}.mp3`)
-        return new Promise((resolve, reject) => {
-            file.pipe(fileFS)
-                .on('finish', () => resolve(`./public/sounds/${url}.mp3`))
-                .on('error', reject)
-        })
-    }
 }
