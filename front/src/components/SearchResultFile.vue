@@ -1,14 +1,11 @@
 <template>
   <div class="q-mb-sm">
     <div class="search-result">
-      <img @click="openPlayer(result)" v-if="result.sound_thumbnail_url" :src="getSrcFromBackend(result.sound_thumbnail_url)" class="search-result__image">
-      <img @click="openPlayer(result)" v-else :src="getSrcFromBackend(result.img)" class="search-result__image">
+      <svg @click="openPlayer(result)" class="search-result__image" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#5f6368">
+        <path d="M640-160q-50 0-85-35t-35-85q0-50 35-85t85-35q11 0 21 1.5t19 6.5v-328h200v80H760v360q0 50-35 85t-85 35ZM120-320v-80h320v80H120Zm0-160v-80h480v80H120Zm0-160v-80h480v80H120Z"/>
+      </svg>
       <div class="d-flex space-between w-100">
-        <div @click="openPlayer(result)" v-if="result.title">{{ result.title }}</div>
-        <div @click="openPlayer(result)" v-else-if="result.sound_name">{{ result.sound_name }}</div>
-        <div v-if="playlist === true">
-          <a class="pli-delete text-white" @click="removeFromPlaylist"> <q-icon name="fas fa-times"/></a>
-        </div>
+        <div @click="openPlayer(result)">{{ result.sound_name }}</div>
       </div>
     </div>
   </div>
@@ -20,7 +17,7 @@ import { functions } from '../functions.js'
 
 export default {
   mixins: [functions],
-  name: 'SearchResultSound',
+  name: 'SearchResultFile',
   props: ['result', 'download', 'tiny', 'playlist'],
   data () {
     return {

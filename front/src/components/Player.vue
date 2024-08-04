@@ -258,12 +258,14 @@ export default {
             title: res.sound_name,
             id: res.sound_id,
             user_id: res.user_id,
-            user: res.user.user_name
+            user: res.user.user_name,
+            url: sound.url
           }
         } else {
           this.soundInfo = {
             title: res.title,
-            id: res.id
+            id: res.id,
+            url: sound.url
           }
         }
         this.soundInfo.type = sound.type

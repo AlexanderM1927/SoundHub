@@ -25,7 +25,7 @@ import { functions } from '../functions.js'
 
 export default {
   mixins: [functions],
-  name: 'SearchResult',
+  name: 'SearchResultPlaylist',
   props: ['result'],
   data () {
     return {

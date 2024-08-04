@@ -77,7 +77,15 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
       localDownloadId = payload.localDownloadId
     }
     if (!payload.playlistMode || payload.isFirstOnPlaylist) {
-      const { newUrl, relatedVideos } = await getUrl(url)
+      let newUrl, relatedVideos
+      if (payload.type === 'device') {
+        newUrl = payload.url
+        relatedVideos = []
+      } else {
+        const processUrl = await getUrl(url)
+        newUrl = processUrl.newUrl
+        relatedVideos = processUrl.relatedVideos
+      }
       commit('setSong', {
         url: newUrl,
         payload: payload

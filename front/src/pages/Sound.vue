@@ -7,6 +7,9 @@
           <p class="snd-subtitle col-9">Reproducir en orden</p>
           <q-btn class="play-btn col-3" color="orange" icon="play_arrow" @click="getPlaylistAndPlay()" />
         </div>
+        <div v-bind:key="file.id" v-for="file in files">
+          <SearchResultFile :result="file" :download="false" :tiny="true"/>
+        </div>
         <div v-bind:key="result.id" v-for="result in sounds">
           <SearchResultSound :result="result" :download="false" :tiny="true"/>
         </div>
@@ -20,9 +23,14 @@ import { functions } from '../functions.js'
 import SoundService from '../services/SoundService'
 import UploadSound from '../components/modals/UploadSound'
 import SearchResultSound from '../components/SearchResultSound.vue'
+import SearchResultFile from '../components/SearchResultFile.vue'
+import { Plugins, FilesystemDirectory } from '@capacitor/core'
+
+const { Filesystem } = Plugins
+
 export default {
   mixins: [functions],
-  components: { SearchResultSound },
+  components: { SearchResultSound, SearchResultFile },
   name: 'PageSounds',
   data () {
     return {
@@ -34,9 +42,36 @@ export default {
     }
   },
   mounted () {
+    this.getMySoundsFromDevice()
     this.getMySounds()
   },
   methods: {
+    async getMySoundsFromDevice () {
+      try {
+        this.activateLoading()
+        const ret = await Filesystem.readdir({
+          path: 'soundhub',
+          directory: FilesystemDirectory.Data
+        })
+        for (let i = 0; i < ret.files.length; i++) {
+          const readFile = await Filesystem.readFile({
+            path: 'soundhub/' + ret.files[i],
+            directory: FilesystemDirectory.Data
+          })
+          const arrayBuffer = this.base64ToArrayBuffer(readFile.data)
+          const newBlob = new Blob([arrayBuffer], { type: 'audio/mp3' })
+          const newUrl = URL.createObjectURL(newBlob)
+          const data = {
+            sound_name: ret.files[i],
+            type: 'device',
+            url: newUrl
+          }
+          this.files.push(data)
+        }
+      } catch (e) {
+        console.error('Unable to read dir', e)
+      }
+    },
     async getMySounds () {
       try {
         if (localStorage.getItem('user')) {

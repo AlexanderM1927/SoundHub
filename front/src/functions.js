@@ -84,10 +84,12 @@ export const functions = {
       this.$q.loading.hide()
     },
     async openPlayer (result) {
-      this.addToCollection('recent', {
-        ...result,
-        time: Date.now()
-      })
+      if (!result.type !== 'device') {
+        this.addToCollection('recent', {
+          ...result,
+          time: Date.now()
+        })
+      }
       this.$store.dispatch('sounds/reloadPlaylist')
       this.activateLoading()
       let url = ''
@@ -99,6 +101,8 @@ export const functions = {
       } else if (result.type === 'sound') {
         url = result.sound_id
         img = img !== '' ? img : this.getSrcFromBackend(result.sound_thumbnail_url)
+      } else if (result.type === 'device') {
+        url = result.url
       }
       window.downloadBgId = url
       await this.$store.dispatch('sounds/getSongById', {
@@ -112,10 +116,12 @@ export const functions = {
         document.getElementById('player').classList.toggle('inactive')
       }
       this.disableLoading()
-      await ViewService.store({
-        sound_id: url,
-        view_type: result.type
-      })
+      if (!result.type !== 'device') {
+        await ViewService.store({
+          sound_id: url,
+          view_type: result.type
+        })
+      }
     },
     async playPlaylist (playlist) {
       this.activateLoading()
@@ -157,6 +163,15 @@ export const functions = {
     getSrcFromBackend (url) {
       return process.env.API_URL.replace('v1/', '') + url.replace('public', '')
     },
+    base64ToArrayBuffer (base64) {
+      const binaryString = atob(base64)
+      const len = binaryString.length
+      const bytes = new Uint8Array(len)
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i)
+      }
+      return bytes.buffer
+    },
     convertBlobToBase64 (blob) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
@@ -185,9 +200,10 @@ export const functions = {
         const blob = request.data
         this.convertBlobToBase64(blob).then(async (str) => {
           await this.verifyAndCreateFolder()
+          const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
           await Filesystem.writeFile({
             data: str,
-            path: 'soundhub/' + payload.name + payload.sound_file_url.substr(payload.sound_file_url.lastIndexOf('.')),
+            path: 'soundhub/' + payload.title + currentDate + '.mp3',
             directory: FilesystemDirectory.Data
           })
           this.alert('positive', 'Archivo descargado.')
