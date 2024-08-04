@@ -68,8 +68,6 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         const downloadBackgroundSound = () => {
           setTimeout(async () => {
             const canDownloadNextSong = window.canDownloadNextSong
-            console.log('url', url)
-            console.log('canDownloadNextSong', canDownloadNextSong)
             if (canDownloadNextSong) {
               window.canDownloadNextSong = false
               const sound = await fetch(url)

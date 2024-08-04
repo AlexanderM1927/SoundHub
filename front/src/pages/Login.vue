@@ -151,7 +151,6 @@ export default {
             this.tab = 'sign_in'
           }
         } else {
-          console.log(this.user)
           this.alert('negative', 'Las claves no coinciden')
         }
       } catch (error) {

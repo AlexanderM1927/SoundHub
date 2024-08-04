@@ -290,13 +290,6 @@ export default {
       this.wavesurfer.on('ready', () => {
         window.canDownloadNextSong = true
         this.isLoading = false
-        const audioNode = document.getElementsByTagName('audio')
-        for (let i = 0; i < audioNode.length; i++) {
-          const audio = audioNode[i]
-          audio.setAttribute('type', 'audio/mp3')
-          audio.setAttribute('title', 'soundhub')
-          audio.load()
-        }
         this.disableLoading()
         this.wavesurfer.playPause()
         this.loadThumbnail()
