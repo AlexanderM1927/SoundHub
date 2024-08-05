@@ -80,8 +80,6 @@ export class YoutubeService {
                 return 0
             }
         })
-        console.log('getBestFormat', getBestFormat)
-        console.log('getBestFormat.length', getBestFormat.length)
         if (getBestFormat[0]) {
             const downloadAndStream = () => {
                 const options: {
