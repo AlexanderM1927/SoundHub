@@ -193,7 +193,7 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'front'
+        appId: 'soundhub'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
