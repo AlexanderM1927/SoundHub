@@ -55,6 +55,7 @@ export class YoutubeService {
     async downloadSound ({ url }: { url: any }) {
         let sound: any = null
         const info: videoInfo = await ytdl.getInfo(url)
+        const formats: any[] = info.formats ? info.formats : info.player_response.streamingData.formats
         const relatedVideos = info.related_videos.map((video) => {
             return {
                 id: video.id,
@@ -62,9 +63,25 @@ export class YoutubeService {
                 thumbnail: video.thumbnails
             }
         })
-        const getBestFormat = info.formats.filter((format: any) => {
+        let getBestFormat = formats.filter((format: any) => {
             return format.hasAudio === true && format.container === 'mp4' && format.hasVideo === true
         })
+        if (getBestFormat.length === 0) {
+            getBestFormat = formats.filter((format: any) => {
+                return format.hasAudio === true && format.container === 'mp4'
+            })
+        }
+        getBestFormat = getBestFormat.sort((a: any, b: any) => {
+            if (parseInt(a.contentLength) < parseInt(b.contentLength)) {
+                return -1
+            } else if (parseInt(a.contentLength) > parseInt(b.contentLength)) {
+                return 1
+            } else {
+                return 0
+            }
+        })
+        console.log('getBestFormat', getBestFormat)
+        console.log('getBestFormat.length', getBestFormat.length)
         if (getBestFormat[0]) {
             const downloadAndStream = () => {
                 const options: {
