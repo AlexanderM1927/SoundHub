@@ -14,13 +14,13 @@
       <!--ADD TO LIST-->
       <q-btn
         class="col-5 q-ml-sm q-mb-xs"
-        @click="$emit.agregarSound(soundInfo)"
+        @click="$emit('agregarSound', soundInfo)"
         color="pink">
         Agregar a playlist
       </q-btn>
       <q-btn
         class="col-5 q-ml-sm q-mb-xs"
-        @click="$emit.downloadFile(soundInfo)"
+        @click="$emit('downloadFile', soundInfo)"
         color="pink"
         icon="download">
         Download
