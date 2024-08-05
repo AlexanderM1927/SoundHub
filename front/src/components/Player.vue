@@ -22,7 +22,7 @@
           </div>
         </div>
         <!--PREVIOUS SONG-->
-        <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 1" class='col-md-1 col-xs-2'>
+        <div class='col-md-1 col-xs-2'>
           <div class="row justify-center">
             <q-icon
               name="fas fa-step-backward"
@@ -33,12 +33,12 @@
           </div>
         </div>
         <!--SOUND WAVES-->
-        <div :class="(playlist.length > 1 ? 'col-md-8 col-xs-4' : 'col-md-10 col-xs-7')">
+        <div :class="'col-md-8 col-xs-4'">
           <div id='waveform'></div>
           <div id="audioBox"><audio id="audioInput" controls type="audio/mp3" title="soundhub"></audio></div>
         </div>
         <!--NEXT SONG-->
-        <div v-show="playlist && typeof(playlist) == 'object' && playlist.length > 1" class="col-md-1 col-xs-2">
+        <div class="col-md-1 col-xs-2">
           <div class="row justify-center">
             <q-icon
               name="fas fa-step-forward"
@@ -72,50 +72,14 @@
               <q-tooltip class="bg-white text-primary">Close</q-tooltip>
             </q-btn>
           </q-bar>
-          <div class="content">
-            <div class="text-h5" style="font-weight: bold;">{{ soundInfo.title }}</div>
-            <div :class="`row col-md-3 col-xs-12 rslt-div-btns justify-around`">
-              <!--ADD TO LIST-->
-              <q-btn
-                class="col-5 q-ml-sm q-mb-xs"
-                @click="agregarSound(soundInfo)"
-                color="pink">
-                Agregar a playlist
-              </q-btn>
-              <q-btn
-                class="col-5 q-ml-sm q-mb-xs"
-                @click="downloadFile(soundInfo)"
-                color="pink"
-                icon="download">
-                Download
-              </q-btn>
-            </div>
-            <span v-if="soundInfo.type === 'sound'">
-              Publicada por:
-              <a
-                style="
-                  text-decoration: none;
-                  color: #DEA559;
-                  font-weight: bold;
-                  cursor: pointer;
-                "
-                @click="goTo('/profile/' + soundInfo.user_id)"
-              >
-                {{ soundInfo.user }}
-              </a>
-            </span>
-            <div v-if="soundInfo.type === 'sound'">
-              <br>
-              <q-separator />
-              <div class="text-h6">Comentarios:</div>
-              <div class="box__comments">
-                <comment v-for="(comment, i) in comments" :key="i" :info="comment"></comment>
-              </div>
-              <q-editor class="full-width" content-class="bg-comment" toolbar-toggle-color="yellow-8" toolbar-bg="pink" v-model="comment" min-height="5rem" />
-              <br>
-              <q-btn class="full-width" label="Comentar" color="pink" @click="makeComment" />
-            </div>
-          </div>
+          <SoundInfo
+            :user="user"
+            :soundInfo="soundInfo"
+            :comments="comments"
+            @agregarSound="agregarSound"
+            @downloadFile="downloadFile"
+          >
+          </SoundInfo>
         </q-card>
       </q-dialog>
       <q-dialog
@@ -136,15 +100,15 @@ import SoundService from '../services/SoundService'
 import CommentService from '../services/CommentService'
 import { functions } from '../functions.js'
 import Playlist from '../pages/Playlist.vue'
-import Comment from './Comment.vue'
 import SoundPlaylistService from '../services/SoundPlaylistService'
+import SoundInfo from './SoundInfo'
 
 export default {
   name: 'Player',
   mixins: [functions],
   components: {
-    Comment,
-    Playlist
+    Playlist,
+    SoundInfo
   },
   data () {
     return {
@@ -184,15 +148,17 @@ export default {
     },
     position () {
       if (this.position) {
-        const { url, img, type, title } = this.playlist[this.position].payload
-        if (url === window.lastSoundRelated) {
+        const { url, img, type, title } = this.playlist[this.position].payload // lastone
+        if (url === window.penultimateSoundRelated) {
           window.downloadBgId = url
           this.$store.dispatch('sounds/getSongById', {
             url: url,
             img: img,
             type: type,
             title: title,
-            localDownloadId: url
+            localDownloadId: url,
+            playlistMode: true,
+            requireRealtedSounds: true
           })
         }
       }
@@ -219,27 +185,6 @@ export default {
     agregarSound (sound) {
       this.dialogPlaylist = true
       this.sound = sound
-    },
-    async makeComment () {
-      if (this.comment.length > 0) {
-        const request = await CommentService.store({
-          comment: this.comment,
-          user_id: this.user.user_id,
-          sound_id: this.soundInfo.id
-        })
-        this.comments.unshift(
-          {
-            user: {
-              user_name: this.user.user_name
-            },
-            comment_msg: request.data.data.comment_msg
-          }
-        )
-        this.comment = ''
-        if (request.status === 200) this.alert('positive', 'Comentario enviado')
-      } else {
-        this.alert('warning', 'Please, introduce some text')
-      }
     },
     async openDialogInfo () {
       if (!this.dialogInfo) {
@@ -274,13 +219,15 @@ export default {
             id: res.sound_id,
             user_id: res.user_id,
             user: res.user.user_name,
-            url: sound.url
+            url: sound.url,
+            img: this.getSrcFromBackend(res.sound_thumbnail_url)
           }
         } else {
           this.soundInfo = {
             title: res.title,
             id: res.id,
-            url: sound.url
+            url: sound.url,
+            img: res.thumbnail.thumbnails[0].url
           }
         }
         this.soundInfo.type = sound.type
@@ -316,7 +263,7 @@ export default {
         this.disableLoading()
         setTimeout(() => {
           this.wavesurfer.playPause()
-        }, 500)
+        }, 2000)
         this.loadThumbnail()
       })
       this.wavesurfer.on('play', () => {
@@ -379,6 +326,7 @@ export default {
       this.soundPlaying = sound
       this.wavesurfer.load(sound.url)
       this.activateLoading()
+      await this.getInformationSound()
     },
     isIOS () {
       if (typeof window === 'undefined' || typeof navigator === 'undefined') return false
