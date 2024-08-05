@@ -181,6 +181,21 @@ export default {
   watch: {
     song () {
       if (this.song) this.loadFile(this.song)
+    },
+    position () {
+      if (this.position) {
+        const { url, img, type, title } = this.playlist[this.position].payload
+        if (url === window.lastSoundRelated) {
+          window.downloadBgId = url
+          this.$store.dispatch('sounds/getSongById', {
+            url: url,
+            img: img,
+            type: type,
+            title: title,
+            localDownloadId: url
+          })
+        }
+      }
     }
   },
   methods: {

@@ -53,50 +53,57 @@ export class YoutubeService {
     }
 
     async downloadSound ({ url }: { url: any }) {
-        let sound: any = null
-        const info: videoInfo = await ytdl.getInfo(url)
-        const formats: any[] = info.formats ? info.formats : info.player_response.streamingData.formats
-        const relatedVideos = info.related_videos.map((video) => {
-            return {
-                id: video.id,
-                title: video.title?.replace(/[^a-zA-Z ]/g, ""),
-                thumbnail: video.thumbnails
-            }
-        })
-        let getBestFormat = formats.filter((format: any) => {
-            return format.hasAudio === true && format.container === 'mp4' && format.hasVideo === true
-        })
-        if (getBestFormat.length === 0) {
-            getBestFormat = formats.filter((format: any) => {
-                return format.hasAudio === true && format.container === 'mp4'
-            })
-        }
-        getBestFormat = getBestFormat.sort((a: any, b: any) => {
-            if (parseInt(a.contentLength) < parseInt(b.contentLength)) {
-                return -1
-            } else if (parseInt(a.contentLength) > parseInt(b.contentLength)) {
-                return 1
-            } else {
-                return 0
-            }
-        })
-        if (getBestFormat[0]) {
-            const downloadAndStream = () => {
-                const options: {
-                    quality?: any
-                } = {
-                    quality: getBestFormat[0].itag
+        try {
+            let sound: any = null
+            const info: videoInfo = await ytdl.getInfo(url)
+            const formats: any[] = info.formats ? info.formats : info.player_response.streamingData.formats
+            const relatedVideos = info.related_videos.map((video) => {
+                return {
+                    id: video.id,
+                    title: video.title?.replace(/[^a-zA-Z ]/g, ""),
+                    thumbnail: video.thumbnails
                 }
-                sound = ytdl(url, options)
+            })
+            let getBestFormat = formats.filter((format: any) => {
+                return format.hasAudio === true && format.container === 'mp4' && format.hasVideo === true
+            })
+            if (getBestFormat.length === 0) {
+                getBestFormat = formats.filter((format: any) => {
+                    return format.hasAudio === true && format.container === 'mp4'
+                })
             }
-        
-            downloadAndStream()
-        }
-        
+            getBestFormat = getBestFormat.sort((a: any, b: any) => {
+                if (parseInt(a.contentLength) < parseInt(b.contentLength)) {
+                    return -1
+                } else if (parseInt(a.contentLength) > parseInt(b.contentLength)) {
+                    return 1
+                } else {
+                    return 0
+                }
+            })
+            if (getBestFormat[0]) {
+                const downloadAndStream = () => {
+                    const options: {
+                        quality?: any
+                    } = {
+                        quality: getBestFormat[0].itag
+                    }
+                    sound = ytdl(url, options)
+                }
+            
+                downloadAndStream()
+            }
+            
 
-        return {
-            sound,
-            relatedVideos
+            return {
+                sound,
+                relatedVideos
+            }
+        } catch (error) {
+            return {
+                sound: null,
+                relatedVideos: []
+            }
         }
     }
 }

@@ -32,6 +32,7 @@ const setPlaylistDefault = (relatedVideos, dispatch) => {
       img: relatedVideos[i].thumbnail[0].url,
       title: relatedVideos[i].title
     })
+    if (i === (relatedVideos.length - 1)) window.lastSoundRelated = relatedVideos[i].id
   }
 }
 
