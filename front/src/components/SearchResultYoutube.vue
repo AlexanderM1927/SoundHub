@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="search-result">
+    <div v-if="playlist" class="search-result">
       <img @click="openPlayer(result)" v-if="result.img" :src="result.img" class="search-result__image">
       <img @click="openPlayer(result)" v-else :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
       <div class="d-flex space-between w-100">
@@ -8,6 +8,13 @@
         <div v-if="playlist === true">
           <a class="pli-delete text-white" @click="removeFromPlaylist"> <q-icon name="fas fa-times"/></a>
         </div>
+      </div>
+    </div>
+    <div v-else class="search-result" @click="openPlayer(result)">
+      <img v-if="result.img" :src="result.img" class="search-result__image">
+      <img v-else :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
+      <div class="d-flex space-between w-100">
+        <div>{{ result.title }}</div>
       </div>
     </div>
   </div>

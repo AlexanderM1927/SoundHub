@@ -50,6 +50,11 @@
       <q-editor class="full-width" content-class="bg-comment" toolbar-toggle-color="yellow-8" toolbar-bg="pink" v-model="comment" min-height="5rem" />
       <br>
       <q-btn class="full-width" label="Comentar" color="pink" @click="makeComment" />
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
     </div>
   </div>
 </template>
