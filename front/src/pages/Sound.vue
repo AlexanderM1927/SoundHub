@@ -117,7 +117,6 @@ export default {
       for (let i = 0; i < this.sounds.length; i++) {
         this.allSounds.push(this.sounds[i])
       }
-      console.log('this.allSounds', this.allSounds)
       this.playPlaylist(this.allSounds)
     },
     getPlaylistAndPlayShuffle () {
