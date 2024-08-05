@@ -307,12 +307,6 @@ export default {
         navigator.mediaSession.setActionHandler('nexttrack', () => {
           this.setNewSong('next')
         })
-        navigator.mediaSession.setActionHandler('seekbackward', () => {
-          this.wavesurfer.skipBackward()
-        })
-        navigator.mediaSession.setActionHandler('seekforward', () => {
-          this.wavesurfer.skipForward()
-        })
         navigator.mediaSession.setActionHandler('seekto', (details) => {
           const currentTime = details.seekTime
           this.wavesurfer.seekTo(currentTime / this.wavesurfer.getDuration())
