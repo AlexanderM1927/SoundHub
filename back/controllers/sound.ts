@@ -124,7 +124,7 @@ export class SoundController {
                     user_id: soundFromDB.user_id,
                     type: 'sound',
                     user: {
-                        user_name: soundFromDB.user_name,
+                        user_name: soundFromDB.dataValues.user,
                     }
                 }
                 Object.assign(sound, soundFromDB.dataValues)

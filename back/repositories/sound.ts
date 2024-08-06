@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 // @ts-ignore
-import { sound as Sound } from '../models'
+import { user as User, sound as Sound } from '../models'
 
 export class SoundRepository {
     
@@ -24,7 +24,10 @@ export class SoundRepository {
         const sound = await Sound.findOne({ 
             where: {
               sound_id
-            }
+            },
+            include: [{
+              model: User
+            }]
         })
 
         return sound

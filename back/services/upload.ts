@@ -1,16 +1,38 @@
 import multer from 'multer'
 import path from 'path'
 
+const whitelistAudio = [
+    'audio/mp3',
+    'audio/mpeg',
+    'audio/m4a'
+]
+
+const whitelistImage = [
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'image/webp'
+]
+
 const storage = multer.diskStorage({
-    destination: function (_req: any, _file: any, callback) {
+    destination: function (_req: any, _file: any, callback: any) {
         // try this route into the server saving files
         callback(null, './public/sounds/');
     },
-    filename: function (_req: any, file: any, callback) {
+    filename: function (_req: any, file: any, callback: any) {
        callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
-const upload = multer({ storage : storage }).fields([
+const upload = multer({ storage : storage, fileFilter: (_req: any, file: any, cb: any) => {
+    if (file.fieldname === 'sound_thumbnail_url' && !whitelistImage.includes(file.mimetype)) {
+        return cb(new Error('sound_thumbnail_url debe ser una imagen de tipo ' + whitelistImage.toString()))
+    }
+    if (file.fieldname === 'sound_file_url' && !whitelistAudio.includes(file.mimetype)) {
+        return cb(new Error('sound_file_url debe ser un archivo ' + whitelistAudio.toString()))
+    }
+
+    cb(null, true)
+} }).fields([
     {
         name: 'sound_file_url',
         maxCount: 1 
@@ -29,9 +51,9 @@ export class UploadService {
     }
 
     init (req: any, res: any) {
-        upload(req, res, async (err: any) => {
-            if(err) {
-                return res.status(400).json({err})
+        upload(req, res, async (error: any) => {
+            if(error) {
+                res.status(400).json({error: (error as Error).message})
             } else {
                 const sound = await this.soundRepository.create({
                     user_id: req.body.user_id,
