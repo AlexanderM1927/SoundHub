@@ -126,6 +126,7 @@ module.exports = function (/* ctx */) {
         navigateFallbackDenylist: [new RegExp('^/v1/')]
       }, // only for GenerateSW
       manifest: {
+        id: 'soundhub',
         name: 'SoundHub',
         short_name: 'SoundHub',
         description: 'SoundHub',
