@@ -8,6 +8,7 @@ import SearchService from '../../services/SearchService'
 let canDownloadNextSong = false
 let videosToDownload = []
 let parentDownload = ''
+let isDownloadingFirstSound = false
 
 export const getItemsByName = async ({ commit }, payload) => {
   try {
@@ -73,18 +74,20 @@ const downloadBackgroundSound = async ({ commit, url, payload }) => {
         })
       }
     } else {
-      if (payload.urlParent === parentDownload) {
+      if (payload.urlParent === parentDownload && !isDownloadingFirstSound) {
         commit('setSongOnPlaylist', {
           url: newUrl,
           payload: payload
         })
+      } else {
+        commit('reloadPlaylist')
       }
     }
     canDownloadNextSong = true
   } else {
     window.timeoutdownloadBgId = setTimeout(async () => {
       await downloadBackgroundSound({ commit, url, payload })
-    }, 1000)
+    }, 2000)
   }
 }
 
@@ -92,6 +95,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
   try {
     const url = SearchService.getSongById(payload)
     if (!payload.playlistMode || payload.isFirstOnPlaylist) {
+      isDownloadingFirstSound = true
       if (window.timeoutdownloadBgId) clearTimeout(window.timeoutdownloadBgId)
       commit('reloadPlaylist')
       videosToDownload = []
@@ -117,6 +121,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
       }
       parentDownload = payload.url
       canDownloadNextSong = true
+      isDownloadingFirstSound = false
     } else if (payload.playlistMode) {
       if (payload.requireRelatedSounds) { // this is used by the last sound on playlist to following with suggestions
         const { relatedVideos } = await getUrl(url)

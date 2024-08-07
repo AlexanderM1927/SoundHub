@@ -146,6 +146,13 @@ export default {
     song () {
       if (this.song) this.loadFile(this.song)
     },
+    // playlist () {
+    //   if (this.playlist) {
+    //     console.log('%c' + this.playlist.map((obj) => {
+    //       return obj.payload.title
+    //     }).toString(), 'background-color: red; color: white;')
+    //   }
+    // },
     position () {
       if (this.position) {
         const { url, img, type, title } = this.playlist[this.position].payload // current song

@@ -61,7 +61,8 @@ export class YoutubeService {
                 return {
                     id: video.id,
                     title: video.title?.replace(/[^a-zA-Z ]/g, ""),
-                    thumbnail: video.thumbnails
+                    thumbnail: video.thumbnails,
+                    duration: video.length_seconds
                 }
             })
             let getBestFormat = formats.filter((format: any) => {
