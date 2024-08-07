@@ -158,7 +158,7 @@ export default {
             title: title,
             localDownloadId: url,
             playlistMode: true,
-            requireRealtedSounds: true
+            requireRelatedSounds: true
           })
         }
       }

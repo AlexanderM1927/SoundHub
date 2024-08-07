@@ -33,7 +33,6 @@ const setPlaylistDefault = (relatedVideos, dispatch) => {
       title: relatedVideos[i].title
     })
     if (i === (relatedVideos.length - 2)) window.penultimateSoundRelated = relatedVideos[i].id
-    if (i === (relatedVideos.length - 1)) window.lastSoundRelated = relatedVideos[i].id
   }
 }
 
@@ -110,7 +109,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         localDownloadId = payload.localDownloadId
       }
     } else if (payload.playlistMode) {
-      if (payload.requireRealtedSounds) {
+      if (payload.requireRelatedSounds) {
         const { relatedVideos } = await getUrl(url)
         localDownloadId = payload.localDownloadId
         setPlaylistDefault(relatedVideos, dispatch)

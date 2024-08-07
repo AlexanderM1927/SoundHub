@@ -82,7 +82,7 @@ export class SoundController {
                     sound,
                     relatedVideos
                 } = await this.youtubeService.downloadSound({ url, type })
-                nextVideos = [...relatedVideos].slice(0, 10)
+                nextVideos = [...relatedVideos].slice(0, 20)
                 response = sound
             } else {
                 const sound = await this.soundRepository.getSoundById({
