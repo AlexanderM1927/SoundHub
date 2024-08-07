@@ -146,13 +146,6 @@ export default {
     song () {
       if (this.song) this.loadFile(this.song)
     },
-    playlist () {
-      if (this.playlist.length > 0) {
-        console.log(`%cthis.playlist: ${this.playlist.map((pl) => {
-          return pl.payload.title
-        }).toString()}`, 'background-color:red;color:#fff;padding: 5px 10px;')
-      }
-    },
     position () {
       if (this.position) {
         const { url, img, type, title } = this.playlist[this.position].payload // current song
