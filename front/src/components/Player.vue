@@ -146,11 +146,17 @@ export default {
     song () {
       if (this.song) this.loadFile(this.song)
     },
+    playlist () {
+      if (this.playlist.length > 0) {
+        console.log(`%cthis.playlist: ${this.playlist.map((pl) => {
+          return pl.payload.title
+        }).toString()}`, 'background-color:red;color:#fff;padding: 5px 10px;')
+      }
+    },
     position () {
       if (this.position) {
-        const { url, img, type, title } = this.playlist[this.position].payload // lastone
-        if (url === window.penultimateSoundRelated) {
-          window.downloadBgId = url
+        const { url, img, type, title } = this.playlist[this.position].payload // current song
+        if (url === window.penultimateSoundRelated) { // if is the penultimate
           this.$store.dispatch('sounds/getSongById', {
             url: url,
             img: img,
@@ -258,7 +264,6 @@ export default {
         // console.log('e', e)
       })
       this.wavesurfer.on('ready', () => {
-        window.canDownloadNextSong = true
         this.isLoading = false
         this.disableLoading()
         setTimeout(() => {

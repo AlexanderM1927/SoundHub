@@ -90,7 +90,6 @@ export const functions = {
           time: Date.now()
         })
       }
-      this.$store.dispatch('sounds/reloadPlaylist')
       this.activateLoading()
       let url = ''
       let img = ''
@@ -104,13 +103,13 @@ export const functions = {
       } else if (result.type === 'device') {
         url = result.url
       }
-      window.downloadBgId = url
       await this.$store.dispatch('sounds/getSongById', {
         url: url,
         img: img,
         type: result.type,
         title: result.sound_name ? result.sound_name : result.title,
-        localDownloadId: url
+        isFirstOnPlaylist: result.type === 'video',
+        urlParent: url
       })
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
         document.getElementById('player').classList.toggle('inactive')
@@ -125,9 +124,9 @@ export const functions = {
     },
     async playPlaylist (playlist) {
       this.activateLoading()
-      this.$store.dispatch('sounds/reloadPlaylist')
       let isNotFirst = false
       let url = ''
+      let urlParent = ''
       for (let i = 0; i < playlist.length; i++) {
         let img = ''
         // these next methods are to load next sounds while reproduce the first one
@@ -143,7 +142,7 @@ export const functions = {
           url = playlist[i].url
         }
         if (!isNotFirst) {
-          window.downloadBgId = url
+          urlParent = url
         }
         await this.$store.dispatch('sounds/getSongById', {
           url: url,
@@ -152,7 +151,7 @@ export const functions = {
           playlistMode: true,
           img: img,
           title: playlist[i].sound_name ? playlist[i].sound_name : playlist[i].title,
-          localDownloadId: url
+          urlParent
         })
         if (!isNotFirst) {
           if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
