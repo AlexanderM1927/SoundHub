@@ -62,10 +62,12 @@ const downloadBackgroundSound = ({ commit, url, payload }) => {
           const processUrl = await getUrl(url)
           newUrl = processUrl.newUrl
         }
-        commit('setSongOnPlaylist', {
-          url: newUrl,
-          payload: payload
-        })
+        if (localDownloadId && (localDownloadId === window.downloadBgId)) {
+          commit('setSongOnPlaylist', {
+            url: newUrl,
+            payload: payload
+          })
+        }
         window.canDownloadNextSong = true
       } else {
         reloadPlaylist({ commit })
