@@ -92,7 +92,6 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
   try {
     const url = SearchService.getSongById(payload)
     if (!payload.playlistMode || payload.isFirstOnPlaylist) {
-      parentDownload = payload.url
       if (window.timeoutdownloadBgId) clearTimeout(window.timeoutdownloadBgId)
       commit('reloadPlaylist')
       videosToDownload = []
@@ -116,6 +115,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
       if (!payload.playlistMode && payload.type === 'video') {
         setPlaylistDefault({ relatedVideos, dispatch, urlParent: payload.url })
       }
+      parentDownload = payload.url
       canDownloadNextSong = true
     } else if (payload.playlistMode) {
       if (payload.requireRelatedSounds) { // this is used by the last sound on playlist to following with suggestions
