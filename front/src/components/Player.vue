@@ -259,7 +259,6 @@ export default {
         this.isLoading = true
         if (e > 70) {
           this.isLoading = false
-          this.disableLoading()
         }
         // console.log('e', e)
       })
@@ -274,6 +273,7 @@ export default {
       this.wavesurfer.on('play', () => {
         this.isLoading = false
         this.isPlaying = true
+        this.disableLoading()
       })
       this.wavesurfer.on('pause', () => {
         this.isLoading = false
