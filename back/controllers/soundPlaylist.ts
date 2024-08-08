@@ -34,10 +34,10 @@ export class SoundPlaylistController {
             for (let i = 0; i < playlist.sounds.length; i++) {
                 playlist.playlist_name = playlist.sounds[i].dataValues.playlist.dataValues.playlist_name
                 if (playlist.sounds[i].dataValues.youtube_id) {
-                    const searchYt = await this.youtubeService.getSoundByYoutubeAPI({
-                        name: playlist.sounds[i].youtube_id
+                    const searchYt = await this.youtubeService.getSoundByIdOnYoutube({
+                        id: playlist.sounds[i].youtube_id
                     })
-                    const element = searchYt.items[0]
+                    const element = searchYt
                     element.type = 'video'
                     element.sound_playlist_id = playlist.sounds[i].sound_playlist_id
                     playlist.sounds[i] = element

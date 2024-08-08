@@ -20,6 +20,32 @@ export class YoutubeService {
         }
     }
 
+    async getSoundByIdOnYoutube ({ id }: { id: any }) {
+        try {
+            const info: videoInfo = await ytdl.getInfo(id)
+            const getBestThumbnail = info.videoDetails.thumbnails.sort((a: any, b: any) => {
+                if (parseInt(a.width) < parseInt(b.width)) {
+                    return 1
+                } else if (parseInt(a.width) > parseInt(b.width)) {
+                    return -1
+                } else {
+                    return 0
+                }
+            }).slice(1,3)
+
+            return {
+                title: info.videoDetails.title,
+                thumbnail: {
+                    thumbnails: getBestThumbnail
+                },
+                id: id,
+                type: 'video'
+            }
+        } catch (error) {
+            return {}
+        }
+    }
+
     async searchSound ({ name }: { name: any }) {
         const youtube = await this.getSoundByYoutubeAPI({ name })
         const sounds = await this.soundRepository.getSoundByName({

@@ -41,9 +41,9 @@ export class ViewRepository {
             const obj = views[i]
             let sound = null
             if (obj.view_type === 'video') {
-                const youtubeSearch = await this.youtubeService.getSoundByYoutubeAPI({ name: obj.sound_id })
-                if (youtubeSearch.items.length > 0) {
-                    sound = youtubeSearch.items[0]
+                const youtubeSearch = await this.youtubeService.getSoundByIdOnYoutube({ id: obj.sound_id })
+                if (youtubeSearch && youtubeSearch.title) {
+                    sound = youtubeSearch
                 } else {
                     continue;
                 }

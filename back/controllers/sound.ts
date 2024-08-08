@@ -132,10 +132,10 @@ export class SoundController {
                 }
                 Object.assign(sound, soundFromDB.dataValues)
             } else {
-                const youtubeSearch = await this.youtubeService.getSoundByYoutubeAPI({
-                    name: sound_id
+                const youtubeSearch = await this.youtubeService.getSoundByIdOnYoutube({
+                    id: sound_id
                 })
-                sound = youtubeSearch.items[0]
+                sound = youtubeSearch
             }
             res.json({
               error: null,
