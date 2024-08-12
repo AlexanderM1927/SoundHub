@@ -46,12 +46,12 @@ const setPlaylistDefault = ({ relatedVideos, dispatch, urlParent }) => {
 const getUrl = async (url) => {
   const sound = await fetch(url)
   const relatedVideos = JSON.parse(sound.headers.get('related-videos'))
-  const blob = await sound.blob()
-  const newBlob = new Blob([blob], { type: 'audio/mp3' })
-  const newUrl = URL.createObjectURL(newBlob)
+  // const blob = await sound.blob()
+  // const newBlob = new Blob([blob], { type: 'audio/mp3' })
+  // const newUrl = URL.createObjectURL(newBlob)
 
   return {
-    newUrl,
+    newUrl: url,
     relatedVideos
   }
 }

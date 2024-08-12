@@ -72,43 +72,79 @@ export class SoundController {
         try {
             const url = req.params.url;
             const type = req.params.type;
-            // const userAgent = req.headers['user-agent'];
-            let response = null
-            let soundUrl = ''
-            let nextVideos: any = []
           
             if (type === TYPE_VIDEO) {
                 const {
-                    sound,
+                    contentLength,
+                    itag,
+                    container,
                     relatedVideos
-                } = await this.youtubeService.downloadSound({ url, type })
-                nextVideos = [...relatedVideos].filter((obj) => {
+                } = await this.youtubeService.getInfoSound({ url })
+                const nextVideos = [...relatedVideos].filter((obj) => {
                     return parseInt(obj.duration) < 500
                 }).slice(0, 10)
-                response = sound
+
+                const rangeHeader = req.headers.range || null;
+                let startRange = 0;
+                let endRange = contentLength - 1;  // Si no hay rango, envía todo el contenido
+
+                if (rangeHeader) {
+                    const rangePosition = rangeHeader.replace(/bytes=/, "").split("-");
+                    startRange = parseInt(rangePosition[0], 10);
+
+                    // Si rangePosition[1] es undefined o una cadena vacía, usa el valor por defecto (contentLength - 1)
+                    if (rangePosition[1]) {
+                        endRange = parseInt(rangePosition[1], 10);
+                    }
+                }
+
+                const chunksize = (endRange - startRange) + 1;
+
+                const headers: any = {
+                    'Access-Control-Expose-Headers': 'Related-Videos',
+                    'Content-Type': `audio/${container}`,
+                    'Content-Length': chunksize,
+                    "Content-Range": "bytes " + startRange + "-" + endRange + "/" + contentLength,
+                    "Accept-Ranges": "bytes",
+                    "Related-Videos": JSON.stringify(nextVideos)
+                }
+
+                res.writeHead(206, headers)
+
+                const range = { start: startRange, end: endRange }
+
+                const { sound } = this.youtubeService.downloadSound({
+                    url: url,
+                    options: {
+                        quality: itag,
+                        range
+                    }
+                })
+
+                sound.pipe(res)
             } else {
                 const sound = await this.soundRepository.getSoundById({
                     sound_id: url
                 })
                 if (sound) {
                     const __dirname = path.dirname(fileURLToPath(import.meta.url))
-                    soundUrl = path.join(__dirname.replace('v1', '').replace('dist', '').replace('controllers', ''), sound.sound_file_url);
-                    response = fileSystem.createReadStream(soundUrl);
+                    const soundUrl = path.join(__dirname.replace('v1', '').replace('dist', '').replace('controllers', ''), sound.sound_file_url)
+                    const soundStream = fileSystem.createReadStream(soundUrl)
+
+                    res.setHeader('Access-Control-Expose-Headers', 'Related-Videos')
+                    res.setHeader("Content-Type", "audio/mpeg");
+                    res.setHeader("Accept-Ranges", "bytes");
+                    res.setHeader("Connection", "Keep-Alive");
+                    res.setHeader("Content-Length", fileSystem.statSync(soundUrl).size);
+                    res.setHeader("Transfer-encoding", "chunked");
+                    res.setHeader("Related-Videos", JSON.stringify([]));
+
+                    soundStream.pipe(res)
+                } else {
+                    res.status(404).json({ error: "Sound not found" });
                 }
             }
 
-            if (response) {
-
-                res.setHeader('Access-Control-Expose-Headers', 'Related-Videos')
-                res.setHeader("Content-Type", "audio/mpeg");
-                res.setHeader("Accept-Ranges", "bytes");
-                res.setHeader("Connection", "Keep-Alive");
-                res.setHeader("Transfer-encoding", "chunked");
-                console.log('nextVideos', nextVideos)
-                res.setHeader("Related-Videos", JSON.stringify(nextVideos))
-                response.pipe(res)
-
-            }
         } catch (error) {
             res.status(400).json({error: (error as Error).message})
         }  
