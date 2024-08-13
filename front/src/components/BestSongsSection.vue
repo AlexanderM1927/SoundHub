@@ -57,7 +57,10 @@ export default {
             objRes = {
               id: element.id,
               title: element.title,
-              img: element.thumbnail.thumbnails[0].url
+              img: element.thumbnail.thumbnails[0].url,
+              length: {
+                simpleText: element.length.simpleText
+              }
             }
           }
           objRes.firstOne = (items.indexOf(element) === 0 ?? false)

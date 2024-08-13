@@ -77,6 +77,7 @@ body {
   align-items: center;
   justify-items: center;
   cursor: pointer;
+  position: relative;
 }
 
 .search-result__image {
@@ -88,6 +89,15 @@ body {
 .search-result__user {
   justify-items: center;
   align-items: center;
+}
+
+.search-result__duration {
+  position: absolute;
+  top: 0.5rem;
+  left: 1rem;
+  background-color: rgba(39, 36, 36);
+  opacity: 0.7;
+  color: white;
 }
 
 .d-flex {

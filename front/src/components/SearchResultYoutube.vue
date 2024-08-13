@@ -5,6 +5,9 @@
       <img @click="openPlayer(result)" v-else :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
       <div class="d-flex space-between w-100">
         <div @click="openPlayer(result)">{{ result.title }}</div>
+        <div v-if="result.length" class="search-result__duration">
+          {{ result.length.simpleText }}
+        </div>
         <div v-if="playlist === true">
           <a class="pli-delete text-white" @click="removeFromPlaylist"> <q-icon name="fas fa-times"/></a>
         </div>
@@ -15,6 +18,9 @@
       <img v-else :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
       <div class="d-flex space-between w-100">
         <div>{{ result.title }}</div>
+      </div>
+      <div v-if="result.length" class="search-result__duration">
+        {{ result.length.simpleText }}
       </div>
     </div>
   </div>
