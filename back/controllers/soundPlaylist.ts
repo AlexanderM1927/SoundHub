@@ -16,7 +16,6 @@ export class SoundPlaylistController {
                 data: savedSoundPlaylist
             })
         } catch (error) {
-            console.log({error: (error as Error).message})
             res.status(400).json({error: (error as Error).message})
         }
     }

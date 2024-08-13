@@ -43,15 +43,14 @@ const setPlaylistDefault = ({ relatedVideos, dispatch, urlParent }) => {
   }
 }
 
-const getUrl = async (url) => {
-  const sound = await fetch(url)
-  const relatedVideos = JSON.parse(sound.headers.get('related-videos'))
+const getRelatedVideos = async (url) => {
+  const { data } = await SearchService.getRelatedVideos({ url })
+  const relatedVideos = data.data
   // const blob = await sound.blob()
   // const newBlob = new Blob([blob], { type: 'audio/mp3' })
   // const newUrl = URL.createObjectURL(newBlob)
 
   return {
-    newUrl: url,
     relatedVideos
   }
 }
@@ -63,8 +62,7 @@ const downloadBackgroundSound = async ({ commit, url, payload }) => {
     if (payload.type === 'device') {
       newUrl = payload.url
     } else {
-      const processUrl = await getUrl(url)
-      newUrl = processUrl.newUrl
+      newUrl = url
     }
     if (videosToDownload.length > 0) {
       if (videosToDownload.includes(payload.url)) {
@@ -104,9 +102,9 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         newUrl = payload.url
         relatedVideos = []
       } else {
-        const processUrl = await getUrl(url)
-        newUrl = processUrl.newUrl
-        relatedVideos = processUrl.relatedVideos
+        const data = await getRelatedVideos(payload.url)
+        newUrl = url
+        relatedVideos = data.relatedVideos
       }
       commit('setSong', {
         url: newUrl,
@@ -124,7 +122,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
       isDownloadingFirstSound = false
     } else if (payload.playlistMode) {
       if (payload.requireRelatedSounds) { // this is used by the last sound on playlist to following with suggestions
-        const { relatedVideos } = await getUrl(url)
+        const { relatedVideos } = await getRelatedVideos(payload.url)
         setPlaylistDefault({ relatedVideos, dispatch, urlParent: payload.url })
       }
       // Download sound in background

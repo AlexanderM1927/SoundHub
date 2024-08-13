@@ -26,6 +26,7 @@ export const createRouter = () => {
     // // Searches
 	router.get('/search/:name', soundController.search)
 	router.get('/download/:type/:url', soundController.download)
+	router.get('/related_videos/:url', soundController.getRelatedVideos)
     
     // // Sounds
     router.post('/sounds', verifyToken, soundController.store)

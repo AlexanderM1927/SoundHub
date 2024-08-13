@@ -9,5 +9,8 @@ export default {
   },
   download (params) {
     return Api().get('download/' + params.type + '/' + params.url, { responseType: 'blob' })
+  },
+  getRelatedVideos (params) {
+    return Api().get('related_videos/' + params.url)
   }
 }

@@ -78,24 +78,23 @@ export class SoundController {
                 const {
                     contentLength,
                     itag,
-                    container,
-                    relatedVideos
-                } = await this.youtubeService.getInfoSound({ url })
-                const nextVideos = [...relatedVideos].filter((obj) => {
-                    return parseInt(obj.duration) < 500
-                }).slice(0, 10)                
+                    container
+                } = await this.youtubeService.getInfoSound({ url })  
+
+                const { sound } = this.youtubeService.downloadSound({
+                    url: url,
+                    options: {
+                        quality: itag
+                    }
+                })
 
                 if (!contentLength) {
                     _contentLength = await this.youtubeService.preloadSound({
-                        url: url,
-                        options: {
-                            quality: itag
-                        }
+                        sound: sound
                     })
                 } else {
                     _contentLength = contentLength
                 }
-                
 
                 const rangeHeader = req.headers.range || null;
                 let startRange = 0;
@@ -114,27 +113,28 @@ export class SoundController {
                 const chunksize = (endRange - startRange) + 1;
 
                 const headers: any = {
-                    'Access-Control-Expose-Headers': 'Related-Videos',
                     'Content-Type': `video/${container}`,
                     'Content-Length': chunksize,
                     "Content-Range": "bytes " + startRange + "-" + endRange + "/" + _contentLength,
-                    "Accept-Ranges": "bytes",
-                    "Related-Videos": JSON.stringify(nextVideos)
+                    "Accept-Ranges": "bytes"
                 }
 
                 res.writeHead(206, headers)
 
                 const range = { start: startRange, end: endRange }
 
-                const { sound } = this.youtubeService.downloadSound({
-                    url: url,
-                    options: {
-                        quality: itag,
-                        range
-                    }
-                })
-
-                sound.pipe(res)
+                if (rangeHeader) {
+                    const theSound = this.youtubeService.downloadSound({
+                        url: url,
+                        options: {
+                            quality: itag,
+                            range
+                        }
+                    })
+                    theSound.sound.pipe(res)
+                } else {
+                    sound.pipe(res)
+                }
             } else {
                 const sound = await this.soundRepository.getSoundById({
                     sound_id: url
@@ -144,13 +144,11 @@ export class SoundController {
                     const soundUrl = path.join(__dirname.replace('v1', '').replace('dist', '').replace('controllers', ''), sound.sound_file_url)
                     const soundStream = fileSystem.createReadStream(soundUrl)
 
-                    res.setHeader('Access-Control-Expose-Headers', 'Related-Videos')
                     res.setHeader("Content-Type", "audio/mpeg");
                     res.setHeader("Accept-Ranges", "bytes");
                     res.setHeader("Connection", "Keep-Alive");
                     res.setHeader("Content-Length", fileSystem.statSync(soundUrl).size);
                     res.setHeader("Transfer-encoding", "chunked");
-                    res.setHeader("Related-Videos", JSON.stringify([]));
 
                     soundStream.pipe(res)
                 } else {
@@ -161,6 +159,25 @@ export class SoundController {
         } catch (error) {
             res.status(400).json({error: (error as Error).message})
         }  
+    }
+
+    getRelatedVideos = async (req: any, res: any) => {
+        try {
+            const url = req.params.url;
+            const {
+                relatedVideos
+            } = await this.youtubeService.getInfoSound({ url })
+            const nextVideos = [...relatedVideos].filter((obj) => {
+                return parseInt(obj.duration) < 500
+            }).slice(0, 10) 
+
+            res.json({
+                error: null,
+                data: nextVideos
+              })
+        } catch (error) {
+            res.status(400).json({error: (error as Error).message})
+        }
     }
 
     getSoundById = async (req: any, res: any) => {

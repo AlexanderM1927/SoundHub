@@ -67,7 +67,7 @@ export class YoutubeService {
         }
         for (let i = 0; i < youtube.items.length; i++) {
             const video = youtube.items[i]
-            if (video.type === 'video' && video.length.accessibility && video.length.simpleText.match(/:/g).length === 1) {
+            if (video.type === 'video' && video.length && video.length.accessibility) {
                 // delete videos larger than 10 minutes
                 // const minutes = video.length.simpleText.substring(0, video.length.simpleText.indexOf(':'))
                 results.items.push(video)
@@ -119,18 +119,20 @@ export class YoutubeService {
         }
     }
 
-    preloadSound ({ url, options }: { url: string, options: any }) {
-        return new Promise((resolve, _reject) => {
-            let _contentLength = 0;
-
-            const { sound } = this.downloadSound({ url, options })
+    preloadSound ({ sound }: { sound: any }) {
+        return new Promise((resolve, reject) => {
+            let contentLength = 0;
 
             sound?.on('data', (chunk: any) => {
-                _contentLength += chunk.length;
+                contentLength += chunk.length;
             });
 
             sound?.on('end', () => {
-                resolve(_contentLength)
+                resolve(contentLength)
+            })
+
+            sound?.on('fail', () => {
+                reject()
             })
         })
     }
