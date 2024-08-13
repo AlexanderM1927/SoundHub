@@ -34,7 +34,7 @@
         </div>
         <!--SOUND WAVES-->
         <div :class="'col-md-8 col-xs-4'">
-          <div id='waveform'></div>
+          <div id='waveform' v-show="!isLoading"></div>
           <div id="audioBox"><audio id="audioInput" controls type="audio/mp3" title="soundhub"></audio></div>
         </div>
         <!--NEXT SONG-->
@@ -257,7 +257,7 @@ export default {
       })
       this.wavesurfer.on('loading', (e) => {
         this.isLoading = true
-        if (e > 70) {
+        if (e > 50) {
           this.isLoading = false
         }
         // console.log('e', e)
