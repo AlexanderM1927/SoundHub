@@ -130,10 +130,7 @@ export class YoutubeService {
             });
 
             sound?.on('end', () => {
-                resolve({
-                    sound,
-                    contentLength
-                })
+                resolve(contentLength)
             })
 
             sound?.on('fail', () => {
