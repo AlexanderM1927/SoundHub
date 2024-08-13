@@ -263,7 +263,7 @@ export default {
         // console.log('e', e)
       })
       this.wavesurfer.on('ready', () => {
-        this.wavesurfer.backend.setPeaks(null) 
+        this.wavesurfer.backend.setPeaks(null)
         this.wavesurfer.drawBuffer()
         this.isLoading = false
         this.disableLoading()
