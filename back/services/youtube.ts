@@ -1,4 +1,4 @@
-import ytdl, { videoInfo } from '@distube/ytdl-core'
+import ytdl, { videoInfo, videoFormat } from '@distube/ytdl-core'
 // @ts-ignore
 import youtubesearchapi from 'youtube-search-api'
 
@@ -69,8 +69,8 @@ export class YoutubeService {
             const video = youtube.items[i]
             if (video.type === 'video' && video.length.accessibility && video.length.simpleText.match(/:/g).length === 1) {
                 // delete videos larger than 10 minutes
-                const minutes = video.length.simpleText.substring(0, video.length.simpleText.indexOf(':'))
-                if (parseInt(minutes) < 11) results.items.push(video)
+                // const minutes = video.length.simpleText.substring(0, video.length.simpleText.indexOf(':'))
+                results.items.push(video)
             }
         }
         results.nextPage = youtube.nextPage
@@ -81,8 +81,12 @@ export class YoutubeService {
 
     async getInfoSound ({ url }: { url: string}) {
         const info: videoInfo = await ytdl.getInfo(url)
-        const audioFormat = ytdl.chooseFormat(info.formats, {
-            quality: "lowestaudio"
+        const formats: videoFormat[] = info.formats ? info.formats : (info.player_response.streamingData.formats as videoFormat[])
+        // const audioFormat = ytdl.chooseFormat(info.formats, {
+        //     quality: "lowestaudio"
+        // })
+        const audioFormats = formats.filter((format: videoFormat) => {
+            return format.container === 'mp4' && format.hasVideo && format.hasAudio
         })
         
         const relatedVideos = info.related_videos.map((video) => {
@@ -96,9 +100,9 @@ export class YoutubeService {
 
 
         return {
-            contentLength: audioFormat.contentLength,
-            itag: audioFormat.itag,
-            container: audioFormat.container,
+            contentLength: audioFormats[0].contentLength,
+            itag: audioFormats[0].itag,
+            container: audioFormats[0].container,
             relatedVideos
         }
     }
@@ -113,5 +117,21 @@ export class YoutubeService {
                 sound: null
             }
         }
+    }
+
+    preloadSound ({ url, options }: { url: string, options: any }) {
+        return new Promise((resolve, _reject) => {
+            let _contentLength = 0;
+
+            const { sound } = this.downloadSound({ url, options })
+
+            sound?.on('data', (chunk: any) => {
+                _contentLength += chunk.length;
+            });
+
+            sound?.on('end', () => {
+                resolve(_contentLength)
+            })
+        })
     }
 }

@@ -72,6 +72,7 @@ export class SoundController {
         try {
             const url = req.params.url;
             const type = req.params.type;
+            let _contentLength = 0
           
             if (type === TYPE_VIDEO) {
                 const {
@@ -82,17 +83,29 @@ export class SoundController {
                 } = await this.youtubeService.getInfoSound({ url })
                 const nextVideos = [...relatedVideos].filter((obj) => {
                     return parseInt(obj.duration) < 500
-                }).slice(0, 10)
+                }).slice(0, 10)                
+
+                if (!contentLength) {
+                    _contentLength = await this.youtubeService.preloadSound({
+                        url: url,
+                        options: {
+                            quality: itag
+                        }
+                    })
+                } else {
+                    _contentLength = contentLength
+                }
+                
 
                 const rangeHeader = req.headers.range || null;
                 let startRange = 0;
-                let endRange = contentLength - 1;  // Si no hay rango, envía todo el contenido
+                let endRange = _contentLength - 1;  // Si no hay rango, envía todo el contenido
 
                 if (rangeHeader) {
                     const rangePosition = rangeHeader.replace(/bytes=/, "").split("-");
                     startRange = parseInt(rangePosition[0], 10);
 
-                    // Si rangePosition[1] es undefined o una cadena vacía, usa el valor por defecto (contentLength - 1)
+                    // Si rangePosition[1] es undefined o una cadena vacía, usa el valor por defecto (_contentLength - 1)
                     if (rangePosition[1]) {
                         endRange = parseInt(rangePosition[1], 10);
                     }
@@ -102,9 +115,9 @@ export class SoundController {
 
                 const headers: any = {
                     'Access-Control-Expose-Headers': 'Related-Videos',
-                    'Content-Type': `audio/${container}`,
+                    'Content-Type': `video/${container}`,
                     'Content-Length': chunksize,
-                    "Content-Range": "bytes " + startRange + "-" + endRange + "/" + contentLength,
+                    "Content-Range": "bytes " + startRange + "-" + endRange + "/" + _contentLength,
                     "Accept-Ranges": "bytes",
                     "Related-Videos": JSON.stringify(nextVideos)
                 }

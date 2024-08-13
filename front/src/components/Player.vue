@@ -324,6 +324,7 @@ export default {
       }
       this.soundPlaying = sound
       this.wavesurfer.load(sound.url)
+      this.isLoading = true
       this.activateLoading()
       await this.getInformationSound()
     },
