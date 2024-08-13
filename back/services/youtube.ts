@@ -119,16 +119,21 @@ export class YoutubeService {
         }
     }
 
-    preloadSound ({ sound }: { sound: any }) {
+    preloadSound ({ url, options }: { url: string, options: any }) {
         return new Promise((resolve, reject) => {
             let contentLength = 0;
+
+            const { sound } = this.downloadSound({ url, options})
 
             sound?.on('data', (chunk: any) => {
                 contentLength += chunk.length;
             });
 
             sound?.on('end', () => {
-                resolve(contentLength)
+                resolve({
+                    sound,
+                    contentLength
+                })
             })
 
             sound?.on('fail', () => {

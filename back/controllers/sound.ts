@@ -81,17 +81,17 @@ export class SoundController {
                     container
                 } = await this.youtubeService.getInfoSound({ url })  
 
-                const { sound } = this.youtubeService.downloadSound({
+                const soundDefaultOptions = {
                     url: url,
                     options: {
                         quality: itag
                     }
-                })
+                }
+
+                const { sound } = this.youtubeService.downloadSound(soundDefaultOptions)
 
                 if (!contentLength) {
-                    _contentLength = await this.youtubeService.preloadSound({
-                        sound: sound
-                    })
+                    _contentLength = await this.youtubeService.preloadSound(soundDefaultOptions)
                 } else {
                     _contentLength = contentLength
                 }
