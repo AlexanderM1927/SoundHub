@@ -34,7 +34,7 @@
         </div>
         <!--SOUND WAVES-->
         <div :class="'col-md-8 col-xs-4'">
-          <div id='waveform' v-show="!isLoading"></div>
+          <div id='waveform'></div>
           <div id="audioBox"><audio id="audioInput" controls type="audio/mp3" title="soundhub"></audio></div>
         </div>
         <!--NEXT SONG-->
@@ -263,6 +263,8 @@ export default {
         // console.log('e', e)
       })
       this.wavesurfer.on('ready', () => {
+        this.wavesurfer.backend.setPeaks(null)
+        this.wavesurfer.drawBuffer()
         this.isLoading = false
         this.disableLoading()
         setTimeout(() => {
