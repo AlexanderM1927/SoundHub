@@ -52,7 +52,7 @@
             <q-icon
               name="fas fa-step-forward"
               color="pink"
-              class="fs-2"
+              class="fs-2 btn-player"
               @click="setNewSong('next')"
             />
           </div>
