@@ -131,10 +131,14 @@ export default {
     },
     async searchLyric (soundName) {
       this.showLyrics = true
-      const apiUrl = `https://lyrics-finder-api.vercel.app/lyrics?song=${this.cleanTitle(soundName)}`
-      const request = await fetch(apiUrl)
-      const { lyrics } = await request.json()
-      this.lyrics = lyrics
+      try {
+        const apiUrl = `https://lyrics-finder-api.vercel.app/lyrics?song=${this.cleanTitle(soundName)}`
+        const request = await fetch(apiUrl)
+        const { lyrics } = await request.json()
+        this.lyrics = lyrics
+      } catch (error) {
+        this.lyrics = '¡Ooops! no encontramos esa letra... :('
+      }
     }
   }
 }
