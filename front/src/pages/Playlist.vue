@@ -13,7 +13,7 @@
         </div>
         <div class="q-mx-md" v-else>
           <p class="default-msg">Para crear playlist, primero debes iniciar sesión.</p>
-          <q-btn class="yellow-btn" label="Ingresar" to="/login" color="orange"/>
+          <q-btn class="sh-btn" label="Ingresar" to="/login" color="orange"/>
         </div>
       </div>
     </div>

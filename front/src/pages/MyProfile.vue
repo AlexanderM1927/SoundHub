@@ -23,8 +23,8 @@
         <q-input class="prfl-input col-11" v-model="user.user_email" label="Correo" dark borderless></q-input>
         <!--BUTTONS-->
         <div class="row full-width justify-around">
-          <q-btn class="yellow-btn col-5" label="Modificar" type="submit" color="orange"/>
-          <q-btn class="yellow-btn col-5" label="Reiniciar" @click="reset" type="reset" color="orange"/>
+          <q-btn class="sh-btn col-5" label="Modificar" type="submit" color="pink"/>
+          <q-btn class="sh-btn col-5" label="Reiniciar" @click="reset" type="reset" color="pink"/>
         </div>
       </template>
     </q-form>
