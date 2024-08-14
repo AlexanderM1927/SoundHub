@@ -81,14 +81,12 @@ export class SoundController {
                     container
                 } = await this.youtubeService.getInfoSound({ url })  
 
-                const soundDefaultOptions = {
+                const soundDefaultOptions: any = {
                     url: url,
                     options: {
                         quality: itag
                     }
                 }
-
-                const { sound } = this.youtubeService.downloadSound(soundDefaultOptions)
 
                 if (!contentLength) {
                     _contentLength = await this.youtubeService.preloadSound(soundDefaultOptions)
@@ -123,18 +121,14 @@ export class SoundController {
 
                 const range = { start: startRange, end: endRange }
 
-                if (rangeHeader) {
-                    const theSound = this.youtubeService.downloadSound({
-                        url: url,
-                        options: {
-                            quality: itag,
-                            range
-                        }
-                    })
-                    theSound.sound.pipe(res)
-                } else {
-                    sound.pipe(res)
+                soundDefaultOptions.options = {
+                    ...soundDefaultOptions.options,
+                    range
                 }
+
+                console.log('soundDefaultOptions', soundDefaultOptions)
+                const { sound } = this.youtubeService.downloadSound(soundDefaultOptions)
+                sound.pipe(res)
             } else {
                 const sound = await this.soundRepository.getSoundById({
                     sound_id: url
