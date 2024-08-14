@@ -228,7 +228,7 @@ export const functions = {
     cleanTitle (title) {
       let result
       // clean speciall words and []
-      result = title.replace(/(\(|\)|\[|\]|official|oficial|video|lyric|lyrics|letra)/gi, '')
+      result = title.replace(/(\(|\)|\[|\]|official|oficial|video|audio|lyric|lyrics|letra)/gi, '')
       // clean emojis and []
       result = result.replace(/[\[\]\(\)\u{1F600}-\u{1F64F}\u{2700}-\u{27BF}]+/gu, '')
       result = result.replace(/[\[\]\(\)\p{Emoji_Presentation}\p{Extended_Pictographic}]+/gu, '').trim()
