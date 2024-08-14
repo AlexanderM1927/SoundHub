@@ -8,6 +8,20 @@ export class YoutubeService {
         this.soundRepository = soundRepository
     }
 
+    convertDurationInMinutes (duration: string) {
+        const parts = duration.split(':').map(Number)
+
+        let minutes = 0;
+
+        if (parts.length === 2) { // Formato MM:SS
+            minutes = parts[0] + parts[1] / 60;
+        } else if (parts.length === 3) { // Formato HH:MM:SS
+            minutes = parts[0] * 60 + parts[1] + parts[2] / 60;
+        }
+
+        return minutes
+    }
+
     async getSoundByYoutubeAPI ({ name }: { name: any }) {
         try {
             const result = await youtubesearchapi.GetListByKeyword(name, false)
@@ -69,8 +83,8 @@ export class YoutubeService {
             const video = youtube.items[i]
             if (video.type === 'video' && video.length && video.length.accessibility) {
                 // delete videos larger than 10 minutes
-                // const minutes = video.length.simpleText.substring(0, video.length.simpleText.indexOf(':'))
-                results.items.push(video)
+                const minutes = this.convertDurationInMinutes(video.length.simpleText)
+                if (minutes < 100) results.items.push(video)
             }
         }
         results.nextPage = youtube.nextPage
