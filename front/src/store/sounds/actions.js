@@ -46,9 +46,6 @@ const setPlaylistDefault = ({ relatedVideos, dispatch, urlParent }) => {
 const getRelatedVideos = async (url) => {
   const { data } = await SearchService.getRelatedVideos({ url })
   const relatedVideos = data.data
-  // const blob = await sound.blob()
-  // const newBlob = new Blob([blob], { type: 'audio/mp3' })
-  // const newUrl = URL.createObjectURL(newBlob)
 
   return {
     relatedVideos
