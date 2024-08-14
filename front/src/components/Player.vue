@@ -267,9 +267,7 @@ export default {
         this.wavesurfer.drawBuffer()
         this.isLoading = false
         this.disableLoading()
-        setTimeout(() => {
-          this.wavesurfer.playPause()
-        }, 2000)
+        this.wavesurfer.playPause()
         this.loadThumbnail()
       })
       this.wavesurfer.on('play', () => {

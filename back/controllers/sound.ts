@@ -126,7 +126,6 @@ export class SoundController {
                     range
                 }
 
-                console.log('soundDefaultOptions', soundDefaultOptions)
                 const { sound } = this.youtubeService.downloadSound(soundDefaultOptions)
                 sound.pipe(res)
             } else {
