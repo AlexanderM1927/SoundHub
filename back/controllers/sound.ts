@@ -162,7 +162,7 @@ export class SoundController {
             } = await this.youtubeService.getInfoSound({ url })
             const nextVideos = [...relatedVideos].filter((obj) => {
                 return obj.duration && parseInt(obj.duration) < 500
-            }).slice(0, 10) 
+            }).slice(0, 5) 
 
             res.json({
                 error: null,
