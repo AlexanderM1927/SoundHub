@@ -431,15 +431,13 @@ export default {
 
 .progressBar {
   background: #FFFFFF;
-  border-radius: 0.5rem;
   cursor: pointer;
   width: 100%;
-  height: 0.5rem;
+  height: 1rem;
 }
 
 .progressBar .progress {
   background: $pink;
-  border-radius: 0.5rem;
   width: 0;
   height: 100%;
   transition: width 0.1s linear;
