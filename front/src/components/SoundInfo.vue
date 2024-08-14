@@ -35,6 +35,8 @@
         </template>
       </q-input>
       {{ lyrics }}
+      <hr>
+      <b>Algunas letras pueden que no coincidan con la canción, es por eso que puedes corregir el nombre y agregar el artista o modificarlo en caso de necesitarlo.</b>
     </div>
     <span v-if="soundInfo.type === 'sound'">
       Publicada por:
