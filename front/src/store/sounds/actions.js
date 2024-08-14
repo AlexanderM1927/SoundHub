@@ -108,7 +108,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         newUrl = payload.url
         relatedVideos = []
       } else {
-        newUrl = url
+        newUrl = await getBlobUrl(url)
       }
       commit('setSong', {
         url: newUrl,

@@ -21,7 +21,6 @@ export default {
   data () {
     return {
       leftDrawerOpen: false,
-      wavesurfer: null,
       isLoading: false
     }
   },

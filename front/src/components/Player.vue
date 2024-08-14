@@ -4,20 +4,20 @@
         <div class='col-md-1 col-xs-2'>
           <div class="row justify-center">
             <!--LOADING ICON-->
-            <q-circular-progress v-if="isLoading" size="72px" indeterminate color="pink" />
+            <!-- <q-circular-progress v-if="isLoading" size="72px" indeterminate color="pink" /> -->
             <!--PAUSE BUTTON-->
             <q-icon
               v-if='isPlaying'
               name="fas fa-pause"
               class="plyr-btn plyr-pink"
-              @click='wavesurfer.playPause()'
+              @click='pauseSong()'
             />
             <!--PLAY BUTTON-->
             <q-icon
-              v-if="!isPlaying && !isLoading"
+              v-if="!isPlaying"
               name="fas fa-play"
               class="plyr-btn plyr-pink"
-              @click="wavesurfer.playPause()"
+              @click="playSong()"
             />
           </div>
         </div>
@@ -34,8 +34,17 @@
         </div>
         <!--SOUND WAVES-->
         <div :class="'col-md-8 col-xs-4'">
-          <div id='waveform'></div>
-          <div id="audioBox"><audio id="audioInput" controls type="audio/mp3" title="soundhub"></audio></div>
+          <div class="player-container">
+            <audio ref="audioInput" id="audioInput" controls type="audio/mp3" title="soundhub"></audio>
+            <div ref="progressContainer" id="progressBar" class="progressBar">
+              <div ref="progress" class="progress" id="progress"></div>
+              <div class="duration">
+                <span ref="tiempoActual" id="tiempoActual">0:00</span>
+                <span ref="tiempoDuracion" id="tiempoDuracion">0:00</span>
+              </div>
+            </div>
+          </div>
+          <!---div id='waveform'></div--->
         </div>
         <!--NEXT SONG-->
         <div class="col-md-1 col-xs-2">
@@ -95,7 +104,6 @@
 </template>
 
 <script>
-import WaveSurfer from 'wavesurfer.js'
 import SoundService from '../services/SoundService'
 import CommentService from '../services/CommentService'
 import { functions } from '../functions.js'
@@ -112,8 +120,7 @@ export default {
   },
   data () {
     return {
-      wavesurfer: null,
-      isLoading: false,
+      // isLoading: false,
       dialogInfo: false,
       soundInfo: {},
       comment: '',
@@ -241,49 +248,6 @@ export default {
         console.error(error)
       }
     },
-    createWaveSurfer () {
-      this.wavesurfer = WaveSurfer.create({
-        container: '#waveform',
-        hideScrollbar: true,
-        waveColor: '#F5F5F5',
-        progressColor: '#CF2741',
-        cursorColor: '#fff',
-        barWidth: 3,
-        backend: 'MediaElement'
-      })
-      this.wavesurfer.on('error', err => {
-        this.isLoading = false
-        console.error(err)
-      })
-      this.wavesurfer.on('loading', (e) => {
-        this.isLoading = true
-        if (e > 50) {
-          this.isLoading = false
-        }
-        // console.log('e', e)
-      })
-      this.wavesurfer.on('ready', () => {
-        this.wavesurfer.backend.setPeaks(null)
-        this.wavesurfer.drawBuffer()
-        this.isLoading = false
-        this.disableLoading()
-        this.wavesurfer.playPause()
-        this.loadThumbnail()
-      })
-      this.wavesurfer.on('play', () => {
-        this.isLoading = false
-        this.isPlaying = true
-        this.disableLoading()
-      })
-      this.wavesurfer.on('pause', () => {
-        this.isLoading = false
-        this.isPlaying = false
-      })
-      this.wavesurfer.on('finish', () => {
-        this.isLoading = false
-        this.setNewSong('next')
-      })
-    },
     loadThumbnail () {
       if ('mediaSession' in navigator) {
         const content = {
@@ -301,10 +265,10 @@ export default {
         navigator.mediaSession.metadata = new window.MediaMetadata(content)
 
         navigator.mediaSession.setActionHandler('play', () => {
-          this.wavesurfer.playPause()
+          this.playSong()
         })
         navigator.mediaSession.setActionHandler('pause', () => {
-          this.wavesurfer.playPause()
+          this.pauseSong()
         })
         navigator.mediaSession.setActionHandler('previoustrack', () => {
           this.setNewSong('prev')
@@ -314,18 +278,72 @@ export default {
         })
         navigator.mediaSession.setActionHandler('seekto', (details) => {
           const currentTime = details.seekTime
-          this.wavesurfer.seekTo(currentTime / this.wavesurfer.getDuration())
+          this.$refs.audioInput.currentTime = currentTime
         })
       }
     },
-    async loadFile (sound) {
-      if (!this.wavesurfer) {
-        this.createWaveSurfer()
+    loadSong (url) {
+      this.$refs.audioInput.src = url
+      this.$refs.audioInput.load()
+      this.$refs.audioInput.addEventListener('timeupdate', (e) => {
+        this.updateProgressBar(e)
+      })
+      this.$refs.audioInput.addEventListener('ended', () => {
+        this.setNewSong('next')
+      })
+      this.$refs.progressContainer.addEventListener('click', (e) => {
+        this.setProgressBar(e)
+      })
+    },
+    playSong () {
+      this.isPlaying = true
+      this.$refs.audioInput.play()
+    },
+    pauseSong () {
+      this.isPlaying = false
+      this.$refs.audioInput.pause()
+    },
+    updateProgressBar (e) {
+      if (this.isPlaying) {
+        const { duration, currentTime } = e.srcElement
+        const progressPercent = (currentTime / duration) * 100
+        this.$refs.progress.style.width = `${progressPercent}%`
+        const durationMinutes = Math.floor(duration / 60)
+        let durationSeconds = Math.floor(duration % 60)
+
+        if (durationSeconds < 10) {
+          durationSeconds = `0${durationSeconds}`
+        }
+
+        if (durationSeconds) {
+          this.$refs.tiempoDuracion.innerText = `${durationMinutes}:${durationSeconds}`
+        }
+
+        const currentMinutes = Math.floor(currentTime / 60)
+        let currentSeconds = Math.floor(currentTime % 60)
+
+        if (currentSeconds < 10) {
+          currentSeconds = `0${currentSeconds}`
+        }
+
+        if (currentSeconds) {
+          this.$refs.tiempoActual.innerText = `${currentMinutes}:${currentSeconds}`
+        }
       }
-      this.soundPlaying = sound
-      this.wavesurfer.load(sound.url)
-      this.isLoading = true
+    },
+    setProgressBar (e) {
+      const width = this.$refs.progressContainer.clientWidth
+      const clickX = e.offsetX
+      const { duration } = this.$refs.audioInput
+      this.$refs.audioInput.currentTime = (clickX / width) * duration
+    },
+    async loadFile (sound) {
       this.activateLoading()
+      this.soundPlaying = sound
+      this.loadSong(sound.url)
+      this.playSong()
+      this.loadThumbnail()
+      this.disableLoading()
       await this.getInformationSound()
     },
     isIOS () {
@@ -353,10 +371,7 @@ export default {
 }
 </script>
 
-<style>
-#audioBox {
-  display: none;
-}
+<style lang="scss">
 
 .plyr-play {
   margin: auto;
@@ -404,5 +419,39 @@ export default {
 .box__comments {
   height: 35vh;
   overflow-y: auto;
+}
+
+#audioInput {
+  display: none;
+}
+
+.player-container {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+.progressBar {
+  background: #FFFFFF;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  width: 100%;
+  height: 0.5rem;
+}
+
+.progressBar .progress {
+  background: $pink;
+  border-radius: 0.5rem;
+  width: 0;
+  height: 100%;
+  transition: width 0.1s linear;
+}
+
+.progressBar .duration {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  color: white;
 }
 </style>
