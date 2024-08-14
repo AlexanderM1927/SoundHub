@@ -108,7 +108,7 @@ body {
 .pli-delete {
   width: 1.5rem;
   height: 1.8rem;
-  background-color: #CF2741;
+  background-color: $pink;
   border-radius: 1rem;
   margin-top: 1rem;
   padding: 0.5rem;
@@ -131,6 +131,6 @@ body {
   margin: auto;
   max-width: 80px;
   height: 35px;
-  background: #CF2741;
+  background: $pink;
   color: white;
 }

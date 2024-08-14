@@ -10,21 +10,39 @@
       </div>
     </div>
     <br>
-    <div :class="`row col-md-3 col-xs-12 rslt-div-btns justify-around`">
+    <div :class="`d-flex rslt-div-btns justify-around`">
       <!--ADD TO LIST-->
       <q-btn
-        class="col-5 q-ml-sm q-mb-xs"
+        class=""
         @click="$emit('agregarSound', soundInfo)"
         color="pink">
         Agregar a playlist
       </q-btn>
       <q-btn
-        class="col-5 q-ml-sm q-mb-xs"
+        class=""
         @click="$emit('downloadFile', soundInfo)"
         color="pink"
         icon="download">
         Download
       </q-btn>
+      <q-btn
+        class=""
+        @click="searchLyric(soundInfo.title)"
+        color="pink"
+        icon="search"
+      >
+        Buscar letra
+      </q-btn>
+    </div>
+    <br>
+    <div class="lyrics-container" v-if="showLyrics">
+      <b>No es la canción que esperabas?</b><br>
+      <q-input bg-color="white" outlined v-model="soundNameSearch" @keyup.enter="searchLyric(soundNameSearch)" label="Nombre de la canción - artista">
+        <template v-slot:prepend>
+          <q-icon color="grey" name="search" />
+        </template>
+      </q-input>
+      {{ lyrics }}
     </div>
     <span v-if="soundInfo.type === 'sound'">
       Publicada por:
@@ -77,7 +95,16 @@ export default {
   ],
   data () {
     return {
-      comment: ''
+      comment: '',
+      showLyrics: false,
+      lyrics: '',
+      soundNameSearch: ''
+    }
+  },
+  watch: {
+    soundInfo () {
+      this.soundNameSearch = this.soundInfo.title
+      this.searchLyric(this.soundNameSearch)
     }
   },
   methods: {
@@ -101,7 +128,26 @@ export default {
       } else {
         this.alert('warning', 'Please, introduce some text')
       }
+    },
+    async searchLyric (soundName) {
+      this.showLyrics = true
+      const apiUrl = `https://lyrics-finder-api.vercel.app/lyrics?song=${soundName}`
+      const request = await fetch(apiUrl)
+      const { lyrics } = await request.json()
+      this.lyrics = lyrics
     }
   }
 }
 </script>
+<style lang="scss">
+.lyrics-container {
+  width: 100%;
+  white-space:pre-wrap;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 20rem;
+  background: $pink;
+  padding: 2rem;
+  border-radius: 1rem;
+}
+</style>
