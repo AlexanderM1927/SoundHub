@@ -227,11 +227,12 @@ export const functions = {
     },
     cleanTitle (title) {
       let result
-      // clean speciall words and []
+      // clean speciall words and ()[]
       result = title.replace(/(\(|\)|\[|\]|official|oficial|video|audio|lyric|cover|lyrics|versión|version|letra|en vivo)/gi, '')
+      result = result.replace(/(\(|\)|\[|\]|clip)/gi, '')
       // change al & for y
       result = result.replace(/&/g, 'y')
-      // clean emojis and []
+      // clean emojis
       result = result.replace(/[\[\]\(\)\u{1F600}-\u{1F64F}\u{2700}-\u{27BF}]+/gu, '')
       result = result.replace(/[\[\]\(\)\p{Emoji_Presentation}\p{Extended_Pictographic}]+/gu, '').trim()
       return result

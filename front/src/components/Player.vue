@@ -453,5 +453,6 @@ export default {
   display: flex;
   justify-content: space-between;
   color: white;
+  font-size: 0.7rem;
 }
 </style>
