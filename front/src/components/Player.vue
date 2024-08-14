@@ -308,27 +308,25 @@ export default {
         const { duration, currentTime } = e.srcElement
         const progressPercent = (currentTime / duration) * 100
         this.$refs.progress.style.width = `${progressPercent}%`
-        const durationMinutes = Math.floor(duration / 60)
-        let durationSeconds = Math.floor(duration % 60)
+        const durationHoras = Math.floor(duration / 3600)
+        const durationMinutos = Math.floor((duration % 3600) / 60)
+        const durationSegundos = Math.floor(duration % 60)
 
-        if (durationSeconds < 10) {
-          durationSeconds = `0${durationSeconds}`
-        }
+        const durationHorasStr = durationHoras > 0 ? String(durationHoras).padStart(2, '0') + ':' : ''
+        const durationMinutosStr = String(durationMinutos).padStart(2, '0') + ':'
+        const durationSegundosStr = String(durationSegundos).padStart(2, '0')
 
-        if (durationSeconds) {
-          this.$refs.tiempoDuracion.innerText = `${durationMinutes}:${durationSeconds}`
-        }
+        this.$refs.tiempoDuracion.innerText = durationHorasStr + durationMinutosStr + durationSegundosStr
 
-        const currentMinutes = Math.floor(currentTime / 60)
-        let currentSeconds = Math.floor(currentTime % 60)
+        const currentHoras = Math.floor(currentTime / 3600)
+        const currentMinutos = Math.floor((currentTime % 3600) / 60)
+        const currentSegundos = Math.floor(currentTime % 60)
 
-        if (currentSeconds < 10) {
-          currentSeconds = `0${currentSeconds}`
-        }
+        const currentHorasStr = currentHoras > 0 ? String(currentHoras).padStart(2, '0') + ':' : ''
+        const currentMinutosStr = String(currentMinutos).padStart(2, '0') + ':'
+        const currentSegundosStr = String(currentSegundos).padStart(2, '0')
 
-        if (currentSeconds) {
-          this.$refs.tiempoActual.innerText = `${currentMinutes}:${currentSeconds}`
-        }
+        this.$refs.tiempoActual.innerText = currentHorasStr + currentMinutosStr + currentSegundosStr
       }
     },
     setProgressBar (e) {
