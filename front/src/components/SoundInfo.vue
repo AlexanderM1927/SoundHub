@@ -25,14 +25,6 @@
         icon="download">
         Download
       </q-btn>
-      <q-btn
-        class=""
-        @click="searchLyric(soundInfo.title)"
-        color="pink"
-        icon="search"
-      >
-        Buscar letra
-      </q-btn>
     </div>
     <br>
     <div class="lyrics-container" v-if="showLyrics">
