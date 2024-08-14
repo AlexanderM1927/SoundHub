@@ -48,11 +48,11 @@
         </div>
         <!--NEXT SONG-->
         <div class="col-md-1 col-xs-2">
-          <div class="row justify-center">
+          <div class="row justify-center btn-player">
             <q-icon
               name="fas fa-step-forward"
               color="pink"
-              class="fs-2 btn-player"
+              class="fs-2"
               @click="setNewSong('next')"
             />
           </div>
