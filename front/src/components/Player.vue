@@ -23,11 +23,11 @@
         </div>
         <!--PREVIOUS SONG-->
         <div class='col-md-1 col-xs-2'>
-          <div class="row justify-center">
+          <div class="row justify-center btn-player">
             <q-icon
               name="fas fa-step-backward"
               color="pink"
-              class="plyr-btn"
+              class="fs-2"
               @click="setNewSong('prev')"
             />
           </div>
@@ -52,7 +52,7 @@
             <q-icon
               name="fas fa-step-forward"
               color="pink"
-              class="plyr-btn"
+              class="fs-2"
               @click="setNewSong('next')"
             />
           </div>
@@ -373,21 +373,20 @@ export default {
 
 <style lang="scss">
 
+.btn-player {
+  height: 100%;
+  align-items: center;
+}
+
 .plyr-play {
   margin: auto;
 }
 
-.asa {
-  margin: auto 0;
-}
-
 .plyr-btn {
-  margin: auto;
   vertical-align: center;
   width: 4rem;
   height: 4rem;
   font-size: 2rem;
-
 }
 
 .plyr-pink {
