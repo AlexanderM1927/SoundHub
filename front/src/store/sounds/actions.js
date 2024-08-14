@@ -52,14 +52,14 @@ const getRelatedVideos = async (url) => {
   }
 }
 
-const getBlobUrl = async (url) => {
-  const request = await fetch(url)
-  const blob = await request.blob()
-  const newBlob = new Blob([blob], { type: 'audio/mp3' })
-  const newUrl = URL.createObjectURL(newBlob)
+// const getBlobUrl = async (url) => {
+//   const request = await fetch(url)
+//   const blob = await request.blob()
+//   const newBlob = new Blob([blob], { type: 'audio/mp3' })
+//   const newUrl = URL.createObjectURL(newBlob)
 
-  return newUrl
-}
+//   return newUrl
+// }
 
 const downloadBackgroundSound = async ({ commit, url, payload }) => {
   if (canDownloadNextSong) {
