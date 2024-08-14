@@ -108,9 +108,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         newUrl = payload.url
         relatedVideos = []
       } else {
-        const data = await getRelatedVideos(payload.url)
         newUrl = url
-        relatedVideos = data.relatedVideos
       }
       commit('setSong', {
         url: newUrl,
@@ -121,6 +119,8 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         payload: payload
       })
       if (!payload.playlistMode && payload.type === 'video') {
+        const data = await getRelatedVideos(payload.url)
+        relatedVideos = data.relatedVideos
         setPlaylistDefault({ relatedVideos, dispatch, urlParent: payload.url })
       }
       parentDownload = payload.url
