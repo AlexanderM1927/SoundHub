@@ -29,7 +29,7 @@
     <br>
     <div class="lyrics-container" v-if="showLyrics">
       <b>No es la letra que esperabas?</b><br>
-      <q-input bg-color="white" outlined v-model="soundNameSearch" @keyup.enter="searchLyric(soundNameSearch)" label="Nombre de la canción - artista">
+      <q-input bg-color="white" outlined v-model="soundNameSearch" @keyup.enter="searchLyric(soundNameSearch)" label="Nombre de la canción y artista">
         <template v-slot:prepend>
           <q-icon color="grey" name="search" />
         </template>
