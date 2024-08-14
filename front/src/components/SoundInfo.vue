@@ -36,7 +36,7 @@
     </div>
     <br>
     <div class="lyrics-container" v-if="showLyrics">
-      <b>No es la canción que esperabas?</b><br>
+      <b>No es la letra que esperabas?</b><br>
       <q-input bg-color="white" outlined v-model="soundNameSearch" @keyup.enter="searchLyric(soundNameSearch)" label="Nombre de la canción - artista">
         <template v-slot:prepend>
           <q-icon color="grey" name="search" />
@@ -137,7 +137,7 @@ export default {
         const { lyrics } = await request.json()
         this.lyrics = lyrics
       } catch (error) {
-        this.lyrics = '¡Ooops! no encontramos esa letra... :('
+        this.lyrics = '¡Ooops! no encontramos esa letra... :( Intenta cambiando el nombre arriba'
       }
     }
   }
