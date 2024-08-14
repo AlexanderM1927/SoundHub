@@ -2,7 +2,7 @@
   <!-- NAVBAR COMPONENT -->
   <div>
     <!-- HEADER ICON/NAME-->
-    <q-header elevated class="bg-black">
+    <q-header elevated class="bg-pink">
       <q-toolbar class="row nav-height col-12 justify-between">
         <div class="row" @click="goTo('/')">
           <img src="/logo.png" class="nav-icon" />
@@ -26,8 +26,7 @@
       show-if-above
       :width="300"
       :breakpoint="2000"
-      bordered
-      content-class="bg-black"
+      content-class="bg-pink"
     >
       <q-scroll-area class="fit">
         <q-list>
