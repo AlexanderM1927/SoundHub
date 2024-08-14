@@ -224,6 +224,11 @@ export const functions = {
       }
       if (error.response.status === 401) { this.goTo('logout') }
       this.alert('negative', error.response.data.error)
+    },
+    cleanTitle (title) {
+      let result
+      result = title.replace(/(\(|\)|\[|\]|official|oficial|video|lyric|lyrics|letra)/gi, '').trim()
+      return result
     }
   }
 }

@@ -103,7 +103,7 @@ export default {
   },
   watch: {
     soundInfo () {
-      this.soundNameSearch = this.soundInfo.title
+      this.soundNameSearch = this.cleanTitle(this.soundInfo.title)
       this.searchLyric(this.soundNameSearch)
     }
   },
@@ -131,7 +131,7 @@ export default {
     },
     async searchLyric (soundName) {
       this.showLyrics = true
-      const apiUrl = `https://lyrics-finder-api.vercel.app/lyrics?song=${soundName}`
+      const apiUrl = `https://lyrics-finder-api.vercel.app/lyrics?song=${this.cleanTitle(soundName)}`
       const request = await fetch(apiUrl)
       const { lyrics } = await request.json()
       this.lyrics = lyrics
