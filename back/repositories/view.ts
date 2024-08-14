@@ -56,10 +56,12 @@ export class ViewRepository {
                         model: User
                     }]
                 })
-                sound = {
-                    type: 'sound'
+                if (soundFromDB) {
+                    sound = {
+                        type: 'sound'
+                    }
+                    Object.assign(sound, soundFromDB.dataValues)
                 }
-                Object.assign(sound, soundFromDB.dataValues)
             }
             if (sound) results.items.push(sound)
         }
