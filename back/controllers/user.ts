@@ -21,8 +21,8 @@ export class UserController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production', // https
                 // sameSite: 'none',
-                // "expires" - The cookie expires in 24 hours
-                maxAge: 1000 * 60 * 60 * 24, // 24 hours,
+                // "expires" - The cookie expires in 30 days
+                maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days,
                 origin: process.env.FRONT_URL
             }
 
