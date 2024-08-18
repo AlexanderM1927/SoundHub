@@ -68,7 +68,7 @@ const downloadBackgroundSound = async ({ commit, url, payload }) => {
     if (payload.type === 'device') {
       newUrl = payload.url
     } else {
-      newUrl = await getBlobUrl(url)
+      newUrl = url
     }
     if (videosToDownload.length > 0) {
       if (videosToDownload.includes(payload.url)) {
@@ -108,7 +108,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         newUrl = payload.url
         relatedVideos = []
       } else {
-        newUrl = await getBlobUrl(url)
+        newUrl = url
       }
       commit('setSong', {
         url: newUrl,
