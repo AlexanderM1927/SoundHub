@@ -52,13 +52,13 @@ const getRelatedVideos = async (url) => {
   }
 }
 
-const getBlobUrl = async (url) => {
-  const request = await fetch(url)
-  const blob = await request.blob()
-  const newBlob = new Blob([blob], { type: 'audio/mp3' })
-  const newUrl = URL.createObjectURL(newBlob)
+const getBlobUrl = (url) => {
+  // const request = await fetch(url)
+  // const blob = await request.blob()
+  // const newBlob = new Blob([blob], { type: 'audio/mp3' })
+  // const newUrl = URL.createObjectURL(newBlob)
 
-  return newUrl
+  return url
 }
 
 const downloadBackgroundSound = async ({ commit, url, payload }) => {
@@ -68,7 +68,7 @@ const downloadBackgroundSound = async ({ commit, url, payload }) => {
     if (payload.type === 'device') {
       newUrl = payload.url
     } else {
-      newUrl = await getBlobUrl(url)
+      newUrl = getBlobUrl(url)
     }
     if (videosToDownload.length > 0) {
       if (videosToDownload.includes(payload.url)) {
@@ -108,7 +108,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         newUrl = payload.url
         relatedVideos = []
       } else {
-        newUrl = await getBlobUrl(url)
+        newUrl = getBlobUrl(url)
       }
       commit('setSong', {
         url: newUrl,
