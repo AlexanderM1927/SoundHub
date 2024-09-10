@@ -316,6 +316,12 @@ export default {
         const durationMinutosStr = String(durationMinutos).padStart(2, '0') + ':'
         const durationSegundosStr = String(durationSegundos).padStart(2, '0')
 
+        if (!isNaN(durationSegundos)) {
+          this.disableLoading()
+        } else {
+          return
+        }
+
         this.$refs.tiempoDuracion.innerText = durationHorasStr + durationMinutosStr + durationSegundosStr
 
         const currentHoras = Math.floor(currentTime / 3600)
@@ -341,7 +347,6 @@ export default {
       this.loadSong(sound.url)
       this.playSong()
       this.loadThumbnail()
-      this.disableLoading()
       await this.getInformationSound()
     },
     isIOS () {

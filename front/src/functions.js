@@ -90,7 +90,6 @@ export const functions = {
           time: Date.now()
         })
       }
-      this.activateLoading()
       let url = ''
       let img = ''
       if (result.img) img = result.img
@@ -114,7 +113,6 @@ export const functions = {
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
         document.getElementById('player').classList.toggle('inactive')
       }
-      this.disableLoading()
       if (!result.type !== 'device') {
         await ViewService.store({
           sound_id: url,
@@ -123,7 +121,6 @@ export const functions = {
       }
     },
     async playPlaylist (playlist) {
-      this.activateLoading()
       let isNotFirst = false
       let url = ''
       let urlParent = ''
@@ -158,7 +155,6 @@ export const functions = {
             document.getElementById('player').classList.toggle('inactive')
           }
         }
-        this.disableLoading()
       }
     },
     getSrcFromBackend (url) {
