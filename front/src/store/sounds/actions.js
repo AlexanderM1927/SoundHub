@@ -61,6 +61,33 @@ const getBlobUrl = async (url) => {
   return newUrl
 }
 
+const addSoundsToPlaylist = ({ commit, url, payload }) => {
+  let newUrl
+  canDownloadNextSong = false
+  if (payload.type === 'device') {
+    newUrl = payload.url
+  } else {
+    newUrl = url
+  }
+  if (videosToDownload.length > 0) {
+    if (videosToDownload.includes(payload.url)) {
+      commit('setSongOnPlaylist', {
+        url: newUrl,
+        payload: payload
+      })
+    }
+  } else {
+    if (payload.urlParent === parentDownload && !isDownloadingFirstSound) {
+      commit('setSongOnPlaylist', {
+        url: newUrl,
+        payload: payload
+      })
+    } else {
+      commit('reloadPlaylist')
+    }
+  }
+}
+
 const downloadBackgroundSound = async ({ commit, url, payload }) => {
   if (canDownloadNextSong) {
     let newUrl
@@ -72,16 +99,16 @@ const downloadBackgroundSound = async ({ commit, url, payload }) => {
     }
     if (videosToDownload.length > 0) {
       if (videosToDownload.includes(payload.url)) {
-        commit('setSongOnPlaylist', {
-          url: newUrl,
-          payload: payload
+        commit('setSongOnDownloadedSounds', {
+          youtubeUrl: url,
+          blobUrl: newUrl
         })
       }
     } else {
       if (payload.urlParent === parentDownload && !isDownloadingFirstSound) {
-        commit('setSongOnPlaylist', {
-          url: newUrl,
-          payload: payload
+        commit('setSongOnDownloadedSounds', {
+          youtubeUrl: url,
+          blobUrl: newUrl
         })
       } else {
         commit('reloadPlaylist')
@@ -133,6 +160,7 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
       }
       // Download sound in background
       // isplaylist
+      addSoundsToPlaylist({ commit, url, payload })
       await downloadBackgroundSound({ commit, url, payload })
     }
   } catch (error) {

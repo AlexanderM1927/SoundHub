@@ -5,6 +5,7 @@ export default function () {
     searchText: '',
     song: null,
     playlist: [],
+    downloadedSounds: [],
     position: 0
     //
   }

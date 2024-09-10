@@ -23,12 +23,17 @@ export const setSongOnPlaylist = (state, payload) => {
   state.playlist.push(payload)
 }
 
+export const setSongOnDownloadedSounds = (state, payload) => {
+  state.downloadedSounds[payload.youtubeUrl] = payload.blobUrl
+}
+
 export const setPosOnPlaylist = (state, payload) => {
   state.position = payload
 }
 
 export const reloadPlaylist = (state) => {
   state.playlist = []
+  state.downloadedSounds = []
   state.position = 0
   state.song = null
 }

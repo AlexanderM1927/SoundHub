@@ -147,6 +147,11 @@ export default {
       get () {
         return this.$store.state.sounds.position
       }
+    },
+    downloadedSounds: {
+      get () {
+        return this.$store.state.sounds.downloadedSounds
+      }
     }
   },
   watch: {
@@ -367,7 +372,14 @@ export default {
             this.$store.dispatch('sounds/setPosition', (this.position - 1))
           }
         }
-        this.loadFile(this.playlist[this.position])
+        console.log(this.downloadedSounds[this.playlist[this.position].url])
+        console.log(this.downloadedSounds)
+        const newEl = { ...this.playlist[this.position] }
+        if (this.downloadedSounds[newEl.url]) {
+          console.log('is preloaded')
+          newEl.url = this.downloadedSounds[newEl.url]
+        }
+        this.loadFile(newEl)
       }
     }
   }
