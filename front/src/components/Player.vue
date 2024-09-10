@@ -129,7 +129,8 @@ export default {
       isPlaying: true,
       dialogPlaylist: false,
       sound: {},
-      soundPlaying: null
+      soundPlaying: null,
+      downloadedSounds: []
     }
   },
   computed: {
@@ -147,11 +148,6 @@ export default {
       get () {
         return this.$store.state.sounds.position
       }
-    },
-    downloadedSounds: {
-      get () {
-        return this.$store.state.sounds.downloadedSounds
-      }
     }
   },
   watch: {
@@ -167,6 +163,7 @@ export default {
     // },
     position () {
       if (this.position) {
+        this.predownloadSound(this.playlist[(this.position + 1)])
         const { url, img, type, title } = this.playlist[this.position].payload // current song
         if (url === window.penultimateSoundRelated) { // if is the penultimate
           this.$store.dispatch('sounds/getSongById', {
@@ -372,14 +369,25 @@ export default {
             this.$store.dispatch('sounds/setPosition', (this.position - 1))
           }
         }
-        console.log(this.downloadedSounds[this.playlist[this.position].url])
-        console.log(this.downloadedSounds)
-        const newEl = { ...this.playlist[this.position] }
-        if (this.downloadedSounds[newEl.url]) {
-          console.log('is preloaded')
-          newEl.url = this.downloadedSounds[newEl.url]
+        // console.log(this.downloadedSounds[this.playlist[this.position].url])
+        const newSong = { ...this.playlist[this.position] }
+        if (this.downloadedSounds[newSong.url]) {
+          newSong.url = this.downloadedSounds[newSong.url]
         }
-        this.loadFile(newEl)
+        this.loadFile(newSong)
+      }
+    },
+    async getBlobUrl (url) {
+      const request = await fetch(url)
+      const blob = await request.blob()
+      const newBlob = new Blob([blob], { type: 'audio/mp3' })
+      const newUrl = URL.createObjectURL(newBlob)
+
+      return newUrl
+    },
+    async predownloadSound (sound) {
+      if (sound) {
+        this.downloadedSounds[sound.url] = await this.getBlobUrl(sound.url)
       }
     }
   }

@@ -5,7 +5,6 @@ export function someAction (context) {
 */
 import SearchService from '../../services/SearchService'
 
-let canDownloadNextSong = false
 let videosToDownload = []
 let parentDownload = ''
 let isDownloadingFirstSound = false
@@ -52,18 +51,8 @@ const getRelatedVideos = async (url) => {
   }
 }
 
-const getBlobUrl = async (url) => {
-  const request = await fetch(url)
-  const blob = await request.blob()
-  const newBlob = new Blob([blob], { type: 'audio/mp3' })
-  const newUrl = URL.createObjectURL(newBlob)
-
-  return newUrl
-}
-
 const addSoundsToPlaylist = ({ commit, url, payload }) => {
   let newUrl
-  canDownloadNextSong = false
   if (payload.type === 'device') {
     newUrl = payload.url
   } else {
@@ -85,40 +74,6 @@ const addSoundsToPlaylist = ({ commit, url, payload }) => {
     } else {
       commit('reloadPlaylist')
     }
-  }
-}
-
-const downloadBackgroundSound = async ({ commit, url, payload }) => {
-  if (canDownloadNextSong) {
-    let newUrl
-    canDownloadNextSong = false
-    if (payload.type === 'device') {
-      newUrl = payload.url
-    } else {
-      newUrl = await getBlobUrl(url)
-    }
-    if (videosToDownload.length > 0) {
-      if (videosToDownload.includes(payload.url)) {
-        commit('setSongOnDownloadedSounds', {
-          youtubeUrl: url,
-          blobUrl: newUrl
-        })
-      }
-    } else {
-      if (payload.urlParent === parentDownload && !isDownloadingFirstSound) {
-        commit('setSongOnDownloadedSounds', {
-          youtubeUrl: url,
-          blobUrl: newUrl
-        })
-      } else {
-        commit('reloadPlaylist')
-      }
-    }
-    canDownloadNextSong = true
-  } else {
-    window.timeoutdownloadBgId = setTimeout(async () => {
-      await downloadBackgroundSound({ commit, url, payload })
-    }, 2000)
   }
 }
 
@@ -151,7 +106,6 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
         setPlaylistDefault({ relatedVideos, dispatch, urlParent: payload.url })
       }
       parentDownload = payload.url
-      canDownloadNextSong = true
       isDownloadingFirstSound = false
     } else if (payload.playlistMode) {
       if (payload.requireRelatedSounds) { // this is used by the last sound on playlist to following with suggestions
@@ -161,7 +115,6 @@ export const getSongById = async ({ commit, dispatch }, payload) => {
       // Download sound in background
       // isplaylist
       addSoundsToPlaylist({ commit, url, payload })
-      await downloadBackgroundSound({ commit, url, payload })
     }
   } catch (error) {
     console.log(error)
