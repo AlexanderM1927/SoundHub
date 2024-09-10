@@ -120,7 +120,7 @@ export default {
   },
   data () {
     return {
-      // isLoading: false,
+      isLoading: true,
       dialogInfo: false,
       soundInfo: {},
       comment: '',
@@ -154,21 +154,35 @@ export default {
   watch: {
     song () {
       if (this.song) this.loadFile(this.song)
+      for (let i = this.position; i < this.playlist.length; i++) {
+        this.predownloadSound(this.playlist[i])
+      }
     },
     playlist () {
-      if (this.playlist) {
-        // console.log('%c' + this.playlist.map((obj) => {
-        //   return obj.payload.title
-        // }).toString(), 'background-color: red; color: white;')
-      }
+      // if (this.playlist) {
+      //   console.log('%c' + this.playlist.map((obj) => {
+      //     return obj.payload.title
+      //   }).toString(), 'background-color: red; color: white;')
+      // }
     },
-    haveListenedFirstSong () {
-      if (this.haveListenedFirstSong) {
-        // download next sounds
-        for (let i = (this.position + 1); i < this.playlist.length; i++) {
-          this.predownloadSound(this.playlist[i])
+    // haveListenedFirstSong () {
+    //   console.log('ENTRO A LA PRIMERA')
+    //   if (this.haveListenedFirstSong) {
+    //     // download next sounds
+    //     for (let i = (this.position + 1); i < this.playlist.length; i++) {
+    //       this.predownloadSound(this.playlist[i])
+    //     }
+    //   }
+    // },
+    isLoading () {
+      const interval = setInterval(() => {
+        const sound = this.soundPlaying
+        if (this.isLoading && this.downloadedSounds[sound.url]) {
+          this.loadSong(this.downloadedSounds[sound.url])
+          this.playSong()
+          clearInterval(interval)
         }
-      }
+      }, 800)
     },
     position () {
       if (this.position) {
@@ -343,6 +357,7 @@ export default {
         this.$refs.tiempoActual.innerText = currentHorasStr + currentMinutosStr + currentSegundosStr
 
         this.disableLoading()
+        this.isLoading = false
         this.haveListenedFirstSong = true
       }
     },
@@ -353,6 +368,7 @@ export default {
       this.$refs.audioInput.currentTime = (clickX / width) * duration
     },
     async loadFile (sound) {
+      this.isLoading = true
       this.haveListenedFirstSong = false
       this.activateLoading()
       this.soundPlaying = sound
@@ -368,7 +384,6 @@ export default {
     },
     setNewSong (type) {
       if (type === 'next' && (this.playlist.length - 1) === this.position) {
-        this.alert('warning', 'No hay mas canciones en el playlist o están cargando')
         return 0
       }
       if (this.playlist.length > 0) {
