@@ -130,7 +130,8 @@ export default {
       dialogPlaylist: false,
       sound: {},
       soundPlaying: null,
-      downloadedSounds: []
+      downloadedSounds: [],
+      haveListenedFirstSong: false
     }
   },
   computed: {
@@ -156,13 +157,17 @@ export default {
     },
     playlist () {
       if (this.playlist) {
+        // console.log('%c' + this.playlist.map((obj) => {
+        //   return obj.payload.title
+        // }).toString(), 'background-color: red; color: white;')
+      }
+    },
+    haveListenedFirstSong () {
+      if (this.haveListenedFirstSong) {
         // download next sounds
         for (let i = (this.position + 1); i < this.playlist.length; i++) {
           this.predownloadSound(this.playlist[i])
         }
-        // console.log('%c' + this.playlist.map((obj) => {
-        //   return obj.payload.title
-        // }).toString(), 'background-color: red; color: white;')
       }
     },
     position () {
@@ -325,8 +330,6 @@ export default {
         const durationMinutosStr = String(durationMinutos).padStart(2, '0') + ':'
         const durationSegundosStr = String(durationSegundos).padStart(2, '0')
 
-        this.disableLoading()
-
         this.$refs.tiempoDuracion.innerText = durationHorasStr + durationMinutosStr + durationSegundosStr
 
         const currentHoras = Math.floor(currentTime / 3600)
@@ -338,6 +341,9 @@ export default {
         const currentSegundosStr = String(currentSegundos).padStart(2, '0')
 
         this.$refs.tiempoActual.innerText = currentHorasStr + currentMinutosStr + currentSegundosStr
+
+        this.disableLoading()
+        this.haveListenedFirstSong = true
       }
     },
     setProgressBar (e) {
@@ -347,6 +353,7 @@ export default {
       this.$refs.audioInput.currentTime = (clickX / width) * duration
     },
     async loadFile (sound) {
+      this.haveListenedFirstSong = false
       this.activateLoading()
       this.soundPlaying = sound
       this.loadSong(sound.url)
