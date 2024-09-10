@@ -166,7 +166,7 @@ export default {
     haveListenedFirstSong () {
       if (this.haveListenedFirstSong) {
         // download next sounds
-        for (let i = (this.position + 1); i < this.playlist.length; i++) {
+        for (let i = this.position; i < this.playlist.length; i++) {
           this.predownloadSound(this.playlist[i])
         }
       }
