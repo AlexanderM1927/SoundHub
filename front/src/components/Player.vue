@@ -154,16 +154,19 @@ export default {
     song () {
       if (this.song) this.loadFile(this.song)
     },
-    // playlist () {
-    //   if (this.playlist) {
-    //     console.log('%c' + this.playlist.map((obj) => {
-    //       return obj.payload.title
-    //     }).toString(), 'background-color: red; color: white;')
-    //   }
-    // },
+    playlist () {
+      if (this.playlist) {
+        // download next sounds
+        for (let i = (this.position + 1); i < this.playlist.length; i++) {
+          this.predownloadSound(this.playlist[i])
+        }
+        // console.log('%c' + this.playlist.map((obj) => {
+        //   return obj.payload.title
+        // }).toString(), 'background-color: red; color: white;')
+      }
+    },
     position () {
       if (this.position) {
-        this.predownloadSound(this.playlist[(this.position + 1)])
         const { url, img, type, title } = this.playlist[this.position].payload // current song
         if (url === window.penultimateSoundRelated) { // if is the penultimate
           this.$store.dispatch('sounds/getSongById', {
