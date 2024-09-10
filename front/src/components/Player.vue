@@ -312,15 +312,15 @@ export default {
         const durationMinutos = Math.floor((duration % 3600) / 60)
         const durationSegundos = Math.floor(duration % 60)
 
+        if (isNaN(durationSegundos)) {
+          return false
+        }
+
         const durationHorasStr = durationHoras > 0 ? String(durationHoras).padStart(2, '0') + ':' : ''
         const durationMinutosStr = String(durationMinutos).padStart(2, '0') + ':'
         const durationSegundosStr = String(durationSegundos).padStart(2, '0')
 
-        if (!isNaN(durationSegundos)) {
-          this.disableLoading()
-        } else {
-          return
-        }
+        this.disableLoading()
 
         this.$refs.tiempoDuracion.innerText = durationHorasStr + durationMinutosStr + durationSegundosStr
 
