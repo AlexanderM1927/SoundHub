@@ -390,7 +390,10 @@ export default {
     },
     async predownloadSound (sound) {
       if (sound) {
-        this.downloadedSounds[sound.url] = await this.getBlobUrl(sound.url)
+        // avoid repeat download
+        if (!this.downloadedSounds[sound.url]) {
+          this.downloadedSounds[sound.url] = await this.getBlobUrl(sound.url)
+        }
       }
     }
   }
