@@ -154,9 +154,7 @@ export default {
   watch: {
     song () {
       if (this.song) this.loadFile(this.song)
-      for (let i = this.position; i < this.playlist.length; i++) {
-        this.predownloadSound(this.playlist[i])
-      }
+      this.predownloadSound(this.song)
     },
     playlist () {
       // if (this.playlist) {
@@ -165,15 +163,14 @@ export default {
       //   }).toString(), 'background-color: red; color: white;')
       // }
     },
-    // haveListenedFirstSong () {
-    //   console.log('ENTRO A LA PRIMERA')
-    //   if (this.haveListenedFirstSong) {
-    //     // download next sounds
-    //     for (let i = (this.position + 1); i < this.playlist.length; i++) {
-    //       this.predownloadSound(this.playlist[i])
-    //     }
-    //   }
-    // },
+    haveListenedFirstSong () {
+      if (this.haveListenedFirstSong) {
+        // download next sounds
+        for (let i = (this.position + 1); i < this.playlist.length; i++) {
+          this.predownloadSound(this.playlist[i])
+        }
+      }
+    },
     isLoading () {
       const interval = setInterval(() => {
         const sound = this.soundPlaying
