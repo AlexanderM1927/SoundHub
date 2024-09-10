@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'nodo-soundhub'
+    }
     options {
         disableConcurrentBuilds()
     }
