@@ -130,8 +130,7 @@ export default {
       dialogPlaylist: false,
       sound: {},
       soundPlaying: null,
-      downloadedSounds: [],
-      haveListenedFirstSong: false
+      downloadedSounds: []
     }
   },
   computed: {
@@ -165,15 +164,6 @@ export default {
       //   }).toString(), 'background-color: red; color: white;')
       // }
     },
-    // haveListenedFirstSong () {
-    //   console.log('ENTRO A LA PRIMERA')
-    //   if (this.haveListenedFirstSong) {
-    //     // download next sounds
-    //     for (let i = (this.position + 1); i < this.playlist.length; i++) {
-    //       this.predownloadSound(this.playlist[i])
-    //     }
-    //   }
-    // },
     isLoading () {
       const interval = setInterval(() => {
         const sound = this.soundPlaying
@@ -358,7 +348,6 @@ export default {
 
         this.disableLoading()
         this.isLoading = false
-        this.haveListenedFirstSong = true
       }
     },
     setProgressBar (e) {
@@ -369,7 +358,6 @@ export default {
     },
     async loadFile (sound) {
       this.isLoading = true
-      this.haveListenedFirstSong = false
       this.activateLoading()
       this.soundPlaying = sound
       this.loadSong(sound.url)
