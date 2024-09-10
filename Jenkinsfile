@@ -47,7 +47,7 @@ pipeline {
             }
             steps {
                 dir('./back') {
-                    sh 'export JENKINS_NODE_COOKIE=dontKillMe; NODE_ENV=production pm2 start'
+                    sh 'export JENKINS_NODE_COOKIE=dontKillMe; NODE_ENV=production pm2 start pm2 start ecosystem.config.cjs'
                 }
             }
         }
