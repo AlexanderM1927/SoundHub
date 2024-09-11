@@ -163,11 +163,11 @@ export default {
       //   }).toString(), 'background-color: red; color: white;')
       // }
     },
-    haveListenedFirstSong () {
+    async haveListenedFirstSong () {
       if (this.haveListenedFirstSong) {
         // download next sounds
         for (let i = this.position; i < this.playlist.length; i++) {
-          this.predownloadSound(this.playlist[i])
+          await this.predownloadSound(this.playlist[i])
         }
       }
     },

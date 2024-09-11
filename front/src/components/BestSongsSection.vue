@@ -14,7 +14,7 @@
       <!--SELECTED SONGS-->
       <TopSong
        v-for="song in songs"
-       :key="song.title"
+       :key="song.id"
        :song="song"/>
     </div>
   </div>
