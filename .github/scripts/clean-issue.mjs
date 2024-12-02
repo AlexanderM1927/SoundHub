@@ -11,14 +11,10 @@ const octokit = new Octokit({ auth: token });
 
   const issueNumber = eventData.issue.number;
   const issueBody = eventData.issue.body;
-  
-  console.log('issueBody', issueBody)
 
   // Eliminar secciones con '_No response_'
-  const cleanedBody = issueBody.replace(/### .*?\n\n_No response_\n\n/g, "");
-  
-  console.log('cleanedBody', cleanedBody)
-  
+  const cleanedBody = issueBody.replace(/### .*\n\n?_No response_\n\n?/g, "");
+
   // Actualizar el issue si hay cambios
   if (cleanedBody !== issueBody) {
     await octokit.issues.update({
