@@ -1,4 +1,5 @@
-const { Octokit } = require("@octokit/rest");
+import { Octokit } from "@octokit/rest";
+import fs from "fs";
 
 const token = process.env.GITHUB_TOKEN;
 const octokit = new Octokit({ auth: token });
@@ -6,7 +7,7 @@ const octokit = new Octokit({ auth: token });
 (async () => {
   const { GITHUB_REPOSITORY, GITHUB_EVENT_PATH } = process.env;
   const [owner, repo] = GITHUB_REPOSITORY.split("/");
-  const eventData = require(GITHUB_EVENT_PATH);
+  const eventData = JSON.parse(await fs.promises.readFile(GITHUB_EVENT_PATH, "utf-8"));
 
   const issueNumber = eventData.issue.number;
   const issueBody = eventData.issue.body;
