@@ -1,0 +1,20 @@
+name: Clean Issues
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+
+jobs:
+  clean-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Remove empty sections
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node .github/scripts/clean-issue.js

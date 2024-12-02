@@ -1,0 +1,23 @@
+{
+  "name": "SoundHub",
+  "version": "1.0.0",
+  "description": "Here you'll be able to listen and download all the music you love.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexanderM1927/SoundHub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexanderM1927/SoundHub/issues"
+  },
+  "homepage": "https://github.com/AlexanderM1927/SoundHub#readme",
+  "dependencies": {
+    "@octokit/rest": "^21.0.2"
+  }
+}
