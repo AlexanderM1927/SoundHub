@@ -10,7 +10,7 @@ pipeline {
             }
             steps {
                 withCredentials([file(credentialsId: 'envsoundhub-front', variable: 'ENV_FILE')]) {
-                    sh 'cp "\$ENV_FILE" ./front/.env'
+                    sh 'cp -u "\$ENV_FILE" ./front/.env'
                 }
                 dir('./front') {
                     sh 'npm install'
@@ -36,7 +36,7 @@ pipeline {
             }
             steps {
                 withCredentials([file(credentialsId: 'envsoundhub', variable: 'ENV_FILE')]) {
-                    sh 'cp "\$ENV_FILE" ./back/.env'
+                    sh 'cp -u "\$ENV_FILE" ./back/.env'
                 }
                 dir('./back') {
                     sh 'npm install'
