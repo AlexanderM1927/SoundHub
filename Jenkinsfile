@@ -9,6 +9,9 @@ pipeline {
                 nodejs 'node-21.11.1'
             }
             steps {
+                withCredentials([file(credentialsId: 'envsoundhub-front', variable: 'ENV_FILE')]) {
+                    sh 'cp "\$ENV_FILE" ./front/.env'
+                }
                 dir('./front') {
                     sh 'npm install'
                     sh 'icongenie generate -m pwa -i ./public/logo.png'
@@ -32,6 +35,9 @@ pipeline {
                 nodejs 'node-21.11.1'
             }
             steps {
+                withCredentials([file(credentialsId: 'envsoundhub', variable: 'ENV_FILE')]) {
+                    sh 'cp "\$ENV_FILE" ./back/.env'
+                }
                 dir('./back') {
                     sh 'npm install'
                     sh 'npx sequelize-cli db:migrate'
