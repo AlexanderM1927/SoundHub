@@ -1,38 +1,49 @@
 <template>
-  <div class="recent-section text-white" v-if="songs.length > 0">
+  <div class="recent-section text-white" v-if="loading || songs.length > 0">
     <div class="recent-title">
       <q-icon name="history" class="recent-title__icon" />
       <span>Escuchado recientemente</span>
     </div>
     <div class="recent-scroll">
-      <div
-        class="recent-card"
-        v-for="result in songs"
-        :key="result.id || result.sound_id"
-        @click="openPlayer(result)"
-      >
-        <div class="recent-card__img-wrap">
-          <img
-            v-if="result.type === 'video'"
-            :src="result.img || (result.thumbnail && result.thumbnail.thumbnails[0].url)"
-            class="recent-card__img"
-          />
-          <img
-            v-else
-            :src="getSrcFromBackend(result.sound_thumbnail_url || result.img)"
-            class="recent-card__img"
-          />
-          <div class="recent-card__overlay">
-            <q-icon name="play_arrow" class="recent-card__play-icon" />
-          </div>
+      <!--SKELETON LOADERS-->
+      <template v-if="loading">
+        <div v-for="n in 8" :key="'skeleton-' + n" class="recent-card">
+          <q-skeleton class="recent-skeleton-img" square />
+          <q-skeleton type="text" class="q-mt-sm" />
+          <q-skeleton type="text" width="50%" />
         </div>
-        <p class="recent-card__title">
-          {{ result.title || result.sound_name }}
-        </p>
-        <p v-if="result.length" class="recent-card__duration">
-          {{ result.length.simpleText }}
-        </p>
-      </div>
+      </template>
+      <!--RECENT SONGS-->
+      <template v-else>
+        <div
+          class="recent-card"
+          v-for="result in songs"
+          :key="result.id || result.sound_id"
+          @click="openPlayer(result)"
+        >
+          <div class="recent-card__img-wrap">
+            <img
+              v-if="result.type === 'video'"
+              :src="result.img || (result.thumbnail && result.thumbnail.thumbnails[0].url)"
+              class="recent-card__img"
+            />
+            <img
+              v-else
+              :src="getSrcFromBackend(result.sound_thumbnail_url || result.img)"
+              class="recent-card__img"
+            />
+            <div class="recent-card__overlay">
+              <q-icon name="play_arrow" class="recent-card__play-icon" />
+            </div>
+          </div>
+          <p class="recent-card__title">
+            {{ result.title || result.sound_name }}
+          </p>
+          <p v-if="result.length" class="recent-card__duration">
+            {{ result.length.simpleText }}
+          </p>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -46,7 +57,8 @@ export default {
   components: {},
   data () {
     return {
-      songs: []
+      songs: [],
+      loading: true
     }
   },
   computed: {
@@ -68,6 +80,7 @@ export default {
   },
   methods: {
     async getRecentSongs () {
+      this.loading = true
       const recentPlayed = await this.getDataCollection('recent')
       const soundsSorted = recentPlayed.sort((a, b) => {
         if (a.time > b.time) {
@@ -82,6 +95,7 @@ export default {
       this.songs = [
         ...this.removeDuplicates(soundsSorted).slice(0, 10)
       ]
+      this.loading = false
     },
     removeDuplicates (arr) {
       return arr.filter((item, index) => {
@@ -138,6 +152,12 @@ export default {
 
 .recent-scroll::-webkit-scrollbar-thumb {
   background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+}
+
+.recent-skeleton-img {
+  width: 150px;
+  height: 150px;
   border-radius: 10px;
 }
 

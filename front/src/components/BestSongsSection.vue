@@ -11,11 +11,23 @@
           </q-card-section>
         </q-card>
       </div>
+      <!--SKELETON LOADERS-->
+      <template v-if="loading">
+        <div
+          v-for="n in 7"
+          :key="'skeleton-' + n"
+          class="popular-card-skeleton"
+        >
+          <q-skeleton class="popular-skeleton-img" square />
+        </div>
+      </template>
       <!--SELECTED SONGS-->
-      <TopSong
-       v-for="song in songs"
-       :key="song.id"
-       :song="song"/>
+      <template v-else>
+        <TopSong
+          v-for="song in songs"
+          :key="song.id"
+          :song="song"/>
+      </template>
     </div>
   </div>
 </template>
@@ -31,7 +43,8 @@ export default {
   components: { TopSong },
   data () {
     return {
-      songs: []
+      songs: [],
+      loading: true
     }
   },
   mounted () {
@@ -40,9 +53,9 @@ export default {
   methods: {
     async getPopularSounds () {
       try {
-        this.activateLoading()
+        this.loading = true
         const request = await ViewService.getViews()
-        this.disableLoading()
+        this.loading = false
         const items = request.data.data.items
         this.songs = items.map(element => {
           let objRes = {}
@@ -68,6 +81,7 @@ export default {
           return objRes
         })
       } catch (error) {
+        this.loading = false
         console.error(error)
       }
     }
@@ -76,6 +90,19 @@ export default {
 </script>
 
 <style scoped>
+.popular-card-skeleton {
+  min-width: 200px;
+  width: 15%;
+  height: 300px;
+  margin: auto 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.popular-skeleton-img {
+  width: 100%;
+  height: 300px;
+}
 /* MOST POPULAR SONGS */
 .popular-body {
   margin-top: 2rem;
