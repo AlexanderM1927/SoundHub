@@ -13,7 +13,7 @@ export class ViewRepository {
     async getViews () {
         const startDate = moment().startOf('week').format('YYYY-MM-DD')
         const endDate = moment().add(1, 'days').format('YYYY-MM-DD')
-        const views = await View.findAll({
+        let views = await View.findAll({
             attributes: [
                 'sound_id',
                 'view_type',
@@ -30,6 +30,21 @@ export class ViewRepository {
             ],
             limit: 10
         })
+
+        if (views.length === 0) {
+            views = await View.findAll({
+                attributes: [
+                    'sound_id',
+                    'view_type',
+                    [Sequelize.literal('COUNT(sound_id)'), 'count']
+                ],
+                group: ['sound_id', 'view_type'],
+                order: [
+                    [Sequelize.literal('count'), 'DESC']
+                ],
+                limit: 10
+            })
+        }
         const results: {
             items: any[],
             nextPage: any
