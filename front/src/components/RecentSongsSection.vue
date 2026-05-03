@@ -1,12 +1,37 @@
 <template>
-  <div class="d-flex justify-center w-100 text-white">
-    <div class="recent_song" v-if="songs.length > 0">
-      <h5 style="padding-left: 1rem;">Escuchado recientemente</h5>
-      <div class="row">
-        <div class="col-6" v-for="result in songs" v-bind:key="result.id">
-          <SearchResultYoutube v-if="result.type === 'video'" :result="result" :download="true" :tiny="false" />
-          <SearchResultSound v-else-if="result.type === 'sound'" :result="result" :download="true" :tiny="false" />
+  <div class="recent-section text-white" v-if="songs.length > 0">
+    <div class="recent-title">
+      <q-icon name="history" class="recent-title__icon" />
+      <span>Escuchado recientemente</span>
+    </div>
+    <div class="recent-scroll">
+      <div
+        class="recent-card"
+        v-for="result in songs"
+        :key="result.id || result.sound_id"
+        @click="openPlayer(result)"
+      >
+        <div class="recent-card__img-wrap">
+          <img
+            v-if="result.type === 'video'"
+            :src="result.img || (result.thumbnail && result.thumbnail.thumbnails[0].url)"
+            class="recent-card__img"
+          />
+          <img
+            v-else
+            :src="getSrcFromBackend(result.sound_thumbnail_url || result.img)"
+            class="recent-card__img"
+          />
+          <div class="recent-card__overlay">
+            <q-icon name="play_arrow" class="recent-card__play-icon" />
+          </div>
         </div>
+        <p class="recent-card__title">
+          {{ result.title || result.sound_name }}
+        </p>
+        <p v-if="result.length" class="recent-card__duration">
+          {{ result.length.simpleText }}
+        </p>
       </div>
     </div>
   </div>
@@ -14,16 +39,11 @@
 
 <script>
 import { functions } from '../functions.js'
-import SearchResultSound from './SearchResultSound.vue'
-import SearchResultYoutube from './SearchResultYoutube.vue'
 
 export default {
   name: 'RecentSongsSection',
   mixins: [functions],
-  components: {
-    SearchResultSound,
-    SearchResultYoutube
-  },
+  components: {},
   data () {
     return {
       songs: []
@@ -60,7 +80,7 @@ export default {
         return 0
       })
       this.songs = [
-        ...this.removeDuplicates(soundsSorted).slice(0, 6)
+        ...this.removeDuplicates(soundsSorted).slice(0, 10)
       ]
     },
     removeDuplicates (arr) {
@@ -76,59 +96,110 @@ export default {
 </script>
 
 <style scoped>
-/* MOST POPULAR SONGS */
-.popular-body {
-  margin-top: 2rem;
-
-  overflow-x: scroll !important;
-  white-space: nowrap;
+.recent-section {
+  width: 100%;
+  padding: 1.5rem 2rem;
 }
 
-.popular-cards {
+.recent-title {
   display: flex;
-  overflow-x: auto;
-  border-radius: 10px;
-}
-
-.popular-body::-webkit-scrollbar {
-  visibility: hidden;
-}
-
-/* RELATED TO SCROLLBAR */
-.popular-cards::-webkit-scrollbar {
-  height: 10px;
-}
-
-.popular-cards::-webkit-scrollbar-track {
-  background: rgba(20, 20, 20, 0.75);
-  border-radius: 10px;
-}
-
-.popular-cards::-webkit-scrollbar-thumb {
-  background: rgba(15, 15, 15, 0.45);
-  border-radius: 10px;
-}
-
-/* TITLE CARD */
-.title-card {
-  height: 340px;
-  padding: 8px;
-  background: linear-gradient(130deg,#ff7a18,#af002d 41.07%,#319197 76.05%);
-  border-radius: 8px;
-}
-
-.tc-body {
-  min-width: 180px;
-  width: 15%;
-  background-color: black;
-  border-radius: 5px;
-}
-
-.tc-text {
+  align-items: center;
+  gap: 0.5rem;
   font-family: 'Inter', sans-serif;
-  font-weight: 900;
-  font-size: 2.1rem;
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
   color: #ffffff;
-  line-height: 2.3rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.recent-title__icon {
+  font-size: 1.4rem;
+  color: #e04060;
+}
+
+.recent-scroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+.recent-scroll::-webkit-scrollbar {
+  height: 5px;
+}
+
+.recent-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.recent-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+}
+
+.recent-card {
+  flex: 0 0 auto;
+  width: 150px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.recent-card:hover {
+  transform: translateY(-4px);
+}
+
+.recent-card__img-wrap {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.recent-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.recent-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.recent-card:hover .recent-card__overlay {
+  opacity: 1;
+}
+
+.recent-card__play-icon {
+  font-size: 3rem;
+  color: #fff;
+}
+
+.recent-card__title {
+  margin: 0.5rem 0 0.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f0f0f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-card__duration {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #aaa;
 }
 </style>
