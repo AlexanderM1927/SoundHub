@@ -1,6 +1,29 @@
-import ytdl, { videoInfo, videoFormat } from '@distube/ytdl-core'
+import { Innertube } from 'youtubei.js'
+import { PassThrough } from 'node:stream'
 // @ts-ignore
 import youtubesearchapi from 'youtube-search-api'
+
+let innertubeInstance: Innertube | null = null
+
+async function getInnertube (): Promise<Innertube> {
+    if (!innertubeInstance) {
+        // ANDROID client provides direct format URLs without JS deciphering
+        innertubeInstance = await Innertube.create({
+            client_type: 'ANDROID' as any,
+            retrieve_player: false
+        })
+    }
+    return innertubeInstance
+}
+
+function extractVideoId (urlOrId: string): string {
+    try {
+        const parsed = new URL(urlOrId)
+        return parsed.searchParams.get('v') ?? urlOrId
+    } catch {
+        return urlOrId
+    }
+}
 
 export class YoutubeService {
     soundRepository: any
@@ -11,12 +34,12 @@ export class YoutubeService {
     convertDurationInMinutes (duration: string) {
         const parts = duration.split(':').map(Number)
 
-        let minutes = 0;
+        let minutes = 0
 
         if (parts.length === 2) { // Formato MM:SS
-            minutes = parts[0] + parts[1] / 60;
+            minutes = parts[0] + parts[1] / 60
         } else if (parts.length === 3) { // Formato HH:MM:SS
-            minutes = parts[0] * 60 + parts[1] + parts[2] / 60;
+            minutes = parts[0] * 60 + parts[1] + parts[2] / 60
         }
 
         return minutes
@@ -36,23 +59,19 @@ export class YoutubeService {
 
     async getSoundByIdOnYoutube ({ id }: { id: any }) {
         try {
-            const info: videoInfo = await ytdl.getInfo(id)
-            const getBestThumbnail = info.videoDetails.thumbnails.sort((a: any, b: any) => {
-                if (parseInt(a.width) < parseInt(b.width)) {
-                    return 1
-                } else if (parseInt(a.width) > parseInt(b.width)) {
-                    return -1
-                } else {
-                    return 0
-                }
-            }).slice(1,3)
+            const yt = await getInnertube()
+            const info = await yt.getBasicInfo(extractVideoId(id))
+            const thumbnails = info.basic_info.thumbnail ?? []
+            const getBestThumbnail = [...thumbnails]
+                .sort((a: any, b: any) => (b.width ?? 0) - (a.width ?? 0))
+                .slice(1, 3)
 
             return {
-                title: info.videoDetails.title,
+                title: info.basic_info.title,
                 thumbnail: {
                     thumbnails: getBestThumbnail
                 },
-                id: id,
+                id,
                 type: 'video'
             }
         } catch (error) {
@@ -72,17 +91,11 @@ export class YoutubeService {
             items: [],
             nextPage: {}
         }
-        for (let i = 0; i < sounds.length; i++) {
-            const sound = {
-                type: 'sound'
-            }
-            Object.assign(sound, sounds[i].dataValues)
-            results.items.push(sound)
+        for (const sound of sounds) {
+            results.items.push({ type: 'sound', ...sound.dataValues })
         }
-        for (let i = 0; i < youtube.items.length; i++) {
-            const video = youtube.items[i]
+        for (const video of youtube.items) {
             if (video.type === 'video' && video.length && video.length.accessibility) {
-                // delete videos larger than 10 minutes
                 const minutes = this.convertDurationInMinutes(video.length.simpleText)
                 if (minutes < 100) results.items.push(video)
             }
@@ -92,63 +105,108 @@ export class YoutubeService {
         return results
     }
 
+    async getInfoSound ({ url }: { url: string }) {
+        const yt = await getInnertube()
+        const info = await yt.getBasicInfo(extractVideoId(url))
 
-    async getInfoSound ({ url }: { url: string}) {
-        const info: videoInfo = await ytdl.getInfo(url)
-        const formats: videoFormat[] = info.formats ? info.formats : (info.player_response.streamingData.formats as videoFormat[])
-        // const audioFormat = ytdl.chooseFormat(info.formats, {
-        //     quality: "lowestaudio"
-        // })
-        const audioFormats = formats.filter((format: videoFormat) => {
-            return format.container === 'mp4' && format.hasVideo && format.hasAudio
-        })
-        
-        const relatedVideos = info.related_videos.map((video) => {
-            return {
-                id: video.id,
-                title: video.title?.replace(/[^a-zA-Z ]/g, ""),
-                thumbnail: video.thumbnails,
-                duration: video.length_seconds
-            }
+        const allFormats = [
+            ...(info.streaming_data?.formats ?? []),
+            ...(info.streaming_data?.adaptive_formats ?? [])
+        ]
+
+        const audioFormats = allFormats.filter((format) => {
+            return format.mime_type.includes('video/mp4') && format.has_video && format.has_audio
         })
 
+        const container = audioFormats[0]?.mime_type.split('/')[1]?.split(';')[0]?.trim() ?? 'mp4'
+
+        const relatedVideos: any[] = []
 
         return {
-            contentLength: audioFormats[0].contentLength,
-            itag: audioFormats[0].itag,
-            container: audioFormats[0].container,
+            contentLength: audioFormats[0]?.content_length,
+            itag: audioFormats[0]?.itag,
+            container,
             relatedVideos
         }
     }
 
     downloadSound ({ url, options }: { url: string, options: any }) {
-        try {
-            return {
-                sound: ytdl(url, options)
+        const passThrough = new PassThrough()
+
+        ;(async () => {
+            try {
+                const yt = await getInnertube()
+                const info = await yt.getBasicInfo(extractVideoId(url))
+
+                const allFormats = [
+                    ...(info.streaming_data?.formats ?? []),
+                    ...(info.streaming_data?.adaptive_formats ?? [])
+                ]
+
+                // For ANDROID client, format.url is populated directly (no deciphering needed)
+                const format = allFormats.find((f: any) => f.itag === options?.quality && f.url)
+                    ?? allFormats.find((f: any) => f.url && f.has_video && f.has_audio)
+                    ?? allFormats.find((f: any) => f.url)
+
+                if (!format?.url) {
+                    passThrough.destroy(new Error('No suitable format found'))
+                    return
+                }
+
+                const fetchHeaders: Record<string, string> = {
+                    'User-Agent': 'com.google.android.youtube/17.36.4 (Linux; U; Android 12) gzip'
+                }
+                if (options?.range) {
+                    fetchHeaders['Range'] = `bytes=${options.range.start}-${options.range.end}`
+                }
+
+                const response = await fetch(format.url, { headers: fetchHeaders })
+
+                if (!response.ok) {
+                    passThrough.destroy(new Error(`YouTube fetch failed: ${response.status} ${response.statusText}`))
+                    return
+                }
+
+                if (!response.body) {
+                    passThrough.destroy(new Error('No response body'))
+                    return
+                }
+
+                const reader = response.body.getReader()
+                try {
+                    while (true) {
+                        const { done, value } = await reader.read()
+                        if (done) break
+                        passThrough.write(value)
+                    }
+                    passThrough.end()
+                } catch (streamError) {
+                    passThrough.destroy(streamError as Error)
+                }
+            } catch (error) {
+                passThrough.destroy(error as Error)
             }
-        } catch (error) {
-            return {
-                sound: null
-            }
-        }
+        })()
+
+        return { sound: passThrough }
     }
 
     preloadSound ({ url, options }: { url: string, options: any }) {
         return new Promise((resolve, reject) => {
-            let contentLength = 0;
+            let contentLength = 0
 
-            const { sound } = this.downloadSound({ url, options})
+            const { sound } = this.downloadSound({ url, options })
 
             sound?.on('data', (chunk: any) => {
-                contentLength += chunk.length;
-            });
+                contentLength += chunk.length
+            })
 
             sound?.on('end', () => {
                 resolve(contentLength)
             })
 
-            sound?.on('fail', () => {
-                reject()
+            sound?.on('error', (err: Error) => {
+                reject(err)
             })
         })
     }
