@@ -59,7 +59,7 @@ export default {
               title: element.title,
               img: element.thumbnail.thumbnails[0].url,
               length: {
-                simpleText: element.length.simpleText
+                simpleText: element.length?.simpleText ?? ''
               }
             }
           }
