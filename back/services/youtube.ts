@@ -4,14 +4,18 @@ import { PassThrough } from 'node:stream'
 import youtubesearchapi from 'youtube-search-api'
 
 let innertubeInstance: Innertube | null = null
+let innertubeCreatedAt: number = 0
+const INNERTUBE_TTL_MS = 30 * 60 * 1000 // 30 minutes
 
 async function getInnertube (): Promise<Innertube> {
-    if (!innertubeInstance) {
+    const now = Date.now()
+    if (!innertubeInstance || (now - innertubeCreatedAt) > INNERTUBE_TTL_MS) {
         // ANDROID client provides direct format URLs without JS deciphering
         innertubeInstance = await Innertube.create({
             client_type: 'ANDROID' as any,
             retrieve_player: false
         })
+        innertubeCreatedAt = now
     }
     return innertubeInstance
 }
@@ -106,8 +110,16 @@ export class YoutubeService {
     }
 
     async getInfoSound ({ url }: { url: string }) {
-        const yt = await getInnertube()
-        const info = await yt.getBasicInfo(extractVideoId(url))
+        let yt = await getInnertube()
+        let info: Awaited<ReturnType<typeof yt.getBasicInfo>>
+        try {
+            info = await yt.getBasicInfo(extractVideoId(url))
+        } catch {
+            // Session may have expired; force recreation and retry once
+            innertubeInstance = null
+            yt = await getInnertube()
+            info = await yt.getBasicInfo(extractVideoId(url))
+        }
 
         const allFormats = [
             ...(info.streaming_data?.formats ?? []),
@@ -153,8 +165,15 @@ export class YoutubeService {
 
         ;(async () => {
             try {
-                const yt = await getInnertube()
-                const info = await yt.getBasicInfo(extractVideoId(url))
+                let yt = await getInnertube()
+                let info: Awaited<ReturnType<typeof yt.getBasicInfo>>
+                try {
+                    info = await yt.getBasicInfo(extractVideoId(url))
+                } catch {
+                    innertubeInstance = null
+                    yt = await getInnertube()
+                    info = await yt.getBasicInfo(extractVideoId(url))
+                }
 
                 const allFormats = [
                     ...(info.streaming_data?.formats ?? []),
