@@ -12,7 +12,8 @@ async function getInnertube (): Promise<Innertube> {
     if (!innertubeInstance || (now - innertubeCreatedAt) > INNERTUBE_TTL_MS) {
         // ANDROID client provides direct format URLs without JS deciphering
         innertubeInstance = await Innertube.create({
-            client_type: 'ANDROID' as any
+            client_type: 'ANDROID' as any,
+            retrieve_player: false
         })
         innertubeCreatedAt = now
     }
