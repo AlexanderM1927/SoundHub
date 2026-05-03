@@ -19,4 +19,6 @@ COPY . /usr/src/front-app/
 
 EXPOSE 9093
 
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
 CMD ["quasar", "dev"]
