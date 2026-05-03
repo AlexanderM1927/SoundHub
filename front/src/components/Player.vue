@@ -35,7 +35,7 @@
         <!--SOUND WAVES-->
         <div :class="'col-md-8 col-xs-4'">
           <div class="player-container">
-            <audio ref="audioInput" id="audioInput" controls type="audio/mp3" title="soundhub"></audio>
+            <audio ref="audioInput" id="audioInput" controls preload="auto" title="soundhub"></audio>
             <div ref="progressContainer" id="progressBar" class="progressBar">
               <div ref="progress" class="progress" id="progress"></div>
               <div class="duration">
@@ -154,7 +154,8 @@ export default {
   watch: {
     song () {
       if (this.song) this.loadFile(this.song)
-      this.predownloadSound(this.song)
+      // predownloadSound for the current song is intentionally omitted:
+      // the audio already streams directly; downloading a blob only interrupts playback
     },
     playlist () {
       // if (this.playlist) {
@@ -172,14 +173,8 @@ export default {
       }
     },
     isLoading () {
-      const interval = setInterval(() => {
-        const sound = this.soundPlaying
-        if (this.isLoading && this.downloadedSounds[sound.url]) {
-          this.loadSong(this.downloadedSounds[sound.url])
-          this.playSong()
-          clearInterval(interval)
-        }
-      }, 800)
+      // Removed: was replacing the streaming src with a full blob once downloaded,
+      // which interrupted playback. The audio streams directly now.
     },
     position () {
       if (this.position) {

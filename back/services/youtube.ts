@@ -118,13 +118,31 @@ export class YoutubeService {
             return format.mime_type.includes('video/mp4') && format.has_video && format.has_audio
         })
 
-        const container = audioFormats[0]?.mime_type.split('/')[1]?.split(';')[0]?.trim() ?? 'mp4'
+        const format = audioFormats[0]
+        const container = format?.mime_type.split('/')[1]?.split(';')[0]?.trim() ?? 'mp4'
+
+        let contentLength = format?.content_length
+
+        // If YouTube didn't include content_length in metadata, resolve it with a
+        // lightweight HEAD request so range/seek support is always available.
+        if (!contentLength && format?.url) {
+            try {
+                const head = await fetch(format.url, {
+                    method: 'HEAD',
+                    headers: { 'User-Agent': 'com.google.android.youtube/17.36.4 (Linux; U; Android 12) gzip' }
+                })
+                const cl = head.headers.get('content-length')
+                if (cl) contentLength = parseInt(cl, 10)
+            } catch {
+                // non-fatal: will fall back to chunked stream without range support
+            }
+        }
 
         const relatedVideos: any[] = []
 
         return {
-            contentLength: audioFormats[0]?.content_length,
-            itag: audioFormats[0]?.itag,
+            contentLength,
+            itag: format?.itag,
             container,
             relatedVideos
         }

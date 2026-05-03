@@ -88,42 +88,46 @@ export class SoundController {
                     }
                 }
 
-                if (!contentLength) {
-                    _contentLength = await this.youtubeService.preloadSound(soundDefaultOptions)
-                } else {
+                if (contentLength) {
                     _contentLength = contentLength
                 }
 
-                const rangeHeader = req.headers.range || null;
-                let startRange = 0;
-                let endRange = _contentLength - 1;  // Si no hay rango, envía todo el contenido
+                if (_contentLength > 0) {
+                    // Content-Length known: support byte-range requests for seeking
+                    const rangeHeader = req.headers.range || null;
+                    let startRange = 0;
+                    let endRange = _contentLength - 1;
 
-                if (rangeHeader) {
-                    const rangePosition = rangeHeader.replace(/bytes=/, "").split("-");
-                    startRange = parseInt(rangePosition[0], 10);
-
-                    // Si rangePosition[1] es undefined o una cadena vacía, usa el valor por defecto (_contentLength - 1)
-                    if (rangePosition[1]) {
-                        endRange = parseInt(rangePosition[1], 10);
+                    if (rangeHeader) {
+                        const rangePosition = rangeHeader.replace(/bytes=/, "").split("-");
+                        startRange = parseInt(rangePosition[0], 10);
+                        if (rangePosition[1]) {
+                            endRange = parseInt(rangePosition[1], 10);
+                        }
                     }
-                }
 
-                const chunksize = (endRange - startRange) + 1;
+                    const chunksize = (endRange - startRange) + 1;
 
-                const headers: any = {
-                    'Content-Type': `video/${container}`,
-                    'Content-Length': chunksize,
-                    "Content-Range": "bytes " + startRange + "-" + endRange + "/" + _contentLength,
-                    "Accept-Ranges": "bytes"
-                }
+                    const headers: any = {
+                        'Content-Type': `video/${container}`,
+                        'Content-Length': chunksize,
+                        "Content-Range": "bytes " + startRange + "-" + endRange + "/" + _contentLength,
+                        "Accept-Ranges": "bytes"
+                    }
 
-                res.writeHead(206, headers)
+                    res.writeHead(206, headers)
 
-                const range = { start: startRange, end: endRange }
-
-                soundDefaultOptions.options = {
-                    ...soundDefaultOptions.options,
-                    range
+                    soundDefaultOptions.options = {
+                        ...soundDefaultOptions.options,
+                        range: { start: startRange, end: endRange }
+                    }
+                } else {
+                    // Content-Length unknown: stream immediately without range support
+                    res.writeHead(200, {
+                        'Content-Type': `video/${container}`,
+                        'Transfer-Encoding': 'chunked',
+                        'Accept-Ranges': 'none'
+                    })
                 }
 
                 const { sound } = this.youtubeService.downloadSound(soundDefaultOptions)
@@ -135,15 +139,32 @@ export class SoundController {
                 if (sound) {
                     const __dirname = path.dirname(fileURLToPath(import.meta.url))
                     const soundUrl = path.join(__dirname.replace('v1', '').replace('dist', '').replace('controllers', ''), sound.sound_file_url)
-                    const soundStream = fileSystem.createReadStream(soundUrl)
+                    const fileSize = fileSystem.statSync(soundUrl).size
+                    const rangeHeader = req.headers.range
 
-                    res.setHeader("Content-Type", "audio/mpeg");
-                    res.setHeader("Accept-Ranges", "bytes");
-                    res.setHeader("Connection", "Keep-Alive");
-                    res.setHeader("Content-Length", fileSystem.statSync(soundUrl).size);
-                    res.setHeader("Transfer-encoding", "chunked");
+                    if (rangeHeader) {
+                        const parts = rangeHeader.replace(/bytes=/, "").split("-")
+                        const start = parseInt(parts[0], 10)
+                        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1
+                        const chunkSize = (end - start) + 1
 
-                    soundStream.pipe(res)
+                        res.writeHead(206, {
+                            'Content-Type': 'audio/mpeg',
+                            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                            'Accept-Ranges': 'bytes',
+                            'Content-Length': chunkSize,
+                            'Connection': 'Keep-Alive'
+                        })
+                        fileSystem.createReadStream(soundUrl, { start, end }).pipe(res)
+                    } else {
+                        res.writeHead(200, {
+                            'Content-Type': 'audio/mpeg',
+                            'Accept-Ranges': 'bytes',
+                            'Content-Length': fileSize,
+                            'Connection': 'Keep-Alive'
+                        })
+                        fileSystem.createReadStream(soundUrl).pipe(res)
+                    }
                 } else {
                     res.status(404).json({ error: "Sound not found" });
                 }
