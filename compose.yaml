@@ -38,6 +38,8 @@ services:
     build: 
       dockerfile: Dockerfile
       context: ./back
+    env_file:
+      - ./back/.env
     volumes:
       - ./back:/usr/src/back-app
       - ./back/package.json:/usr/src/back-app/package.json
