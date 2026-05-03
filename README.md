@@ -9,8 +9,14 @@ Here you'll be able to listen and download all the music you love.
 - Run: docker-compose up -d --build --force-recreate --remove-orphans
 - If you don't have the database structure, you'll need to run migrations and seeders, run the next commands in the **backend** container on Docker
 ````
-```
 npx sequelize-cli db:migrate
 npx sequelize-cli db:seed:all
-```
+````
+
+**example with docker**
+
+````
+docker exec -it backend_soundhub sh
+npx sequelize-cli db:migrate
+npx sequelize-cli db:seed:all
 ````
