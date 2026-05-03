@@ -1,34 +1,64 @@
 <template>
-  <q-page>
-    <div :class="`row justify-around`">
-      <div :class="`custom-dark-bg col-md-8 col-xs-12 container`">
-        <p class="title text-h6 q-ml-md q-mt-md">Mis chats</p>
+  <q-page class="chat-page">
+    <div class="row justify-around q-pa-md">
+      <div class="col-md-6 col-sm-8 col-xs-12">
+        <p class="text-h6 text-white q-mb-md">
+          <q-icon name="chat" class="q-mr-sm" />Mis chats
+        </p>
         <div
+          v-if="channels.length === 0"
+          class="text-center text-grey-6 q-py-xl"
+        >
+          <q-icon name="forum" size="56px" class="q-mb-sm" />
+          <p>No tienes conversaciones aún</p>
+        </div>
+        <q-list separator dark class="rounded-borders channel-list">
+          <q-item
             v-for="(channel, i) in channels"
             :key="i"
-            :class="`row custom-dark-div ${(channel.active ? 'bg-pink' : '')}`"
+            clickable
+            v-ripple
             @click="openModal(i)"
-        >
-            <p class="pl-title">{{channel.user.user_name}}</p>
-        </div>
+            class="channel-item"
+          >
+            <q-item-section avatar>
+              <q-avatar color="pink-8" text-color="white" size="44px" class="text-weight-bold">
+                {{ channel.user.user_name.charAt(0).toUpperCase() }}
+              </q-avatar>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-white text-weight-medium">{{ channel.user.user_name }}</q-item-label>
+            </q-item-section>
+            <q-item-section side v-if="channel.active">
+              <q-badge color="pink" rounded />
+            </q-item-section>
+          </q-item>
+        </q-list>
       </div>
     </div>
+
     <q-dialog
       v-model="modalChat"
       transition-show="slide-up"
       transition-hide="slide-down"
       :maximized="true"
     >
-      <q-card class="pl-card-body">
-        <q-bar>
-          <q-space />
-          <q-btn dense flat icon="close" v-close-popup>
-            <q-tooltip class="bg-white text-primary">Close</q-tooltip>
-          </q-btn>
-        </q-bar>
-        <div class="content">
-          <ChatBox v-if="channelSelected !== -1" :userTo="channels[channelSelected].user" :messagesProp="chats"></ChatBox>
-        </div>
+      <q-card class="chat-modal-card column no-wrap">
+        <q-btn
+          dense
+          flat
+          round
+          icon="arrow_back"
+          color="white"
+          v-close-popup
+          class="chat-back-btn"
+        />
+        <ChatBox
+          v-if="channelSelected !== -1"
+          :userTo="channels[channelSelected].user"
+          :messagesProp="chats"
+          class="col"
+        />
       </q-card>
     </q-dialog>
   </q-page>
@@ -109,30 +139,37 @@ export default {
 }
 </script>
 
-<style>
-.pl-container {
-  margin: 10px 5px;
-  padding: 5px;
-  background-color: rgba(54, 54, 59, .9);
-  border-radius: 3px;
+<style scoped>
+.chat-page {
+  background-color: #18181d;
+  min-height: 100vh;
 }
 
-.pl-title {
-  margin: auto;
-  padding: 4px;
-  font-family: "Inter", sans-serif;
-  font-size: 1.2rem;
-  font-weight: 300;
-  color: #f5f5f5;
-  line-height: 20px !important;
+.channel-list {
+  background-color: #28282f;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.margin-auto {
-  margin: auto;
+.channel-item {
+  transition: background-color 0.2s;
+  min-height: 64px;
 }
 
-.pl-delete {
-  font-size: 1.1rem;
-  cursor: pointer;
+.channel-item:hover {
+  background-color: rgba(233, 30, 99, 0.08);
+}
+
+.chat-modal-card {
+  background-color: #1e1e24;
+  height: 100%;
+  position: relative;
+}
+
+.chat-back-btn {
+  position: absolute;
+  top: 11px;
+  right: 12px;
+  z-index: 10;
 }
 </style>
