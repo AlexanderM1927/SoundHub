@@ -4,6 +4,24 @@ pipeline {
         disableConcurrentBuilds()
     }
     stages {
+        stage('Backend prepare and build') {
+            tools {
+                nodejs 'node-21.11.1'
+            }
+            steps {
+                withCredentials([file(credentialsId: 'envsoundhub', variable: 'ENV_FILE')]) {
+                    sh 'rm -f ./back/.env'
+                    sh 'cp "\$ENV_FILE" ./back/.env'
+                }
+                dir('./back') {
+                    sh 'npm install'
+                    sh 'npx sequelize-cli db:migrate'
+                    sh 'npx sequelize-cli db:seed:all'
+                    sh 'cp -r ./config /var/lib/jenkins/workspace/soundhub/back/dist'
+                    sh 'npm run build'
+                }
+            }
+        }
         stage('Frontend prepare') {
             tools {
                 nodejs 'node-21.11.1'
@@ -28,24 +46,6 @@ pipeline {
                     sh 'quasar build -m pwa'
                     sh 'chown -R jenkins:jenkins ./dist/pwa'
                     sh 'rsync -a ./dist/pwa/. /var/lib/jenkins/workspace/soundhub/back/public'
-                }
-            }
-        }
-        stage('Backend prepare and build') {
-            tools {
-                nodejs 'node-21.11.1'
-            }
-            steps {
-                withCredentials([file(credentialsId: 'envsoundhub', variable: 'ENV_FILE')]) {
-                    sh 'rm -f ./back/.env'
-                    sh 'cp "\$ENV_FILE" ./back/.env'
-                }
-                dir('./back') {
-                    sh 'npm install'
-                    sh 'npx sequelize-cli db:migrate'
-                    sh 'npx sequelize-cli db:seed:all'
-                    sh 'cp -r ./config /var/lib/jenkins/workspace/soundhub/back/dist'
-                    sh 'npm run build'
                 }
             }
         }
