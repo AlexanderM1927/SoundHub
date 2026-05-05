@@ -126,10 +126,11 @@ export default {
     async searchLyric (soundName) {
       this.showLyrics = true
       try {
-        const apiUrl = `https://lyrics-finder-api.vercel.app/lyrics?song=${soundName}`
+        const apiUrl = `https://lrclib.net/api/search?q=${encodeURIComponent(soundName)}`
         const request = await fetch(apiUrl)
-        const { lyrics } = await request.json()
-        this.lyrics = lyrics
+        const results = await request.json()
+        const match = results.find(r => r.plainLyrics)
+        this.lyrics = match ? match.plainLyrics : '¡Ooops! no encontramos esa letra... :( Intenta cambiando el nombre arriba'
       } catch (error) {
         this.lyrics = '¡Ooops! no encontramos esa letra... :( Intenta cambiando el nombre arriba'
       }
