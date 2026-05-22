@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:21-alpine
+FROM node:14-alpine
 
 # create destination directory
 RUN mkdir -p /usr/src/front-app
