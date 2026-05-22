@@ -72,11 +72,11 @@ export default {
               title: element.title,
               img: element.thumbnail.thumbnails[0].url,
               length: {
-                simpleText: element.length?.simpleText ?? ''
+                simpleText: element.length && element.length.simpleText ? element.length.simpleText : ''
               }
             }
           }
-          objRes.firstOne = (items.indexOf(element) === 0 ?? false)
+          objRes.firstOne = items.indexOf(element) === 0
           objRes.type = element.type
           return objRes
         })
