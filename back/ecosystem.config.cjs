@@ -2,7 +2,13 @@ module.exports = {
   apps: [
     {
       name: 'SoundHubBackend',
-      script: './dist/server.js'
-    },
-  ],
+      cwd: '/var/www/apps/soundhub/back',
+      script: './dist/server.js',
+      instances: 1,
+      exec_mode: 'fork',
+      env: {
+        NODE_ENV: 'production'
+      }
+    }
+  ]
 }
