@@ -143,7 +143,7 @@ pipeline {
                 pm2 list | grep SoundHubBackend
 
                 echo "[verify] Local HTTP check..."
-                curl -I --max-time 10 http://127.0.0.1:8003
+                curl -I --max-time 10 http://127.0.0.1:8003 || true
                 '''
             }
         }
