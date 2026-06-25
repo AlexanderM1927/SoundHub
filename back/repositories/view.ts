@@ -56,12 +56,9 @@ export class ViewRepository {
             const obj = views[i]
             let sound = null
             if (obj.view_type === 'video') {
-                const youtubeSearch = await this.youtubeService.getSoundByYoutubeAPI({ name: obj.sound_id })
-                const validItem = youtubeSearch.items.find((item: any) => item.type === 'video' && item.length && item.length.simpleText)
-                if (validItem) {
-                    sound = validItem
-                } else {
-                    continue;
+                sound = await this.youtubeService.getSoundByIdOnYoutube({ id: obj.sound_id })
+                if (!sound || !sound.id) {
+                    continue
                 }
             } else {
                 const soundFromDB = await Sound.findOne({ 

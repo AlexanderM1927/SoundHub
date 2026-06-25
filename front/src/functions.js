@@ -17,6 +17,40 @@ export const functions = {
   mounted () {
   },
   methods: {
+    isPlayableItem (result) {
+      if (!result || !result.type) return false
+
+      if (result.type === 'video') {
+        return Boolean(result.id || result.url)
+      }
+
+      if (result.type === 'sound') {
+        return Boolean(result.sound_id || result.url)
+      }
+
+      if (result.type === 'device') {
+        return Boolean(result.url)
+      }
+
+      return Boolean(result.url || result.id || result.sound_id)
+    },
+    getPlayableUrl (result) {
+      if (!result) return ''
+
+      if (result.type === 'video') {
+        return result.id || result.url || ''
+      }
+
+      if (result.type === 'sound') {
+        return result.sound_id || result.url || ''
+      }
+
+      if (result.type === 'device') {
+        return result.url || ''
+      }
+
+      return result.url || result.id || result.sound_id || ''
+    },
     async prefetchSound (result) {
       if (!result || result.type !== 'video') return
 
@@ -100,24 +134,33 @@ export const functions = {
       this.$q.loading.hide()
     },
     async openPlayer (result) {
-      if (!result.type !== 'device') {
+      if (!result || !result.type) {
+        this.alert('warning', 'No se pudo reproducir esta canción')
+        return
+      }
+
+      if (result.type !== 'device') {
         this.addToCollection('recent', {
           ...result,
           time: Date.now()
         })
       }
-      let url = ''
-      let img = ''
-      if (result.img) img = result.img
-      if (result.type === 'video') {
-        url = result.id
-        img = img !== '' ? img : result.thumbnail.thumbnails[0].url
-      } else if (result.type === 'sound') {
-        url = result.sound_id
-        img = img !== '' ? img : this.getSrcFromBackend(result.sound_thumbnail_url)
-      } else if (result.type === 'device') {
-        url = result.url
+
+      const url = this.getPlayableUrl(result)
+      if (!url) {
+        this.alert('warning', 'Esta canción no tiene una URL válida')
+        return
       }
+
+      let img = result.img || ''
+      if (result.type === 'video' && !img) {
+        img = result.thumbnail && result.thumbnail.thumbnails && result.thumbnail.thumbnails[0]
+          ? result.thumbnail.thumbnails[0].url
+          : ''
+      } else if (result.type === 'sound' && !img && result.sound_thumbnail_url) {
+        img = this.getSrcFromBackend(result.sound_thumbnail_url)
+      }
+
       await this.$store.dispatch('sounds/getSongById', {
         url: url,
         img: img,
@@ -141,45 +184,64 @@ export const functions = {
       }
     },
     async playPlaylist (playlist) {
+      const safePlaylist = Array.isArray(playlist) ? playlist.filter(item => this.isPlayableItem(item)) : []
+
+      if (safePlaylist.length === 0) {
+        this.alert('warning', 'No hay canciones válidas para reproducir')
+        return
+      }
+
       let isNotFirst = false
       let url = ''
       let urlParent = ''
-      for (let i = 0; i < playlist.length; i++) {
+      for (let i = 0; i < safePlaylist.length; i++) {
+        const currentSong = safePlaylist[i]
         let img = ''
         // these next methods are to load next sounds while reproduce the first one
         if (i > 0) isNotFirst = true
-        if (playlist[i].img) img = playlist[i].img
-        if (playlist[i].type === 'video') {
-          url = playlist[i].id
-          img = img !== '' ? img : playlist[i].thumbnail.thumbnails[0].url
-        } else if (playlist[i].type === 'sound') {
-          url = playlist[i].sound_id
-          img = img !== '' ? img : this.getSrcFromBackend(playlist[i].sound_thumbnail_url)
-        } else if (playlist[i].type === 'device') {
-          url = playlist[i].url
+        if (currentSong.img) img = currentSong.img
+        url = this.getPlayableUrl(currentSong)
+
+        if (!url) {
+          continue
         }
+
+        if (currentSong.type === 'video' && !img) {
+          img = currentSong.thumbnail && currentSong.thumbnail.thumbnails && currentSong.thumbnail.thumbnails[0]
+            ? currentSong.thumbnail.thumbnails[0].url
+            : ''
+        } else if (currentSong.type === 'sound' && !img && currentSong.sound_thumbnail_url) {
+          img = this.getSrcFromBackend(currentSong.sound_thumbnail_url)
+        }
+
         if (!isNotFirst) {
           urlParent = url
         }
-        await this.$store.dispatch('sounds/getSongById', {
-          url: url,
-          isFirstOnPlaylist: !isNotFirst,
-          type: playlist[i].type,
-          playlistMode: true,
-          img: img,
-          title: playlist[i].sound_name ? playlist[i].sound_name : playlist[i].title,
-          urlParent
-        })
-        if (i < 2) {
-          this.prefetchSound({
-            type: playlist[i].type,
-            url: url
+
+        try {
+          await this.$store.dispatch('sounds/getSongById', {
+            url: url,
+            isFirstOnPlaylist: !isNotFirst,
+            type: currentSong.type,
+            playlistMode: true,
+            img: img,
+            title: currentSong.sound_name ? currentSong.sound_name : currentSong.title,
+            urlParent
           })
-        }
-        if (!isNotFirst) {
-          if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
-            document.getElementById('player').classList.toggle('inactive')
+          if (i < 2) {
+            this.prefetchSound({
+              type: currentSong.type,
+              url: url
+            })
           }
+          if (!isNotFirst) {
+            if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
+              document.getElementById('player').classList.toggle('inactive')
+            }
+          }
+        } catch (error) {
+          console.log(error)
+          continue
         }
       }
     },

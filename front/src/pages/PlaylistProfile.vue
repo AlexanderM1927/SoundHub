@@ -6,7 +6,7 @@
         <q-btn class="col-2 play-btn" icon="shuffle" @click="getPlaylistAndPlayShuffle()" />
         <q-btn class="col-2 play-btn" icon="play_arrow" @click="getPlaylistAndPlay()" />
       </div>
-      <div v-bind:key="result.id" v-for="result in playlist.sounds">
+      <div v-bind:key="result.sound_playlist_id || result.id || result.url || result.sound_id" v-for="result in safeSounds">
         <SearchResultSound v-if="result.type === 'sound'" :result="result" :tiny="true" :playlist="true" />
         <SearchResultYoutube v-else :result="result" :tiny="true" :playlist="true" />
       </div>
@@ -33,30 +33,69 @@ export default {
       }
     }
   },
+  computed: {
+    safeSounds () {
+      return Array.isArray(this.playlist.sounds) ? this.playlist.sounds : []
+    }
+  },
   mounted () {
     this.getPlaylistInfo(this.id)
   },
   methods: {
+    normalizePlaylistSound (sound) {
+      if (!sound || typeof sound !== 'object') return null
+
+      const normalized = { ...sound }
+
+      if (!normalized.type && normalized.sound_id) {
+        normalized.type = 'sound'
+      }
+
+      if (normalized.type === 'sound' && !normalized.url) {
+        normalized.url = normalized.sound_id || ''
+      }
+
+      if (normalized.type === 'video' && !normalized.url) {
+        normalized.url = normalized.id || ''
+      }
+
+      if (!normalized.title) {
+        normalized.title = normalized.sound_name || normalized.name || 'Sin título'
+      }
+
+      return normalized
+    },
     async getPlaylistInfo (id) {
       try {
         this.activateLoading()
         const request = await PlaylistService.get({ playlist_id: id })
-        this.playlist = request.data.data
-        for (let i = 0; i < this.playlist.sounds.length; i++) {
-          if (this.playlist.sounds[i].sound_id) {
-            this.playlist.sounds[i] = this.playlist.sounds[i].sound
-          }
+        const responsePlaylist = request && request.data && request.data.data ? request.data.data : { playlist_name: '', sounds: [] }
+        const sounds = Array.isArray(responsePlaylist.sounds) ? responsePlaylist.sounds : []
+
+        this.playlist = {
+          ...responsePlaylist,
+          sounds: sounds
+            .map((item) => {
+              const soundItem = item && item.sound ? item.sound : item
+              return this.normalizePlaylistSound(soundItem)
+            })
+            .filter(Boolean)
         }
       } catch (error) {
         console.log(error)
+        this.playlist = {
+          playlist_id: id,
+          playlist_name: '',
+          sounds: []
+        }
       }
       this.disableLoading()
     },
     getPlaylistAndPlay () {
-      this.playPlaylist(this.playlist.sounds)
+      this.playPlaylist(this.safeSounds)
     },
     getPlaylistAndPlayShuffle () {
-      this.playPlaylist(this.shuffleArray([...this.playlist.sounds]))
+      this.playPlaylist(this.shuffleArray([...this.safeSounds]))
     },
     shuffleArray (array) {
       for (let i = array.length - 1; i > 0; i--) {

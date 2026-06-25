@@ -1,10 +1,14 @@
 <template>
   <div>
     <div v-if="playlist" class="search-result">
-      <img @click="openPlayer(result)" v-if="result.img" :src="result.img" class="search-result__image">
-      <img @click="openPlayer(result)" v-else :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
+      <img
+        v-if="getYoutubeImage(result)"
+        @click="openPlayer(result)"
+        :src="getYoutubeImage(result)"
+        class="search-result__image"
+      >
       <div class="d-flex space-between w-100">
-        <div @click="openPlayer(result)">{{ result.title }}</div>
+        <div @click="openPlayer(result)">{{ getYoutubeTitle(result) }}</div>
         <div v-if="result.length" class="search-result__duration">
           {{ result.length.simpleText }}
         </div>
@@ -14,10 +18,13 @@
       </div>
     </div>
     <div v-else class="search-result" @click="openPlayer(result)">
-      <img v-if="result.img" :src="result.img" class="search-result__image">
-      <img v-else :src="result.thumbnail.thumbnails[0].url" class="search-result__image">
+      <img
+        v-if="getYoutubeImage(result)"
+        :src="getYoutubeImage(result)"
+        class="search-result__image"
+      >
       <div class="d-flex space-between w-100">
-        <div>{{ result.title }}</div>
+        <div>{{ getYoutubeTitle(result) }}</div>
       </div>
       <div v-if="result.length" class="search-result__duration">
         {{ result.length.simpleText }}
@@ -39,6 +46,20 @@ export default {
     }
   },
   methods: {
+    getYoutubeImage (result) {
+      if (!result) return ''
+
+      if (result.img) return result.img
+
+      return result.thumbnail && result.thumbnail.thumbnails && result.thumbnail.thumbnails[0]
+        ? result.thumbnail.thumbnails[0].url
+        : ''
+    },
+    getYoutubeTitle (result) {
+      if (!result) return 'Sin título'
+
+      return result.title || result.sound_name || 'Sin título'
+    },
     async removeFromPlaylist () {
       try {
         const data = {

@@ -225,10 +225,11 @@ export class YoutubeService {
             const thumbnails = info.basic_info.thumbnail ?? []
             const getBestThumbnail = [...thumbnails]
                 .sort((a: any, b: any) => (b.width ?? 0) - (a.width ?? 0))
-                .slice(1, 3)
+                .slice(0, 3)
 
             return {
                 title: info.basic_info.title,
+                description: info.basic_info.short_description,
                 thumbnail: {
                     thumbnails: getBestThumbnail
                 },
