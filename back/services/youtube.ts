@@ -10,9 +10,10 @@ const INNERTUBE_TTL_MS = 30 * 60 * 1000 // 30 minutes
 async function getInnertube (): Promise<Innertube> {
     const now = Date.now()
     if (!innertubeInstance || (now - innertubeCreatedAt) > INNERTUBE_TTL_MS) {
+        // Keep the JS player available so formats that need deciphering can be resolved.
         innertubeInstance = await Innertube.create({
             client_type: 'ANDROID' as any,
-            retrieve_player: false
+            retrieve_player: true
         })
         innertubeCreatedAt = now
     }
@@ -120,25 +121,21 @@ export class YoutubeService {
             info = await yt.getBasicInfo(extractVideoId(url))
         }
 
-        const allFormats = [
-            ...(info.streaming_data?.formats ?? []),
-            ...(info.streaming_data?.adaptive_formats ?? [])
-        ]
-
-        const audioFormats = allFormats.filter((format) => {
-            return format.mime_type.includes('video/mp4') && format.has_video && format.has_audio
+        const format = info.chooseFormat({
+            type: 'video+audio',
+            format: 'mp4'
         })
 
-        const format = audioFormats[0]
+        const resolvedUrl = await format.decipher(yt.session.player)
         const container = format?.mime_type.split('/')[1]?.split(';')[0]?.trim() ?? 'mp4'
 
         let contentLength = format?.content_length
 
         // If YouTube didn't include content_length in metadata, resolve it with a
         // lightweight HEAD request so range/seek support is always available.
-        if (!contentLength && format?.url) {
+        if (!contentLength && resolvedUrl) {
             try {
-                const head = await fetch(format.url, {
+                const head = await fetch(resolvedUrl, {
                     method: 'HEAD',
                     headers: { 'User-Agent': 'com.google.android.youtube/17.36.4 (Linux; U; Android 12) gzip' }
                 })
@@ -174,17 +171,14 @@ export class YoutubeService {
                     info = await yt.getBasicInfo(extractVideoId(url))
                 }
 
-                const allFormats = [
-                    ...(info.streaming_data?.formats ?? []),
-                    ...(info.streaming_data?.adaptive_formats ?? [])
-                ]
+                const format = info.chooseFormat({
+                    itag: options?.quality,
+                    type: 'video+audio',
+                    format: 'mp4'
+                })
+                const resolvedUrl = (await format.decipher(yt.session.player)) || format.url
 
-                // For ANDROID client, format.url is populated directly (no deciphering needed)
-                const format = allFormats.find((f: any) => f.itag === options?.quality && f.url)
-                    ?? allFormats.find((f: any) => f.url && f.has_video && f.has_audio)
-                    ?? allFormats.find((f: any) => f.url)
-
-                if (!format?.url) {
+                if (!resolvedUrl) {
                     passThrough.destroy(new Error('No suitable format found'))
                     return
                 }
@@ -196,7 +190,7 @@ export class YoutubeService {
                     fetchHeaders['Range'] = `bytes=${options.range.start}-${options.range.end}`
                 }
 
-                const response = await fetch(format.url, { headers: fetchHeaders })
+                const response = await fetch(resolvedUrl, { headers: fetchHeaders })
 
                 if (!response.ok) {
                     passThrough.destroy(new Error(`YouTube fetch failed: ${response.status} ${response.statusText}`))
