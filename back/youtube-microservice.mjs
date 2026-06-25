@@ -1,7 +1,7 @@
 import http from 'node:http'
 import { Readable } from 'node:stream'
 import { Innertube } from 'youtubei.js'
-import 'dotenv/config'
+import 'dotenv/config.js'
 
 const PORT = Number(process.env.YOUTUBE_PORT || 9000)
 const INNERTUBE_TTL_MS = 30 * 60 * 1000
