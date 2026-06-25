@@ -25,7 +25,7 @@
       <template v-else>
         <TopSong
           v-for="song in songs"
-          :key="song.id"
+          :key="song.id || song.sound_id || song.title"
           :song="song"/>
       </template>
     </div>
@@ -57,26 +57,31 @@ export default {
         const request = await ViewService.getViews()
         this.loading = false
         const items = request.data.data.items
-        this.songs = items.map(element => {
-          let objRes = {}
-          if (element.type === 'sound') {
-            objRes = {
+        this.songs = items.map((element, index) => {
+          const isSound = element.type === 'sound'
+          const img = isSound
+            ? (element.sound_thumbnail_url ? this.getSrcFromBackend(element.sound_thumbnail_url) : '')
+            : (element.thumbnail && element.thumbnail.thumbnails && element.thumbnail.thumbnails[0]
+              ? element.thumbnail.thumbnails[0].url
+              : '')
+
+          const objRes = isSound
+            ? {
               sound_id: element.sound_id,
               title: element.sound_name,
-              img: element.sound_thumbnail_url,
+              img,
               type: 'sound'
             }
-          } else {
-            objRes = {
+            : {
               id: element.id,
               title: element.title,
-              img: element.thumbnail.thumbnails[0].url,
+              img,
               length: {
                 simpleText: element.length && element.length.simpleText ? element.length.simpleText : ''
               }
             }
-          }
-          objRes.firstOne = items.indexOf(element) === 0
+
+          objRes.firstOne = index === 0
           objRes.type = element.type
           return objRes
         })

@@ -246,6 +246,9 @@ export const functions = {
       }
     },
     getSrcFromBackend (url) {
+      if (!url) return ''
+      if (/^(https?:)?\/\//i.test(url) || url.startsWith('data:')) return url
+
       return process.env.API_URL.replace('v1/', '') + url.replace('public', '')
     },
     base64ToArrayBuffer (base64) {
