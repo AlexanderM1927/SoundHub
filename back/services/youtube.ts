@@ -6,6 +6,7 @@ import youtubesearchapi from 'youtube-search-api'
 let innertubeInstance: Innertube | null = null
 let innertubeCreatedAt: number = 0
 const INNERTUBE_TTL_MS = 30 * 60 * 1000 // 30 minutes
+const VIDEO_INFO_CLIENTS = ['ANDROID', 'WEB', 'IOS', 'WEB_EMBEDDED', 'TV_EMBEDDED'] as const
 
 async function getInnertube (): Promise<Innertube> {
     const now = Date.now()
@@ -18,6 +19,33 @@ async function getInnertube (): Promise<Innertube> {
         innertubeCreatedAt = now
     }
     return innertubeInstance
+}
+
+async function getVideoInfoWithFallback (videoId: string) {
+    const yt = await getInnertube()
+    let lastError: unknown = null
+    let lastInfo: Awaited<ReturnType<typeof yt.getBasicInfo>> | null = null
+
+    for (const client of VIDEO_INFO_CLIENTS) {
+        try {
+            const info = await yt.getBasicInfo(videoId, {
+                client: client as any
+            })
+            lastInfo = info
+
+            if (info.streaming_data?.formats?.length || info.streaming_data?.adaptive_formats?.length) {
+                return { yt, info, client }
+            }
+        } catch (error) {
+            lastError = error
+        }
+    }
+
+    if (lastInfo) {
+        return { yt, info: lastInfo, client: 'ANDROID' as const }
+    }
+
+    throw lastError ?? new Error('Streaming data not available')
 }
 
 function extractVideoId (urlOrId: string): string {
@@ -110,15 +138,11 @@ export class YoutubeService {
     }
 
     async getInfoSound ({ url }: { url: string }) {
-        let yt = await getInnertube()
-        let info: Awaited<ReturnType<typeof yt.getBasicInfo>>
-        try {
-            info = await yt.getBasicInfo(extractVideoId(url))
-        } catch {
-            // Session may have expired; force recreation and retry once
-            innertubeInstance = null
-            yt = await getInnertube()
-            info = await yt.getBasicInfo(extractVideoId(url))
+        const { yt, info } = await getVideoInfoWithFallback(extractVideoId(url))
+
+        if (!info.streaming_data?.formats?.length && !info.streaming_data?.adaptive_formats?.length) {
+            const reason = info.playability_status?.reason || info.playability_status?.status || 'unknown'
+            throw new Error(`Streaming data not available (${reason})`)
         }
 
         const format = info.chooseFormat({
@@ -161,14 +185,12 @@ export class YoutubeService {
 
         ;(async () => {
             try {
-                let yt = await getInnertube()
-                let info: Awaited<ReturnType<typeof yt.getBasicInfo>>
-                try {
-                    info = await yt.getBasicInfo(extractVideoId(url))
-                } catch {
-                    innertubeInstance = null
-                    yt = await getInnertube()
-                    info = await yt.getBasicInfo(extractVideoId(url))
+                const { yt, info } = await getVideoInfoWithFallback(extractVideoId(url))
+
+                if (!info.streaming_data?.formats?.length && !info.streaming_data?.adaptive_formats?.length) {
+                    const reason = info.playability_status?.reason || info.playability_status?.status || 'unknown'
+                    passThrough.destroy(new Error(`Streaming data not available (${reason})`))
+                    return
                 }
 
                 const format = info.chooseFormat({
@@ -179,7 +201,8 @@ export class YoutubeService {
                 const resolvedUrl = (await format.decipher(yt.session.player)) || format.url
 
                 if (!resolvedUrl) {
-                    passThrough.destroy(new Error('No suitable format found'))
+                    const reason = info.playability_status?.reason || info.playability_status?.status || 'unknown'
+                    passThrough.destroy(new Error(`No suitable format found (${reason})`))
                     return
                 }
 
