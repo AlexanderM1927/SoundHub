@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'SoundHubYoutubeService',
-      cwd: '/var/www/apps/soundhub-youtube',
+      cwd: '/var/www/SoundHub/back',
       script: './youtube-microservice.mjs',
       instances: 1,
       exec_mode: 'fork',
