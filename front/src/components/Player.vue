@@ -287,25 +287,62 @@ export default {
       }
     },
     loadSong (url) {
-      this.$refs.audioInput.src = url
-      this.$refs.audioInput.load()
-      this.$refs.audioInput.addEventListener('timeupdate', (e) => {
+      const audio = this.$refs.audioInput
+
+      audio.src = url
+      audio.load()
+
+      // Mobile browsers can delay or reject autoplay; don't wait only for timeupdate.
+      audio.ontimeupdate = (e) => {
         this.updateProgressBar(e)
-      })
-      this.$refs.audioInput.addEventListener('ended', () => {
+      }
+      audio.onended = () => {
         this.setNewSong('next')
-      })
-      this.$refs.progressContainer.addEventListener('click', (e) => {
+      }
+      audio.onplaying = () => {
+        this.finishLoading()
+      }
+      audio.oncanplay = () => {
+        this.finishLoading()
+      }
+      audio.onloadeddata = () => {
+        this.finishLoading()
+      }
+      audio.onerror = () => {
+        this.handleAudioIssue()
+      }
+      audio.onstalled = () => {
+        this.handleAudioIssue()
+      }
+
+      this.$refs.progressContainer.onclick = (e) => {
         this.setProgressBar(e)
-      })
+      }
     },
-    playSong () {
+    async playSong () {
       this.isPlaying = true
-      this.$refs.audioInput.play()
+      try {
+        const playback = this.$refs.audioInput.play()
+        if (playback && typeof playback.catch === 'function') {
+          await playback
+        }
+      } catch (error) {
+        this.handleAudioIssue(error)
+      }
     },
     pauseSong () {
       this.isPlaying = false
       this.$refs.audioInput.pause()
+    },
+    finishLoading () {
+      this.disableLoading()
+      this.isLoading = false
+    },
+    handleAudioIssue (error = null) {
+      if (error) {
+        console.error(error)
+      }
+      this.finishLoading()
     },
     updateProgressBar (e) {
       if (this.isPlaying) {
