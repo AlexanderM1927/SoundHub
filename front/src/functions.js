@@ -17,6 +17,22 @@ export const functions = {
   mounted () {
   },
   methods: {
+    async prefetchSound (result) {
+      if (!result || result.type !== 'video') return
+
+      const url = result.url || result.id
+      if (!url) return
+
+      try {
+        await SearchService.prefetch({
+          type: 'video',
+          url
+        })
+      } catch (error) {
+        // Best effort: prefetch must never block playback.
+        console.log(error)
+      }
+    },
     addToCollection (collection, data) {
       this.db.collection(collection).add(data)
         .then(response => {
@@ -110,6 +126,10 @@ export const functions = {
         isFirstOnPlaylist: result.type === 'video',
         urlParent: url
       })
+      this.prefetchSound({
+        type: result.type,
+        url: url
+      })
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
         document.getElementById('player').classList.toggle('inactive')
       }
@@ -150,6 +170,12 @@ export const functions = {
           title: playlist[i].sound_name ? playlist[i].sound_name : playlist[i].title,
           urlParent
         })
+        if (i < 2) {
+          this.prefetchSound({
+            type: playlist[i].type,
+            url: url
+          })
+        }
         if (!isNotFirst) {
           if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
             document.getElementById('player').classList.toggle('inactive')

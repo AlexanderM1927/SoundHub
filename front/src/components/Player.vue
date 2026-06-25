@@ -129,9 +129,7 @@ export default {
       isPlaying: true,
       dialogPlaylist: false,
       sound: {},
-      soundPlaying: null,
-      downloadedSounds: [],
-      haveListenedFirstSong: false
+      soundPlaying: null
     }
   },
   computed: {
@@ -154,8 +152,6 @@ export default {
   watch: {
     song () {
       if (this.song) this.loadFile(this.song)
-      // predownloadSound for the current song is intentionally omitted:
-      // the audio already streams directly; downloading a blob only interrupts playback
     },
     playlist () {
       // if (this.playlist) {
@@ -163,14 +159,6 @@ export default {
       //     return obj.payload.title
       //   }).toString(), 'background-color: red; color: white;')
       // }
-    },
-    async haveListenedFirstSong () {
-      if (this.haveListenedFirstSong) {
-        // download next sounds
-        for (let i = this.position; i < this.playlist.length; i++) {
-          await this.predownloadSound(this.playlist[i])
-        }
-      }
     },
     isLoading () {
       // Removed: was replacing the streaming src with a full blob once downloaded,
@@ -350,7 +338,6 @@ export default {
 
         this.disableLoading()
         this.isLoading = false
-        this.haveListenedFirstSong = true
       }
     },
     setProgressBar (e) {
@@ -361,13 +348,13 @@ export default {
     },
     async loadFile (sound) {
       this.isLoading = true
-      this.haveListenedFirstSong = false
       this.activateLoading()
       this.soundPlaying = sound
       this.loadSong(sound.url)
       this.playSong()
       this.loadThumbnail()
       await this.getInformationSound()
+      this.prefetchNextSong()
     },
     isIOS () {
       if (typeof window === 'undefined' || typeof navigator === 'undefined') return false
@@ -386,29 +373,17 @@ export default {
             this.$store.dispatch('sounds/setPosition', (this.position - 1))
           }
         }
-        // console.log(this.downloadedSounds[this.playlist[this.position].url])
         const newSong = { ...this.playlist[this.position] }
-        if (this.downloadedSounds[newSong.url]) {
-          newSong.url = this.downloadedSounds[newSong.url]
-        }
         this.loadFile(newSong)
       }
     },
-    async getBlobUrl (url) {
-      const request = await fetch(url)
-      const blob = await request.blob()
-      const newBlob = new Blob([blob], { type: 'audio/mp3' })
-      const newUrl = URL.createObjectURL(newBlob)
+    async prefetchNextSong () {
+      if (!this.playlist || this.playlist.length === 0) return
 
-      return newUrl
-    },
-    async predownloadSound (sound) {
-      if (sound) {
-        // avoid repeat download
-        if (!this.downloadedSounds[sound.url]) {
-          this.downloadedSounds[sound.url] = await this.getBlobUrl(sound.url)
-        }
-      }
+      const nextSong = this.playlist[this.position + 1]
+      if (!nextSong || !nextSong.payload) return
+
+      await this.prefetchSound(nextSong.payload)
     }
   }
 }

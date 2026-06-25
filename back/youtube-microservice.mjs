@@ -5,11 +5,13 @@ import 'dotenv/config.js'
 
 const PORT = Number(process.env.YOUTUBE_PORT || 9000)
 const INNERTUBE_TTL_MS = 30 * 60 * 1000
+const RESOLUTION_CACHE_TTL_MS = 5 * 60 * 1000
 const VIDEO_INFO_CLIENTS = ['ANDROID', 'WEB', 'IOS', 'WEB_EMBEDDED', 'TV_EMBEDDED']
 const YOUTUBE_PO_TOKEN = process.env.YOUTUBE_PO_TOKEN?.trim() || process.env.PO_TOKEN?.trim() || undefined
 
 let innertubeInstance = null
 let innertubeCreatedAt = 0
+const videoResolutionCache = new Map()
 
 function json (res, statusCode, payload) {
   res.writeHead(statusCode, {
@@ -71,12 +73,37 @@ async function getVideoInfoWithFallback (videoId) {
   throw lastError || new Error('Streaming data not available')
 }
 
-async function handleHealth (res) {
-  json(res, 200, { ok: true })
+function getResolutionCacheKey (videoId, quality) {
+  return `${videoId}:${quality ?? 'best'}`
 }
 
-async function handleInfo (res, videoId) {
-  const { yt, info } = await getVideoInfoWithFallback(extractVideoId(videoId))
+function getCachedResolution (videoId, quality) {
+  const key = getResolutionCacheKey(videoId, quality)
+  const cached = videoResolutionCache.get(key)
+  if (!cached) return null
+
+  if ((Date.now() - cached.cachedAt) > RESOLUTION_CACHE_TTL_MS) {
+    videoResolutionCache.delete(key)
+    return null
+  }
+
+  return cached
+}
+
+function setCachedResolution (videoId, quality, resolution) {
+  const key = getResolutionCacheKey(videoId, quality)
+  videoResolutionCache.set(key, {
+    ...resolution,
+    cachedAt: Date.now()
+  })
+}
+
+async function resolveVideoPlayback (videoId, options = {}) {
+  const quality = options?.quality ?? 'best'
+  const cached = getCachedResolution(videoId, quality)
+  if (cached) return cached
+
+  const { yt, info } = await getVideoInfoWithFallback(videoId)
 
   if (!info.streaming_data?.formats?.length && !info.streaming_data?.adaptive_formats?.length) {
     const reason = info.playability_status?.reason || info.playability_status?.status || 'unknown'
@@ -84,11 +111,17 @@ async function handleInfo (res, videoId) {
   }
 
   const format = info.chooseFormat({
+    itag: options?.quality,
     type: 'video+audio',
     format: 'mp4'
   })
+  const resolvedUrl = (await format.decipher(yt.session.player)) || format.url
 
-  const resolvedUrl = await format.decipher(yt.session.player)
+  if (!resolvedUrl) {
+    const reason = info.playability_status?.reason || info.playability_status?.status || 'unknown'
+    throw new Error(`No suitable format found (${reason})`)
+  }
+
   const container = format?.mime_type.split('/')[1]?.split(';')[0]?.trim() ?? 'mp4'
 
   let contentLength = format?.content_length
@@ -105,41 +138,57 @@ async function handleInfo (res, videoId) {
     }
   }
 
-  json(res, 200, {
+  const resolution = {
     contentLength,
     itag: format?.itag,
     container,
+    resolvedUrl
+  }
+
+  setCachedResolution(videoId, quality, resolution)
+  if (resolution.itag !== quality) {
+    setCachedResolution(videoId, resolution.itag, resolution)
+  }
+  return resolution
+}
+
+async function handleHealth (res) {
+  json(res, 200, { ok: true })
+}
+
+async function handleInfo (res, videoId) {
+  const resolution = await resolveVideoPlayback(extractVideoId(videoId))
+
+  json(res, 200, {
+    contentLength: resolution.contentLength,
+    itag: resolution.itag,
+    container: resolution.container,
     relatedVideos: []
   })
 }
 
 async function handleDownload (req, res, videoId) {
-  const { yt, info } = await getVideoInfoWithFallback(extractVideoId(videoId))
-
-  if (!info.streaming_data?.formats?.length && !info.streaming_data?.adaptive_formats?.length) {
-    const reason = info.playability_status?.reason || info.playability_status?.status || 'unknown'
-    throw new Error(`Streaming data not available (${reason})`)
-  }
-
-  const format = info.chooseFormat({
-    type: 'video+audio',
-    format: 'mp4'
-  })
-  const resolvedUrl = (await format.decipher(yt.session.player)) || format.url
-
-  if (!resolvedUrl) {
-    const reason = info.playability_status?.reason || info.playability_status?.status || 'unknown'
-    throw new Error(`No suitable format found (${reason})`)
-  }
+  const requestedQuality = urlSearchToNumber(req.url, 'quality')
+  const resolution = await resolveVideoPlayback(extractVideoId(videoId), { quality: requestedQuality })
 
   const headers = {
     'User-Agent': 'com.google.android.youtube/17.36.4 (Linux; U; Android 12) gzip'
   }
-  if (req.headers.range) {
-    headers.Range = req.headers.range
+  const hasRangeRequest = Boolean(req.headers.range && resolution.contentLength)
+  let startRange = 0
+  let endRange = resolution.contentLength ? resolution.contentLength - 1 : 0
+
+  if (hasRangeRequest) {
+    const rangePosition = req.headers.range.replace(/bytes=/, '').split('-')
+    startRange = parseInt(rangePosition[0], 10)
+    if (rangePosition[1]) {
+      endRange = parseInt(rangePosition[1], 10)
+    }
+
+    headers.Range = `bytes=${startRange}-${endRange}`
   }
 
-  const response = await fetch(resolvedUrl, { headers })
+  const response = await fetch(resolution.resolvedUrl, { headers })
   if (!response.ok) {
     throw new Error(`YouTube fetch failed: ${response.status} ${response.statusText}`)
   }
@@ -147,10 +196,22 @@ async function handleDownload (req, res, videoId) {
     throw new Error('No response body')
   }
 
-  res.writeHead(200, {
-    'Content-Type': format.mime_type || 'video/mp4',
-    'Cache-Control': 'no-store'
-  })
+  if (hasRangeRequest) {
+    const chunkSize = (endRange - startRange) + 1
+    res.writeHead(206, {
+      'Content-Type': `video/${resolution.container}`,
+      'Content-Length': chunkSize,
+      'Content-Range': `bytes ${startRange}-${endRange}/${resolution.contentLength}`,
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'no-store'
+    })
+  } else {
+    res.writeHead(200, {
+      'Content-Type': `video/${resolution.container}`,
+      'Accept-Ranges': resolution.contentLength ? 'bytes' : 'none',
+      'Cache-Control': 'no-store'
+    })
+  }
 
   const stream = Readable.fromWeb(response.body)
   stream.on('error', (error) => {
@@ -160,6 +221,18 @@ async function handleDownload (req, res, videoId) {
     res.end(JSON.stringify({ error: error.message }))
   })
   stream.pipe(res)
+}
+
+function urlSearchToNumber (requestUrl, key) {
+  try {
+    const parsed = new URL(requestUrl || '/', 'http://localhost')
+    const value = parsed.searchParams.get(key)
+    if (!value) return undefined
+    const parsedNumber = Number(value)
+    return Number.isNaN(parsedNumber) ? undefined : parsedNumber
+  } catch {
+    return undefined
+  }
 }
 
 const server = http.createServer(async (req, res) => {

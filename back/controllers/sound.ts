@@ -75,14 +75,16 @@ export class SoundController {
             let _contentLength = 0
           
             if (type === TYPE_VIDEO) {
+                const playbackInfo = await this.youtubeService.getInfoSound({ url })
                 const {
                     contentLength,
                     itag,
                     container
-                } = await this.youtubeService.getInfoSound({ url })  
+                } = playbackInfo
 
                 const soundDefaultOptions: any = {
                     url: url,
+                    resolution: playbackInfo,
                     options: {
                         quality: itag
                     }
@@ -173,6 +175,23 @@ export class SoundController {
         } catch (error) {
             res.status(400).json({error: (error as Error).message})
         }  
+    }
+
+    prefetch = async (req: any, res: any) => {
+        try {
+            const url = req.params.url
+            const type = req.params.type
+
+            if (type === TYPE_VIDEO) {
+                await this.youtubeService.getInfoSound({ url })
+                res.status(204).end()
+                return
+            }
+
+            res.status(204).end()
+        } catch (error) {
+            res.status(400).json({error: (error as Error).message})
+        }
     }
 
     getRelatedVideos = async (req: any, res: any) => {
