@@ -1,9 +1,9 @@
-import 'dotenv/config'
 import http from 'node:http'
 import { Readable } from 'node:stream'
 import { Innertube } from 'youtubei.js'
+import 'dotenv/config'
 
-const PORT = Number(process.env.PORT || 9000)
+const PORT = Number(process.env.YOUTUBE_PORT || 9000)
 const INNERTUBE_TTL_MS = 30 * 60 * 1000
 const VIDEO_INFO_CLIENTS = ['ANDROID', 'WEB', 'IOS', 'WEB_EMBEDDED', 'TV_EMBEDDED']
 const YOUTUBE_PO_TOKEN = process.env.YOUTUBE_PO_TOKEN?.trim() || process.env.PO_TOKEN?.trim() || undefined

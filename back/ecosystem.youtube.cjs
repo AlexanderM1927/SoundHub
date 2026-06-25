@@ -9,7 +9,7 @@ module.exports = {
       max_memory_restart: '350M',
       env: {
         NODE_ENV: 'production',
-        PORT: 9000
+        YOUTUBE_PORT: 9000
       }
     }
   ]
