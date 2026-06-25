@@ -189,6 +189,11 @@ const server = http.createServer(async (req, res) => {
   }
 })
 
-server.listen(PORT, () => {
-  console.log(`SoundHub YouTube microservice listening on port ${PORT}`)
+server.on('error', (error) => {
+  console.error('SoundHub YouTube microservice error:', error)
+  process.exitCode = 1
+})
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`SoundHub YouTube microservice listening on 0.0.0.0:${PORT}`)
 })
