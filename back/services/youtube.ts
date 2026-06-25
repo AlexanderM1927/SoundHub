@@ -1,5 +1,5 @@
 import { Innertube } from 'youtubei.js'
-import { PassThrough } from 'node:stream'
+import { PassThrough, Readable } from 'node:stream'
 // @ts-ignore
 import youtubesearchapi from 'youtube-search-api'
 
@@ -7,6 +7,7 @@ let innertubeInstance: Innertube | null = null
 let innertubeCreatedAt: number = 0
 const INNERTUBE_TTL_MS = 30 * 60 * 1000 // 30 minutes
 const VIDEO_INFO_CLIENTS = ['ANDROID', 'WEB', 'IOS', 'WEB_EMBEDDED', 'TV_EMBEDDED'] as const
+const YOUTUBE_SERVICE_URL = process.env.YOUTUBE_SERVICE_URL?.trim().replace(/\/$/, '') || ''
 
 async function getInnertube (): Promise<Innertube> {
     const now = Date.now()
@@ -46,6 +47,47 @@ async function getVideoInfoWithFallback (videoId: string) {
     }
 
     throw lastError ?? new Error('Streaming data not available')
+}
+
+function getRemoteServiceUrl (pathname: string) {
+    if (!YOUTUBE_SERVICE_URL) return null
+    return `${YOUTUBE_SERVICE_URL}${pathname.startsWith('/') ? pathname : `/${pathname}`}`
+}
+
+async function getRemoteVideoInfo (url: string) {
+    const remoteUrl = getRemoteServiceUrl(`/info/${encodeURIComponent(url)}`)
+    if (!remoteUrl) return null
+
+    const response = await fetch(remoteUrl)
+    if (!response.ok) {
+        throw new Error(`Remote youtube service failed: ${response.status} ${response.statusText}`)
+    }
+
+    return await response.json()
+}
+
+async function downloadRemoteVideo (url: string, options: any) {
+    const remoteUrl = getRemoteServiceUrl(`/download/video/${encodeURIComponent(url)}`)
+    if (!remoteUrl) return null
+
+    const headers: Record<string, string> = {
+        'User-Agent': 'SoundHub/1.0'
+    }
+
+    if (options?.range) {
+        headers.Range = `bytes=${options.range.start}-${options.range.end}`
+    }
+
+    const response = await fetch(remoteUrl, { headers })
+    if (!response.ok) {
+        throw new Error(`Remote youtube service failed: ${response.status} ${response.statusText}`)
+    }
+
+    if (!response.body) {
+        throw new Error('Remote youtube service returned an empty body')
+    }
+
+    return Readable.fromWeb(response.body as any)
 }
 
 function extractVideoId (urlOrId: string): string {
@@ -138,6 +180,11 @@ export class YoutubeService {
     }
 
     async getInfoSound ({ url }: { url: string }) {
+        if (YOUTUBE_SERVICE_URL) {
+            const remoteInfo = await getRemoteVideoInfo(url)
+            if (remoteInfo) return remoteInfo
+        }
+
         const { yt, info } = await getVideoInfoWithFallback(extractVideoId(url))
 
         if (!info.streaming_data?.formats?.length && !info.streaming_data?.adaptive_formats?.length) {
@@ -185,6 +232,15 @@ export class YoutubeService {
 
         ;(async () => {
             try {
+                if (YOUTUBE_SERVICE_URL) {
+                    const remoteSound = await downloadRemoteVideo(url, options)
+                    if (remoteSound) {
+                        remoteSound.on('error', (err) => passThrough.destroy(err as Error))
+                        remoteSound.pipe(passThrough)
+                        return
+                    }
+                }
+
                 const { yt, info } = await getVideoInfoWithFallback(extractVideoId(url))
 
                 if (!info.streaming_data?.formats?.length && !info.streaming_data?.adaptive_formats?.length) {
