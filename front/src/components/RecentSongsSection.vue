@@ -24,12 +24,12 @@
           <div class="recent-card__img-wrap">
             <img
               v-if="result.type === 'video'"
-              :src="result.img || (result.thumbnail && result.thumbnail.thumbnails[0].url)"
+              :src="getThumbnailUrl(result)"
               class="recent-card__img"
             />
             <img
               v-else
-              :src="getSrcFromBackend(result.sound_thumbnail_url || result.img)"
+              :src="getThumbnailUrl(result)"
               class="recent-card__img"
             />
             <div class="recent-card__overlay">

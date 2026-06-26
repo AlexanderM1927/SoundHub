@@ -244,7 +244,7 @@ export default {
             title: res.title,
             id: res.id,
             url: sound.url,
-            img: res.thumbnail.thumbnails[0].url
+            img: this.getThumbnailUrl(res)
           }
         }
         this.soundInfo.type = sound.type

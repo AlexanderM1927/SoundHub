@@ -51,9 +51,15 @@ export default {
 
       if (result.img) return result.img
 
-      return result.thumbnail && result.thumbnail.thumbnails && result.thumbnail.thumbnails[0]
-        ? result.thumbnail.thumbnails[0].url
-        : ''
+      if (result.thumbnail?.thumbnails?.[0]?.url) {
+        return result.thumbnail.thumbnails[0].url
+      }
+
+      if (result.id) {
+        return `https://i.ytimg.com/vi/${result.id}/hqdefault.jpg`
+      }
+
+      return ''
     },
     getYoutubeTitle (result) {
       if (!result) return 'Sin título'

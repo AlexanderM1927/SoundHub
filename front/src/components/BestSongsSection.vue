@@ -59,11 +59,7 @@ export default {
         const items = request.data.data.items
         this.songs = items.map((element, index) => {
           const isSound = element.type === 'sound'
-          const img = isSound
-            ? (element.sound_thumbnail_url ? this.getSrcFromBackend(element.sound_thumbnail_url) : '')
-            : (element.thumbnail && element.thumbnail.thumbnails && element.thumbnail.thumbnails[0]
-              ? element.thumbnail.thumbnails[0].url
-              : '')
+          const img = this.getThumbnailUrl(element)
 
           const objRes = isSound
             ? {

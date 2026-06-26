@@ -51,6 +51,21 @@ export const functions = {
 
       return result.url || result.id || result.sound_id || ''
     },
+    getThumbnailUrl (result, fallback = '/logo.png') {
+      if (!result) return fallback
+
+      if (result.img) return result.img
+      if (result.sound_thumbnail_url) return this.getSrcFromBackend(result.sound_thumbnail_url)
+
+      const thumbnailUrl = result.thumbnail?.thumbnails?.[0]?.url
+      if (thumbnailUrl) return thumbnailUrl
+
+      if (result.type === 'video' && result.id) {
+        return `https://i.ytimg.com/vi/${result.id}/hqdefault.jpg`
+      }
+
+      return fallback
+    },
     async prefetchSound (result) {
       if (!result || result.type !== 'video') return
 
@@ -152,14 +167,7 @@ export const functions = {
         return
       }
 
-      let img = result.img || ''
-      if (result.type === 'video' && !img) {
-        img = result.thumbnail && result.thumbnail.thumbnails && result.thumbnail.thumbnails[0]
-          ? result.thumbnail.thumbnails[0].url
-          : ''
-      } else if (result.type === 'sound' && !img && result.sound_thumbnail_url) {
-        img = this.getSrcFromBackend(result.sound_thumbnail_url)
-      }
+      const img = this.getThumbnailUrl(result)
 
       await this.$store.dispatch('sounds/getSongById', {
         url: url,
@@ -196,22 +204,13 @@ export const functions = {
       let urlParent = ''
       for (let i = 0; i < safePlaylist.length; i++) {
         const currentSong = safePlaylist[i]
-        let img = ''
+        const img = this.getThumbnailUrl(currentSong)
         // these next methods are to load next sounds while reproduce the first one
         if (i > 0) isNotFirst = true
-        if (currentSong.img) img = currentSong.img
         url = this.getPlayableUrl(currentSong)
 
         if (!url) {
           continue
-        }
-
-        if (currentSong.type === 'video' && !img) {
-          img = currentSong.thumbnail && currentSong.thumbnail.thumbnails && currentSong.thumbnail.thumbnails[0]
-            ? currentSong.thumbnail.thumbnails[0].url
-            : ''
-        } else if (currentSong.type === 'sound' && !img && currentSong.sound_thumbnail_url) {
-          img = this.getSrcFromBackend(currentSong.sound_thumbnail_url)
         }
 
         if (!isNotFirst) {
@@ -288,7 +287,7 @@ export const functions = {
         const blob = request.data
         this.convertBlobToBase64(blob).then(async (str) => {
           await this.verifyAndCreateFolder()
-          const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
+          const currentDate = new Date().toLocaleString().replace(/[,:\s/]/g, '-')
           await Filesystem.writeFile({
             data: str,
             path: 'soundhub/' + payload.title + currentDate + '.mp3',
@@ -315,13 +314,13 @@ export const functions = {
     cleanTitle (title) {
       let result
       // clean speciall words and ()[]
-      result = title.replace(/(\(|\)|\[|\]|official|oficial|video|audio|lyric|cover|lyrics|versión|version|letra|en vivo)/gi, '')
-      result = result.replace(/(\(|\)|\[|\]|clip)/gi, '')
+      result = title.replace(/[()[\]]|official|oficial|video|audio|lyric|cover|lyrics|versión|version|letra|en vivo/gi, '')
+      result = result.replace(/[()[\]]|clip/gi, '')
       // change al & for y
       result = result.replace(/&/g, 'y')
       // clean emojis
-      result = result.replace(/[\[\]\(\)\u{1F600}-\u{1F64F}\u{2700}-\u{27BF}]+/gu, '')
-      result = result.replace(/[\[\]\(\)\p{Emoji_Presentation}\p{Extended_Pictographic}]+/gu, '').trim()
+      result = result.replace(/[\u{1F600}-\u{1F64F}\u{2700}-\u{27BF}()[\]]+/gu, '')
+      result = result.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}()[\]]+/gu, '').trim()
       return result
     }
   }
