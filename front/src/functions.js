@@ -57,7 +57,9 @@ export const functions = {
       if (result.img) return result.img
       if (result.sound_thumbnail_url) return this.getSrcFromBackend(result.sound_thumbnail_url)
 
-      const thumbnailUrl = result.thumbnail?.thumbnails?.[0]?.url
+      const thumbnailUrl = result.thumbnail && result.thumbnail.thumbnails && result.thumbnail.thumbnails[0]
+        ? result.thumbnail.thumbnails[0].url
+        : ''
       if (thumbnailUrl) return thumbnailUrl
 
       if (result.type === 'video' && result.id) {

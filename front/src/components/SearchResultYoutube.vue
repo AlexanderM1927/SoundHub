@@ -51,7 +51,7 @@ export default {
 
       if (result.img) return result.img
 
-      if (result.thumbnail?.thumbnails?.[0]?.url) {
+      if (result.thumbnail && result.thumbnail.thumbnails && result.thumbnail.thumbnails[0]) {
         return result.thumbnail.thumbnails[0].url
       }
 
