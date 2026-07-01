@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div class="text-h5" style="font-weight: bold;">{{ soundInfo.title }}</div>
+    <div class="text-h5" style="font-weight: bold;">{{ soundInfo.title || soundInfo.sound_name || 'Sin título' }}</div>
     <br>
     <div class="row">
       <div class="col-12 justify-around">
@@ -96,9 +96,15 @@ export default {
     }
   },
   watch: {
-    soundInfo () {
-      this.soundNameSearch = this.cleanTitle(this.soundInfo.title)
-      this.searchLyric(this.soundNameSearch)
+    soundInfo: {
+      immediate: true,
+      handler (newSoundInfo) {
+        const title = newSoundInfo && (newSoundInfo.title || newSoundInfo.sound_name)
+        if (!title) return
+
+        this.soundNameSearch = this.cleanTitle(title)
+        this.searchLyric(this.soundNameSearch)
+      }
     }
   },
   methods: {
@@ -124,6 +130,12 @@ export default {
       }
     },
     async searchLyric (soundName) {
+      if (!soundName) {
+        this.showLyrics = true
+        this.lyrics = 'Â¡Ooops! no encontramos esa letra... :( Intenta cambiando el nombre arriba'
+        return
+      }
+
       this.showLyrics = true
       try {
         const apiUrl = `https://lrclib.net/api/search?q=${encodeURIComponent(soundName)}`

@@ -232,22 +232,25 @@ export default {
         const res = request.data.data
         if (sound.type === 'sound') {
           this.soundInfo = {
-            title: res.sound_name,
+            title: res.sound_name || sound.title || '',
             id: res.sound_id,
             user_id: res.user_id,
-            user: res.user.user_name,
+            user: res.user && res.user.user_name ? res.user.user_name : '',
             url: sound.url,
-            img: this.getSrcFromBackend(res.sound_thumbnail_url)
+            img: this.getSrcFromBackend(res.sound_thumbnail_url) || this.getThumbnailUrl(sound)
           }
         } else {
           this.soundInfo = {
-            title: res.title,
+            title: res.title || sound.title || '',
             id: res.id,
             url: sound.url,
-            img: this.getThumbnailUrl(res)
+            img: this.getThumbnailUrl(res) || this.getThumbnailUrl(sound)
           }
         }
-        this.soundInfo.type = sound.type
+        this.soundInfo = {
+          ...this.soundInfo,
+          type: sound.type
+        }
       } catch (error) {
         console.error(error)
       }

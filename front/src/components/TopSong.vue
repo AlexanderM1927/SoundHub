@@ -35,32 +35,31 @@ export default {
   border-radius: 10px;
   box-shadow: -20px 0 3rem 0.1rem #000;
   transition: 0.5s;
+  cursor: pointer;
+  overflow: hidden;
 }
 
 .p-card-img {
   height: 300px;
+  position: relative;
 }
 
 .p-card-text {
-  width: 100%;
-  height: 300px;
-
+  position: absolute;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.65);
   color: #f5f5f5;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
-  transition: visibility 0.3s linear, opacity 0.3s linear;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
 }
 
 .p-card-p {
   width: 95%;
   margin: 0;
-
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
 
   font-size: 1rem;
   text-align: center;
@@ -84,7 +83,6 @@ export default {
 }
 
 .popular-card:hover .p-card-text {
-  visibility: visible;
   opacity: 1;
 }
 </style>
