@@ -232,7 +232,7 @@ export default {
         const res = request.data.data
         if (sound.type === 'sound') {
           this.soundInfo = {
-            title: res.sound_name || sound.title || '',
+            title: res.sound_name || sound.title || sound.sound_name || '',
             id: res.sound_id,
             user_id: res.user_id,
             user: res.user && res.user.user_name ? res.user.user_name : '',
@@ -241,7 +241,7 @@ export default {
           }
         } else {
           this.soundInfo = {
-            title: res.title || sound.title || '',
+            title: res.title || sound.title || sound.sound_name || '',
             id: res.id,
             url: sound.url,
             img: this.getThumbnailUrl(res) || this.getThumbnailUrl(sound)

@@ -5,7 +5,7 @@
         <q-icon name="fas fa-crown" class="crown"></q-icon>
       </div>
       <q-card-section class="p-card-text">
-        <p class="p-card-p">{{ song.title }}</p>
+        <p class="p-card-p">{{ song.title || song.sound_name || 'Sin título' }}</p>
       </q-card-section>
     </q-img>
   </q-card>

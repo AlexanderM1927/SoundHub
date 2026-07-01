@@ -60,17 +60,22 @@ export default {
         this.songs = items.map((element, index) => {
           const isSound = element.type === 'sound'
           const img = this.getThumbnailUrl(element)
+          const title = element.sound_name || element.title || 'Sin título'
+          const url = element.sound_id || element.id || element.url || ''
 
           const objRes = isSound
             ? {
-              sound_id: element.sound_id,
-              title: element.sound_name,
+              sound_id: url,
+              sound_name: title,
+              title,
+              url,
               img,
               type: 'sound'
             }
             : {
               id: element.id,
-              title: element.title,
+              title,
+              url,
               img,
               length: {
                 simpleText: element.length && element.length.simpleText ? element.length.simpleText : ''
