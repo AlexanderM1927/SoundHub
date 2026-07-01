@@ -36,27 +36,17 @@ export default {
   name: 'SearchResultSound',
   props: ['result', 'download', 'tiny', 'playlist'],
   data () {
-    return {
-    }
+    return {}
   },
   methods: {
     getSoundImage (result) {
       if (!result) return ''
 
-      if (result.sound_thumbnail_url) {
-        return this.getSrcFromBackend(result.sound_thumbnail_url)
-      }
-
-      if (result.img) {
-        return this.getSrcFromBackend(result.img)
-      }
-
-      return ''
+      return this.getThumbnailUrl(result)
     },
     getSoundTitle (result) {
-      if (!result) return 'Sin título'
-
-      return result.title || result.sound_name || 'Sin título'
+      if (!result) return 'Sin titulo'
+      return result.display_title || result.title || result.sound_name || 'Sin titulo'
     },
     async removeFromPlaylist () {
       try {
@@ -65,7 +55,7 @@ export default {
         }
         const request = await SoundPlaylistService.remove(data)
         if (request.status >= 200 && request.status < 300) {
-          this.alert('positive', 'Canción eliminada del playlist correctamente')
+          this.alert('positive', 'Cancion eliminada del playlist correctamente')
           this.$destroy()
           this.$el.parentNode.removeChild(this.$el)
         }

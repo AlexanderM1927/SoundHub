@@ -42,29 +42,21 @@ export default {
   name: 'SearchResult',
   props: ['result', 'download', 'tiny', 'playlist'],
   data () {
-    return {
-    }
+    return {}
   },
   methods: {
     getYoutubeImage (result) {
       if (!result) return ''
 
-      if (result.img) return result.img
+      const thumbnailUrl = result.thumbnail && result.thumbnail.thumbnails && result.thumbnail.thumbnails[0]
+        ? result.thumbnail.thumbnails[0].url
+        : ''
 
-      if (result.thumbnail && result.thumbnail.thumbnails && result.thumbnail.thumbnails[0]) {
-        return result.thumbnail.thumbnails[0].url
-      }
-
-      if (result.id) {
-        return `https://i.ytimg.com/vi/${result.id}/hqdefault.jpg`
-      }
-
-      return ''
+      return result.img || thumbnailUrl || (result.id ? `https://i.ytimg.com/vi/${result.id}/hqdefault.jpg` : '')
     },
     getYoutubeTitle (result) {
-      if (!result) return 'Sin título'
-
-      return result.title || result.sound_name || 'Sin título'
+      if (!result) return 'Sin titulo'
+      return result.display_title || result.title || result.sound_name || 'Sin titulo'
     },
     async removeFromPlaylist () {
       try {
@@ -73,7 +65,7 @@ export default {
         }
         const request = await SoundPlaylistService.remove(data)
         if (request.status >= 200 && request.status < 300) {
-          this.alert('positive', 'Canción eliminada del playlist correctamente')
+          this.alert('positive', 'Cancion eliminada del playlist correctamente')
           this.$destroy()
           this.$el.parentNode.removeChild(this.$el)
         }

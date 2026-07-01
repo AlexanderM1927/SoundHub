@@ -1,11 +1,11 @@
 <template>
   <q-card class="popular-card" @click="openPlayer(song)">
-    <q-img :src="song.type === 'video' ? song.img : this.getSrcFromBackend(song.img)" class="p-card-img" basic>
+    <q-img :src="getThumbnailUrl(song)" class="p-card-img" basic>
       <div v-if="song.firstOne" style="background-color: transparent">
         <q-icon name="fas fa-crown" class="crown"></q-icon>
       </div>
       <q-card-section class="p-card-text">
-        <p class="p-card-p">{{ song.title || song.sound_name || 'Sin título' }}</p>
+        <p class="p-card-p">{{ song.display_title || song.title || 'Sin titulo' }}</p>
       </q-card-section>
     </q-img>
   </q-card>
@@ -29,7 +29,6 @@ export default {
   min-width: 200px;
   width: 15%;
   height: 300px;
-
   margin: auto 0;
   background: none;
   border-radius: 10px;
@@ -60,10 +59,8 @@ export default {
 .p-card-p {
   width: 95%;
   margin: 0;
-
   font-size: 1rem;
   text-align: center;
-
   white-space: pre-wrap;
 }
 
@@ -75,7 +72,6 @@ export default {
   color: rgb(255, 217, 0);
 }
 
-/* EFFECTS */
 .popular-card:hover {
   transform: scale(1.1);
   transition: 0.5s;

@@ -37,7 +37,7 @@
             </div>
           </div>
           <p class="recent-card__title">
-            {{ result.title || result.sound_name }}
+            {{ result.display_title || result.title || result.sound_name }}
           </p>
           <p v-if="result.length" class="recent-card__duration">
             {{ result.length.simpleText }}

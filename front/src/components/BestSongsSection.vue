@@ -1,7 +1,6 @@
 <template>
   <div class="row popular-body col-11">
     <div class="col-12 popular-cards">
-      <!--TITLE CARD-->
       <div class="row title-card q-mr-lg">
         <q-card class="col-12 tc-body">
           <q-card-section class="tc-text">
@@ -11,7 +10,6 @@
           </q-card-section>
         </q-card>
       </div>
-      <!--SKELETON LOADERS-->
       <template v-if="loading">
         <div
           v-for="n in 7"
@@ -21,12 +19,12 @@
           <q-skeleton class="popular-skeleton-img" square />
         </div>
       </template>
-      <!--SELECTED SONGS-->
       <template v-else>
         <TopSong
           v-for="song in songs"
-          :key="song.id || song.sound_id || song.title"
-          :song="song"/>
+          :key="song.id || song.sound_id || song.url || song.display_title || song.title"
+          :song="song"
+        />
       </template>
     </div>
   </div>
@@ -35,11 +33,9 @@
 <script>
 import TopSong from './TopSong'
 import ViewService from '../services/ViewService'
-import { functions } from '../functions.js'
 
 export default {
   name: 'BestSongsSection',
-  mixins: [functions],
   components: { TopSong },
   data () {
     return {
@@ -55,40 +51,17 @@ export default {
       try {
         this.loading = true
         const request = await ViewService.getViews()
-        this.loading = false
-        const items = request.data.data.items
-        this.songs = items.map((element, index) => {
-          const isSound = element.type === 'sound'
-          const img = this.getThumbnailUrl(element)
-          const title = element.sound_name || element.title || 'Sin título'
-          const url = element.sound_id || element.id || element.url || ''
-
-          const objRes = isSound
-            ? {
-              sound_id: url,
-              sound_name: title,
-              title,
-              url,
-              img,
-              type: 'sound'
-            }
-            : {
-              id: element.id,
-              title,
-              url,
-              img,
-              length: {
-                simpleText: element.length && element.length.simpleText ? element.length.simpleText : ''
-              }
-            }
-
-          objRes.firstOne = index === 0
-          objRes.type = element.type
-          return objRes
-        })
+        const items = request && request.data && request.data.data && request.data.data.items
+          ? request.data.data.items
+          : []
+        this.songs = items.map((element, index) => ({
+          ...element,
+          firstOne: index === 0
+        }))
       } catch (error) {
-        this.loading = false
         console.error(error)
+      } finally {
+        this.loading = false
       }
     }
   }

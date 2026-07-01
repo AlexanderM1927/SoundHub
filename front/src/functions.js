@@ -54,7 +54,7 @@ export const functions = {
     getThumbnailUrl (result, fallback = '/logo.png') {
       if (!result) return fallback
 
-      if (result.img) return result.img
+      if (result.img) return this.getSrcFromBackend(result.img)
       if (result.sound_thumbnail_url) return this.getSrcFromBackend(result.sound_thumbnail_url)
 
       const thumbnailUrl = result.thumbnail && result.thumbnail.thumbnails && result.thumbnail.thumbnails[0]

@@ -232,7 +232,7 @@ export default {
         const res = request.data.data
         if (sound.type === 'sound') {
           this.soundInfo = {
-            title: res.sound_name || sound.title || sound.sound_name || '',
+            title: res.display_title || res.title || res.sound_name || sound.display_title || sound.title || '',
             id: res.sound_id,
             user_id: res.user_id,
             user: res.user && res.user.user_name ? res.user.user_name : '',
@@ -241,7 +241,7 @@ export default {
           }
         } else {
           this.soundInfo = {
-            title: res.title || sound.title || sound.sound_name || '',
+            title: res.display_title || res.title || sound.display_title || sound.title || '',
             id: res.id,
             url: sound.url,
             img: this.getThumbnailUrl(res) || this.getThumbnailUrl(sound)
@@ -258,7 +258,7 @@ export default {
     loadThumbnail () {
       if ('mediaSession' in navigator) {
         const content = {
-          title: this.soundPlaying.payload.title,
+          title: this.soundPlaying.payload.display_title || this.soundPlaying.payload.title,
           artist: 'SoundHub',
           artwork: [
             { src: this.soundPlaying.payload.img, sizes: '96x96', type: 'image/png' },

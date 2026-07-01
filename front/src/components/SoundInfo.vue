@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div class="text-h5" style="font-weight: bold;">{{ soundInfo.title || soundInfo.sound_name || 'Sin título' }}</div>
+    <div class="text-h5" style="font-weight: bold;">{{ soundInfo.display_title || soundInfo.title || 'Sin titulo' }}</div>
     <br>
     <div class="row">
       <div class="col-12 justify-around">
@@ -11,32 +11,24 @@
     </div>
     <br>
     <div :class="`d-flex rslt-div-btns justify-around`">
-      <!--ADD TO LIST-->
-      <q-btn
-        class=""
-        @click="$emit('agregarSound', soundInfo)"
-        color="pink">
+      <q-btn @click="$emit('agregarSound', soundInfo)" color="pink">
         Agregar a playlist
       </q-btn>
-      <q-btn
-        class=""
-        @click="$emit('downloadFile', soundInfo)"
-        color="pink"
-        icon="download">
+      <q-btn @click="$emit('downloadFile', soundInfo)" color="pink" icon="download">
         Download
       </q-btn>
     </div>
     <br>
     <div class="lyrics-container" v-if="showLyrics">
       <b>No es la letra que esperabas?</b><br>
-      <q-input bg-color="white" outlined v-model="soundNameSearch" @keyup.enter="searchLyric(soundNameSearch)" label="Nombre de la canción y artista">
+      <q-input bg-color="white" outlined v-model="soundNameSearch" @keyup.enter="searchLyric(soundNameSearch)" label="Nombre de la cancion y artista">
         <template v-slot:prepend>
           <q-icon color="grey" name="search" />
         </template>
       </q-input>
       {{ lyrics }}
       <hr>
-      <b>Algunas letras pueden que no coincidan con la canción, es por eso que puedes corregir el nombre y agregar el artista o modificarlo en caso de necesitarlo.</b>
+      <b>Algunas letras pueden que no coincidan con la canción, por eso puedes corregir el nombre y agregar el artista o modificarlo si lo necesitas.</b>
     </div>
     <span v-if="soundInfo.type === 'sound'">
       Publicada por:
@@ -62,11 +54,7 @@
       <q-editor class="full-width" content-class="bg-comment" toolbar-toggle-color="yellow-8" toolbar-bg="pink" v-model="comment" min-height="5rem" />
       <br>
       <q-btn class="full-width" label="Comentar" color="pink" @click="makeComment" />
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
+      <br><br><br><br><br>
     </div>
   </div>
 </template>
@@ -99,7 +87,7 @@ export default {
     soundInfo: {
       immediate: true,
       handler (newSoundInfo) {
-        const title = newSoundInfo && (newSoundInfo.title || newSoundInfo.sound_name)
+        const title = newSoundInfo && (newSoundInfo.display_title || newSoundInfo.title || newSoundInfo.sound_name)
         if (!title) return
 
         this.soundNameSearch = this.cleanTitle(title)
@@ -115,14 +103,12 @@ export default {
           user_id: this.user.user_id,
           sound_id: this.soundInfo.id
         })
-        this.comments.unshift(
-          {
-            user: {
-              user_name: this.user.user_name
-            },
-            comment_msg: request.data.data.comment_msg
-          }
-        )
+        this.comments.unshift({
+          user: {
+            user_name: this.user.user_name
+          },
+          comment_msg: request.data.data.comment_msg
+        })
         this.comment = ''
         if (request.status === 200) this.alert('positive', 'Comentario enviado')
       } else {
@@ -132,7 +118,7 @@ export default {
     async searchLyric (soundName) {
       if (!soundName) {
         this.showLyrics = true
-        this.lyrics = 'Â¡Ooops! no encontramos esa letra... :( Intenta cambiando el nombre arriba'
+        this.lyrics = '¡Ooops! no encontramos esa letra... :( Intenta cambiando el nombre arriba'
         return
       }
 
