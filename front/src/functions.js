@@ -17,6 +17,11 @@ export const functions = {
   mounted () {
   },
   methods: {
+    getDisplayTitle (result) {
+      if (!result) return ''
+
+      return result.display_title || result.sound_name || result.title || result.name || ''
+    },
     isPlayableItem (result) {
       if (!result || !result.type) return false
 
@@ -170,12 +175,14 @@ export const functions = {
       }
 
       const img = this.getThumbnailUrl(result)
+      const title = this.getDisplayTitle(result)
 
       await this.$store.dispatch('sounds/getSongById', {
         url: url,
         img: img,
         type: result.type,
-        title: result.sound_name ? result.sound_name : result.title,
+        title: title,
+        display_title: title,
         isFirstOnPlaylist: result.type === 'video',
         urlParent: url
       })
@@ -186,7 +193,7 @@ export const functions = {
       if (document.getElementById('player') && document.getElementById('player').classList.contains('inactive')) {
         document.getElementById('player').classList.toggle('inactive')
       }
-      if (!result.type !== 'device') {
+      if (result.type !== 'device') {
         await ViewService.store({
           sound_id: url,
           view_type: result.type
@@ -220,13 +227,15 @@ export const functions = {
         }
 
         try {
+          const title = this.getDisplayTitle(currentSong)
           await this.$store.dispatch('sounds/getSongById', {
             url: url,
             isFirstOnPlaylist: !isNotFirst,
             type: currentSong.type,
             playlistMode: true,
             img: img,
-            title: currentSong.sound_name ? currentSong.sound_name : currentSong.title,
+            title: title,
+            display_title: title,
             urlParent
           })
           if (i < 2) {

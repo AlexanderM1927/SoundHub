@@ -1,15 +1,15 @@
 <template>
   <q-card class="popular-card" @click="openPlayer(song)">
-    <q-img :src="getThumbnailUrl(song)" class="p-card-img" basic>
-      <div v-if="song.firstOne" style="background-color: transparent">
-        <q-icon name="fas fa-crown" class="crown"></q-icon>
-      </div>
-      <q-card-section class="p-card-text">
-        <p class="p-card-p">{{ song.display_title || song.title || 'Sin titulo' }}</p>
-      </q-card-section>
-    </q-img>
-  </q-card>
-</template>
+      <q-img :src="getThumbnailUrl(song)" class="p-card-img" basic>
+        <div v-if="song.firstOne" style="background-color: transparent">
+          <q-icon name="fas fa-crown" class="crown"></q-icon>
+        </div>
+        <q-card-section class="p-card-text">
+        <p class="p-card-p">{{ getDisplayTitle(song) || 'Sin titulo' }}</p>
+        </q-card-section>
+      </q-img>
+    </q-card>
+  </template>
 
 <script>
 import { functions } from '../functions.js'
