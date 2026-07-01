@@ -4,6 +4,10 @@ import { fileURLToPath } from 'url'
 import fileSystem from 'fs'
 
 const TYPE_VIDEO = 'video'
+const getDisplayTitle = (item: any) => {
+    return item?.sound_name || item?.title || item?.name || 'Sin título'
+}
+
 export class SoundController {
     soundRepository: any
     viewRepository: any
@@ -220,16 +224,19 @@ export class SoundController {
             let sound = null
             if (type === 'sound') {
                 const soundFromDB = await this.soundRepository.getSoundById({ sound_id: parseInt(sound_id) })
+                const soundData = soundFromDB?.dataValues || soundFromDB
                 sound = {
-                    sound_name: soundFromDB.sound_name,
-                    sound_id: soundFromDB.sound_id,
-                    user_id: soundFromDB.user_id,
+                    ...soundData,
+                    sound_name: soundData?.sound_name || '',
+                    sound_id: soundData?.sound_id,
+                    user_id: soundData?.user_id,
                     type: 'sound',
+                    title: getDisplayTitle(soundData),
+                    display_title: getDisplayTitle(soundData),
                     user: {
-                        user_name: soundFromDB.dataValues.user,
+                        user_name: soundData?.user?.user_name || soundData?.user_name || '',
                     }
                 }
-                Object.assign(sound, soundFromDB.dataValues)
             } else {
                 const youtubeSearch = await this.youtubeService.getSoundByIdOnYoutube({
                     id: sound_id
@@ -267,10 +274,16 @@ export class SoundController {
 
             const sounds = await this.soundRepository.getSoundByUserId({ user_id: parseInt(user_id) })
             for (let i = 0; i < sounds.length; i++) {
+                const soundData = sounds[i].dataValues || sounds[i]
                 const sound = {
-                    type: 'sound'
+                    ...soundData,
+                    type: 'sound',
+                    title: getDisplayTitle(soundData),
+                    display_title: getDisplayTitle(soundData),
+                    sound_name: soundData?.sound_name || '',
+                    img: soundData?.sound_thumbnail_url || '',
+                    url: soundData?.sound_id
                 }
-                Object.assign(sound, sounds[i].dataValues)
                 results.items.push(sound)
             }
             

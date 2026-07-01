@@ -254,7 +254,16 @@ export class YoutubeService {
             nextPage: {}
         }
         for (const sound of sounds) {
-            results.items.push({ type: 'sound', ...sound.dataValues })
+            const soundData = sound.dataValues || sound
+            results.items.push({
+                ...soundData,
+                type: 'sound',
+                title: soundData.sound_name || soundData.title || 'Sin título',
+                display_title: soundData.sound_name || soundData.title || 'Sin título',
+                sound_name: soundData.sound_name || '',
+                img: soundData.sound_thumbnail_url || '',
+                url: soundData.sound_id
+            })
         }
         for (const video of youtube.items) {
             if (video.type === 'video' && video.length && video.length.accessibility) {
