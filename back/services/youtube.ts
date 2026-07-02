@@ -11,6 +11,55 @@ const VIDEO_INFO_CLIENTS = ['ANDROID', 'WEB', 'IOS', 'WEB_EMBEDDED', 'TV_EMBEDDE
 const YOUTUBE_SERVICE_URL = process.env.YOUTUBE_SERVICE_URL?.trim().replace(/\/$/, '') || ''
 const videoResolutionCache = new Map<string, any>()
 
+function getTextFromYoutubeNode (value: any): string {
+    if (!value) return ''
+    if (typeof value === 'string') return value.trim()
+    if (typeof value?.text === 'string') return value.text.trim()
+    if (typeof value?.simpleText === 'string') return value.simpleText.trim()
+    if (Array.isArray(value?.runs)) {
+        return value.runs
+            .map((item: any) => getTextFromYoutubeNode(item))
+            .filter(Boolean)
+            .join('')
+            .trim()
+    }
+
+    return ''
+}
+
+function getYoutubeTitleFromInfo (info: any): string {
+    return [
+        info?.basic_info?.title,
+        info?.basic_info?.original_title,
+        getTextFromYoutubeNode(info?.primary_info?.title),
+        getTextFromYoutubeNode(info?.secondary_info?.title),
+        getTextFromYoutubeNode(info?.microformat?.player_microformat_renderer?.title)
+    ].find((value) => typeof value === 'string' && value.trim())?.trim() || ''
+}
+
+function getYoutubeDescriptionFromInfo (info: any): string {
+    return [
+        info?.basic_info?.short_description,
+        info?.basic_info?.description,
+        getTextFromYoutubeNode(info?.secondary_info?.description),
+        getTextFromYoutubeNode(info?.microformat?.player_microformat_renderer?.description)
+    ].find((value) => typeof value === 'string' && value.trim())?.trim() || ''
+}
+
+function getYoutubeThumbnailsFromInfo (info: any): any[] {
+    const thumbnailSources = [
+        info?.basic_info?.thumbnail,
+        info?.basic_info?.thumbnails,
+        info?.microformat?.player_microformat_renderer?.thumbnail?.thumbnails,
+        info?.primary_info?.thumbnail?.thumbnails
+    ].find((value) => Array.isArray(value) && value.length > 0) || []
+
+    return [...thumbnailSources]
+        .filter((thumbnail: any) => thumbnail?.url)
+        .sort((a: any, b: any) => (b.width ?? 0) - (a.width ?? 0))
+        .slice(0, 3)
+}
+
 async function getInnertube (): Promise<Innertube> {
     const now = Date.now()
     if (!innertubeInstance || (now - innertubeCreatedAt) > INNERTUBE_TTL_MS) {
@@ -192,6 +241,28 @@ export class YoutubeService {
         this.soundRepository = soundRepository
     }
 
+    async searchVideoMetadataById (videoId: string) {
+        try {
+            const result = await this.getSoundByYoutubeAPI({ name: videoId })
+            const items = Array.isArray(result?.items) ? result.items : []
+            const exactMatch = items.find((item: any) => item?.type === 'video' && item?.id === videoId)
+            const firstVideo = exactMatch || items.find((item: any) => item?.type === 'video')
+
+            if (!firstVideo) return null
+
+            return {
+                title: getTextFromYoutubeNode(firstVideo?.title),
+                thumbnail: {
+                    thumbnails: Array.isArray(firstVideo?.thumbnail?.thumbnails)
+                        ? firstVideo.thumbnail.thumbnails
+                        : []
+                }
+            }
+        } catch {
+            return null
+        }
+    }
+
     convertDurationInMinutes (duration: string) {
         const parts = duration.split(':').map(Number)
 
@@ -219,25 +290,38 @@ export class YoutubeService {
     }
 
     async getSoundByIdOnYoutube ({ id }: { id: any }) {
+        const videoId = extractVideoId(id)
+
         try {
-            const yt = await getInnertube()
-            const info = await yt.getBasicInfo(extractVideoId(id))
-            const thumbnails = info.basic_info.thumbnail ?? []
-            const getBestThumbnail = [...thumbnails]
-                .sort((a: any, b: any) => (b.width ?? 0) - (a.width ?? 0))
-                .slice(0, 3)
+            const { info } = await getVideoInfoWithFallback(videoId)
+            const fallbackMetadata = await this.searchVideoMetadataById(videoId)
+            const thumbnails = getYoutubeThumbnailsFromInfo(info)
+            const fallbackThumbnails = fallbackMetadata?.thumbnail?.thumbnails || []
+            const mergedThumbnails = thumbnails.length > 0 ? thumbnails : fallbackThumbnails
+            const title = getYoutubeTitleFromInfo(info) || fallbackMetadata?.title || ''
+            const description = getYoutubeDescriptionFromInfo(info)
 
             return {
-                title: info.basic_info.title,
-                description: info.basic_info.short_description,
+                title,
+                description,
                 thumbnail: {
-                    thumbnails: getBestThumbnail
+                    thumbnails: mergedThumbnails
                 },
-                id,
+                id: videoId,
                 type: 'video'
             }
         } catch (error) {
-            return {}
+            const fallbackMetadata = await this.searchVideoMetadataById(videoId)
+
+            return {
+                title: fallbackMetadata?.title || '',
+                description: '',
+                thumbnail: {
+                    thumbnails: fallbackMetadata?.thumbnail?.thumbnails || []
+                },
+                id: videoId,
+                type: 'video'
+            }
         }
     }
 
